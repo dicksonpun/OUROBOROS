@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.102
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PANDA", "PANDA\PANDA.csproj", "{DC7F05B1-49BF-4F76-A71B-2985C5105E58}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DC7F05B1-49BF-4F76-A71B-2985C5105E58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DC7F05B1-49BF-4F76-A71B-2985C5105E58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DC7F05B1-49BF-4F76-A71B-2985C5105E58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DC7F05B1-49BF-4F76-A71B-2985C5105E58}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {34293033-2ACC-4B9C-A0B7-A99769F5305F}
+	EndGlobalSection
+EndGlobal
