@@ -1,22 +1,51 @@
-﻿<Window x:Class="PANDA.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:PANDA"
-        mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800"
-        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-        TextElement.FontWeight="Regular"
-        TextElement.FontSize="13"
-        TextOptions.TextFormattingMode="Ideal" 
-        TextOptions.TextRenderingMode="Auto"        
-        Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{DynamicResource MaterialDesignFont}">
-    <Grid>
-        <materialDesign:Card Padding="32" Margin="16">
-            <TextBlock Style="{DynamicResource MaterialDesignTitleTextBlock}">My First Material Design App</TextBlock>
-        </materialDesign:Card>
-    </Grid>
-</Window>
+﻿<controls:MetroWindow x:Class="PANDA.MainWindow"
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:PANDA="clr-namespace:PANDA"
+                      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
+                      xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+                      xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
+                      xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+                      WindowTransitionsEnabled="False"
+                      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+                      Background="{DynamicResource MaterialDesignPaper}"					  
+                      GlowBrush="{DynamicResource AccentColorBrush}"					  
+                      FontFamily="{StaticResource DefaultFont}"
+                      Title="PANDA" Height="640" Width="800">
+    <controls:MetroWindow.LeftWindowCommands>
+        <controls:WindowCommands>
+            <wpf:PopupBox Style="{StaticResource WindowCommandsPopupBoxStyle}">
+                <StackPanel>
+                    <Button Content="Hello World"/>
+                    <Button Content="Nice Popup"/>
+                    <Button Content="Goodbye"/>
+                </StackPanel>
+            </wpf:PopupBox>
+        </controls:WindowCommands>
+    </controls:MetroWindow.LeftWindowCommands>
+    <dockablz:Layout>
+        <dragablz:TabablzControl BorderThickness="0"
+                                 Margin="0,-1,0,1">
+            <dragablz:TabablzControl.InterTabController>
+                <dragablz:InterTabController />
+            </dragablz:TabablzControl.InterTabController>
+            <TabItem Header="DIALOGS">
+                <PANDA:Dialogs Margin="8">
+                    <PANDA:Dialogs.DataContext>
+                        <PANDA:DialogsViewModel />
+                    </PANDA:Dialogs.DataContext>
+                </PANDA:Dialogs>
+            </TabItem>
+            <TabItem Header="MAHAPPS">
+                <PANDA:Mah Margin="16" />
+            </TabItem>
+            <TabItem Header="PALETTE">
+                <PANDA:PaletteSelector Margin="16">
+                    <PANDA:PaletteSelector.DataContext>
+                        <PANDA:PaletteSelectorViewModel />
+                    </PANDA:PaletteSelector.DataContext>
+                </PANDA:PaletteSelector>
+            </TabItem>
+        </dragablz:TabablzControl>
+    </dockablz:Layout>
+</controls:MetroWindow>
