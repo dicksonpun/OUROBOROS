@@ -8,6 +8,12 @@
         public MainWindow()
         {
             InitializeComponent();
+            LoadUserConfigurations();
+        }
+
+        void LoadUserConfigurations()
+        {
+            PaletteSelectorViewModel.LoadPalette();
         }
     }
 }

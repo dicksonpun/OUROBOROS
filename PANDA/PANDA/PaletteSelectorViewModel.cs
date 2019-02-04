@@ -1,9 +1,11 @@
 ﻿using System;
-using MaterialDesignColors;
-using MaterialDesignThemes.Wpf;
+using System.IO;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Input;
+using MaterialDesignColors;
+using MaterialDesignThemes.Wpf;
+using Newtonsoft.Json;
 
 namespace PANDA
 {
@@ -23,6 +25,10 @@ namespace PANDA
         public ICommand ApplyPrimaryCommand { get; } = new AnotherCommandImplementation(o => ApplyPrimary((Swatch)o));
 
         public ICommand ApplyAccentCommand { get; } = new AnotherCommandImplementation(o => ApplyAccent((Swatch)o));
+
+        public ICommand LoadPaletteCommand { get; } = new AnotherCommandImplementation(o => LoadPalette());
+
+        public ICommand SavePaletteCommand { get; } = new AnotherCommandImplementation(o => SavePalette());
 
         private static void ApplyStyle(bool alternate)
         {
@@ -55,5 +61,29 @@ namespace PANDA
             new PaletteHelper().ReplaceAccentColor(swatch);
         }
 
+        private static void SavePalette()
+        {
+            Palette currentPalette = new PaletteHelper().QueryPalette();
+
+            //open file stream
+            StreamWriter file = File.CreateText(@"C:\Users\Dickson\Desktop\test.txt");
+            try
+            {
+                JsonSerializer serializer = new JsonSerializer();
+                //serialize object directly into file stream
+                serializer.Serialize(file, currentPalette);
+            }
+            finally
+            {
+                file.Close();
+            }
+        }
+
+        public static void LoadPalette()
+        {
+            string jsonString = File.ReadAllText(@"C:\Users\Dickson\Desktop\test.txt");
+            Palette currentPalette = JsonConvert.DeserializeObject<Palette>(jsonString);
+            new PaletteHelper().ReplacePalette(currentPalette);
+        }
     }
 }
