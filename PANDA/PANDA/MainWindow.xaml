@@ -29,6 +29,13 @@
             <dragablz:TabablzControl.InterTabController>
                 <dragablz:InterTabController />
             </dragablz:TabablzControl.InterTabController>
+            <TabItem Header="SETTINGS">
+                <PANDA:PaletteSelector Margin="16">
+                    <PANDA:PaletteSelector.DataContext>
+                        <PANDA:PaletteSelectorViewModel />
+                    </PANDA:PaletteSelector.DataContext>
+                </PANDA:PaletteSelector>
+            </TabItem>
             <TabItem Header="DIALOGS">
                 <PANDA:Dialogs Margin="8">
                     <PANDA:Dialogs.DataContext>
@@ -38,13 +45,6 @@
             </TabItem>
             <TabItem Header="MAHAPPS">
                 <PANDA:Mah Margin="16" />
-            </TabItem>
-            <TabItem Header="PALETTE">
-                <PANDA:PaletteSelector Margin="16">
-                    <PANDA:PaletteSelector.DataContext>
-                        <PANDA:PaletteSelectorViewModel />
-                    </PANDA:PaletteSelector.DataContext>
-                </PANDA:PaletteSelector>
             </TabItem>
         </dragablz:TabablzControl>
     </dockablz:Layout>
