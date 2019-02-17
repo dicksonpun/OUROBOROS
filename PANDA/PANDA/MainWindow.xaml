@@ -3,8 +3,9 @@
                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                       xmlns:PANDA="clr-namespace:PANDA"
                       xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-                      xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
                       xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
+                      xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+                      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                       xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
                       WindowTransitionsEnabled="False"
                       TextElement.Foreground="{DynamicResource MaterialDesignBody}"
@@ -15,6 +16,9 @@
     <controls:MetroWindow.LeftWindowCommands>
         <controls:WindowCommands>
             <wpf:PopupBox Style="{StaticResource WindowCommandsPopupBoxStyle}">
+                <wpf:PopupBox.ToggleContent>
+                    <iconPacks:PackIconMaterial Kind="PlusBox" />
+                </wpf:PopupBox.ToggleContent>
                 <StackPanel>
                     <Button Content="Hello World"/>
                     <Button Content="Nice Popup"/>

@@ -45,7 +45,7 @@
                         <Border.Background>
                             <SolidColorBrush Color="{Binding ExemplarHue.Color, Mode=OneTime}" />
                         </Border.Background>
-                        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type PANDA:PaletteSelector}}, Path=DataContext.ApplyPrimaryCommand, Mode=OneTime}"
+                        <Button Command="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type PANDA:PaletteSelector}}, Path=DataContext.SavePrimarySwatchCommand, Mode=OneTime}"
                                 CommandParameter="{Binding}">
                             <StackPanel Orientation="Horizontal">
                                 <TextBlock Text="Primary" />
@@ -57,6 +57,7 @@
                             </StackPanel>
                         </Button>
                     </Border>
+                    <!--
                     <Border Grid.Row="1" Grid.Column="1" 
                                         Visibility="{Binding IsAccented, Converter={StaticResource BooleanToVisibilityConverter}, Mode=OneTime}"
                                         Width="120">
@@ -75,6 +76,7 @@
                             </StackPanel>
                         </Button>
                     </Border>
+                    -->
                 </Grid>
             </wpf:Card>
         </DataTemplate>
@@ -84,6 +86,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+        
+        <!--
         <Grid HorizontalAlignment="Left" Margin="16 0 0 4">
             <Grid.RowDefinitions>
                 <RowDefinition />
@@ -105,6 +109,7 @@
             <ToggleButton Grid.Row="2" Grid.Column="1" Margin="8 4 16 4" Command="{Binding SavePaletteCommand}" CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=IsChecked}" />
             <TextBlock Grid.Row="2" Grid.Column="2" VerticalAlignment="Center">TEST</TextBlock>
         </Grid>
+        -->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
             <ItemsControl ItemsSource="{Binding Swatches, Mode=OneTime}">
                 <ItemsControl.ItemsPanel>

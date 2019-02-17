@@ -1,4 +1,7 @@
-﻿namespace PANDA
+﻿using System;
+using System.Windows;
+
+namespace PANDA
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -8,12 +11,20 @@
         public MainWindow()
         {
             InitializeComponent();
+            LoadApplicationPalette();
             LoadUserConfigurations();
+        }
+
+        void LoadApplicationPalette()
+        {
+            PaletteSelectorViewModel.ApplyDarkBase();
+            PaletteSelectorViewModel.LoadPrimarySwatch();
         }
 
         void LoadUserConfigurations()
         {
-            PaletteSelectorViewModel.LoadPalette();
+
         }
+
     }
 }
