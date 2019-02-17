@@ -21,8 +21,6 @@ namespace PANDA
             ShowProgressDialogCommand = new AnotherCommandImplementation(_ => ProgressDialog());
         }
 
-        public Flyout LeftFlyout { get; set; }
-
         private void InputDialog()
         {
             var metroDialogSettings = new MetroDialogSettings
@@ -44,7 +42,7 @@ namespace PANDA
 
             var controller = await DialogCoordinator.Instance.ShowProgressAsync(this, "MahApps Dialog", "Using Material Design Themes (WORK IN PROGRESS)", true, metroDialogSettings);
             controller.SetIndeterminate();
-            await Task.Delay(3000);
+            await Task.Delay(1000);
             await controller.CloseAsync();
         }
     }

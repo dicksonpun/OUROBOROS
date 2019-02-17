@@ -28,7 +28,7 @@ namespace PANDA
 
         public ICommand LoadPaletteCommand { get; } = new AnotherCommandImplementation(o => LoadPalette());
 
-        public ICommand SavePaletteCommand { get; } = new AnotherCommandImplementation(o => SavePalette());
+        public ICommand SavePrimarySwatchCommand { get; } = new AnotherCommandImplementation(o => SavePrimarySwatch((Swatch)o));
 
         private static void ApplyStyle(bool alternate)
         {
@@ -46,6 +46,11 @@ namespace PANDA
             }
         }
 
+        public static void ApplyDarkBase(bool isDark = true)
+        {
+            new PaletteHelper().SetLightDark(isDark);
+        }
+
         private static void ApplyBase(bool isDark)
         {
             new PaletteHelper().SetLightDark(isDark);
@@ -61,10 +66,21 @@ namespace PANDA
             new PaletteHelper().ReplaceAccentColor(swatch);
         }
 
+        public static void SavePrimarySwatch(Swatch swatch)
+        {
+            new PaletteHelper().ReplacePrimaryColor(swatch);
+            Properties.Settings.Default.UserPrimarySwatch = swatch.ToString();
+            Properties.Settings.Default.Save();
+        }
+
+        public static void LoadPrimarySwatch()
+        {
+            new PaletteHelper().ReplacePrimaryColor(Properties.Settings.Default.UserPrimarySwatch);
+        }
+
         private static void SavePalette()
         {
-            Palette currentPalette = new PaletteHelper().QueryPalette();
-
+            /*
             //open file stream
             StreamWriter file = File.CreateText(@"C:\Users\Dickson\Desktop\test.txt");
             try
@@ -77,6 +93,7 @@ namespace PANDA
             {
                 file.Close();
             }
+            */
         }
 
         public static void LoadPalette()
