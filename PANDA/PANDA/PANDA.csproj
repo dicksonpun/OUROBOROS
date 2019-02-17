@@ -35,7 +35,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>icon\panda.ico</ApplicationIcon>
+    <ApplicationIcon>Icons\panda.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
@@ -88,11 +88,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Dialogs.xaml">
+    <Page Include="Features\Dialogs\Dialogs.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Mah.xaml">
+    <Page Include="Features\Mah\Mah.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -105,25 +105,25 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AnotherCommandImplementation.cs" />
-    <Compile Include="PaletteSelectorViewModel.cs" />
-    <Compile Include="Dialogs.xaml.cs">
+    <Compile Include="Features\PaletteSelector\PaletteSelectorViewModel.cs" />
+    <Compile Include="Features\Dialogs\Dialogs.xaml.cs">
       <DependentUpon>Dialogs.xaml</DependentUpon>
     </Compile>
-    <Compile Include="DialogsViewModel.cs" />
-    <Compile Include="Mah.xaml.cs">
+    <Compile Include="Features\Dialogs\DialogsViewModel.cs" />
+    <Compile Include="Features\Mah\Mah.xaml.cs">
       <DependentUpon>Mah.xaml</DependentUpon>
     </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="PaletteSelector.xaml">
+    <Page Include="Features\PaletteSelector\PaletteSelector.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PaletteSelector.xaml.cs">
+    <Compile Include="Features\PaletteSelector\PaletteSelector.xaml.cs">
       <DependentUpon>PaletteSelector.xaml</DependentUpon>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -153,9 +153,15 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="icon\credits.txt" />
-    <Resource Include="icon\panda.ico" />
-    <Resource Include="icon\panda.png" />
+    <Resource Include="Icons\credits.txt" />
+    <Resource Include="Icons\panda.ico" />
+    <Resource Include="Icons\panda.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Features\Home\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Documentation\Licenses.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
