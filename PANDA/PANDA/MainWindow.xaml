@@ -33,6 +33,13 @@
             <dragablz:TabablzControl.InterTabController>
                 <dragablz:InterTabController />
             </dragablz:TabablzControl.InterTabController>
+            <TabItem Header="HOME">
+                <PANDA:PaletteSelector Margin="16">
+                    <PANDA:PaletteSelector.DataContext>
+                        <PANDA:PaletteSelectorViewModel />
+                    </PANDA:PaletteSelector.DataContext>
+                </PANDA:PaletteSelector>
+            </TabItem>
             <TabItem Header="SETTINGS">
                 <PANDA:PaletteSelector Margin="16">
                     <PANDA:PaletteSelector.DataContext>
