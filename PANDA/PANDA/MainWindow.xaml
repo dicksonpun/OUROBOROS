@@ -1,62 +1,61 @@
-﻿<controls:MetroWindow x:Class="PANDA.MainWindow"
-                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                      xmlns:PANDA="clr-namespace:PANDA"
-                      xmlns:controls="http://metro.mahapps.com/winfx/xaml/controls"
-                      xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
-                      xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
-                      xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
-                      xmlns:wpf="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
-                      WindowTransitionsEnabled="False"
-                      TextElement.Foreground="{DynamicResource MaterialDesignBody}"
-                      Background="{DynamicResource MaterialDesignPaper}"					  
-                      GlowBrush="{DynamicResource AccentColorBrush}"					  
-                      FontFamily="{StaticResource DefaultFont}"
-                      Title="PANDA" Height="640" Width="800">
-    <controls:MetroWindow.LeftWindowCommands>
-        <controls:WindowCommands>
-            <wpf:PopupBox Style="{StaticResource WindowCommandsPopupBoxStyle}">
-                <wpf:PopupBox.ToggleContent>
-                    <iconPacks:PackIconMaterial Kind="PlusBox" />
-                </wpf:PopupBox.ToggleContent>
-                <StackPanel>
-                    <Button Content="Hello World"/>
-                    <Button Content="Nice Popup"/>
-                    <Button Content="Goodbye"/>
-                </StackPanel>
-            </wpf:PopupBox>
-        </controls:WindowCommands>
-    </controls:MetroWindow.LeftWindowCommands>
-    <dockablz:Layout>
-        <dragablz:TabablzControl BorderThickness="0"
-                                 Margin="0,-1,0,1">
-            <dragablz:TabablzControl.InterTabController>
-                <dragablz:InterTabController />
-            </dragablz:TabablzControl.InterTabController>
-            <TabItem Header="HOME">
-                <PANDA:PaletteSelector Margin="16">
-                    <PANDA:PaletteSelector.DataContext>
-                        <PANDA:PaletteSelectorViewModel />
-                    </PANDA:PaletteSelector.DataContext>
-                </PANDA:PaletteSelector>
-            </TabItem>
-            <TabItem Header="SETTINGS">
-                <PANDA:PaletteSelector Margin="16">
-                    <PANDA:PaletteSelector.DataContext>
-                        <PANDA:PaletteSelectorViewModel />
-                    </PANDA:PaletteSelector.DataContext>
-                </PANDA:PaletteSelector>
-            </TabItem>
-            <TabItem Header="DIALOGS">
-                <PANDA:Dialogs Margin="8">
-                    <PANDA:Dialogs.DataContext>
-                        <PANDA:DialogsViewModel />
-                    </PANDA:Dialogs.DataContext>
-                </PANDA:Dialogs>
-            </TabItem>
-            <TabItem Header="MAHAPPS">
-                <PANDA:Mah Margin="16" />
-            </TabItem>
-        </dragablz:TabablzControl>
-    </dockablz:Layout>
-</controls:MetroWindow>
+﻿<Window x:Class="PANDA.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:controls="clr-namespace:PANDA.Controls"
+        xmlns:viewModel="clr-namespace:PANDA.ViewModel"
+        xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+        xmlns:materialDesignExtControls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+        mc:Ignorable="d"
+        Title="PANDA"  Height="800" Width="1300" 
+        WindowStartupLocation="CenterScreen"
+        WindowStyle="SingleBorderWindow"
+        ResizeMode="CanResizeWithGrip"
+        Background="{DynamicResource MaterialDesignBackground}" 
+        Foreground="{DynamicResource MaterialDesignBody}"
+        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
+    <Window.Resources>
+        <!-- Add new view models and their controls here so it is in scope when binding is needed below. -->
+        <DataTemplate DataType="{x:Type viewModel:ClearcaseManagerViewModel}">
+            <controls:ClearcaseManagerControl />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:LicenseListViewModel}">
+            <controls:LicenseListControl />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:VersionLogViewModel}">
+            <controls:VersionLogControl />
+        </DataTemplate>
+    </Window.Resources>
+    
+    <Grid>
+        <materialDesign:DialogHost Identifier="dialogHost">
+            <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding Path=IsNavigationDrawerOpen, ElementName=appBar}" 
+                                       LeftDrawerBackground="{DynamicResource MaterialDesignBackground}">
+                <materialDesign:DrawerHost.LeftDrawerContent>
+                    <materialDesignExtControls:SideNavigation x:Name="navigationDrawerNav" 
+                                                                Items="{Binding Path=NavigationItems, Mode=TwoWay}" 
+                                                                Width="320"
+                                                                NavigationItemSelected="NavigationItemSelectedHandler" />
+                </materialDesign:DrawerHost.LeftDrawerContent>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />  <!--HEIGHT FOR APPBAR-->
+                        <RowDefinition Height="*" />     <!--HEIGHT FOR REST OF WINDOW-->
+                    </Grid.RowDefinitions>
+
+                    <materialDesignExtControls:AppBar Type="Medium" x:Name="appBar" Grid.ColumnSpan="3" Title="PANDA" ShowNavigationDrawerButton="True">
+                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Settings"> <!-- ="GoToDocumentation"> -->
+                            <materialDesign:PackIcon Kind="Settings" Height="24" Width="24" />
+                        </Button>
+                    </materialDesignExtControls:AppBar>
+
+                    <ContentControl x:Name="contentControl" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></ContentControl>
+                </Grid>
+            </materialDesign:DrawerHost>
+        </materialDesign:DialogHost>
+    </Grid>
+</Window>
