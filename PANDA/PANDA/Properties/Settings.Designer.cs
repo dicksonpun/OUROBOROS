@@ -22,17 +22,5 @@ namespace PANDA.Properties {
                 return defaultInstance;
             }
         }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("Blue")]
-        public string UserPrimarySwatch {
-            get {
-                return ((string)(this["UserPrimarySwatch"]));
-            }
-            set {
-                this["UserPrimarySwatch"] = value;
-            }
-        }
     }
 }

@@ -1,30 +1,16 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 
 namespace PANDA
 {
-    /// <summary>
-    /// Interaction logic for MainWindow.xaml
-    /// </summary>
-    public partial class MainWindow
+    public partial class MainWindow : Window
     {
         public MainWindow()
         {
             InitializeComponent();
-            LoadApplicationPalette();
-            LoadUserConfigurations();
+            DetermineApplicationMode();
+            UpdateTitleBasedOnApplicationMode();
+            InitializeNavigationDrawerNav();     // Note: Dependency on ApplicationMode data
+            InitializeMessageHub();              // Note: Dependency on ApplicationMode data
         }
-
-        void LoadApplicationPalette()
-        {
-            PaletteSelectorViewModel.ApplyDarkBase();
-            PaletteSelectorViewModel.LoadPrimarySwatch();
-        }
-
-        void LoadUserConfigurations()
-        {
-
-        }
-
     }
 }
