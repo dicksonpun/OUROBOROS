@@ -20,8 +20,8 @@
         <DataTemplate DataType="{x:Type viewModel:ClearcaseManagerViewModel}">
             <controls:ClearcaseManagerControl />
         </DataTemplate>
-        <DataTemplate DataType="{x:Type viewModel:LicenseListViewModel}">
-            <controls:LicenseListControl />
+        <DataTemplate DataType="{x:Type viewModel:LicenseLogViewModel}">
+            <controls:LicenseLogControl />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:VersionLogViewModel}">
             <controls:VersionLogControl />
@@ -34,7 +34,7 @@
                                        LeftDrawerBackground="{DynamicResource MaterialDesignBackground}">
                 <materialDesign:DrawerHost.LeftDrawerContent>
                     <materialDesignExtControls:SideNavigation x:Name="navigationDrawerNav" 
-                                                                Items="{Binding Path=NavigationItems, Mode=TwoWay}" 
+                                                                Items="{Binding Path=NavigationItems, Mode=OneWay}" 
                                                                 Width="320"
                                                                 NavigationItemSelected="NavigationItemSelectedHandler" />
                 </materialDesign:DrawerHost.LeftDrawerContent>
@@ -47,8 +47,8 @@
                         <RowDefinition Height="*" />     <!--HEIGHT FOR REST OF WINDOW-->
                     </Grid.RowDefinitions>
 
-                    <materialDesignExtControls:AppBar Type="Medium" x:Name="appBar" Grid.ColumnSpan="3" Title="PANDA" ShowNavigationDrawerButton="True">
-                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Settings"> <!-- ="GoToDocumentation"> -->
+                    <materialDesignExtControls:AppBar Type="Medium" x:Name="appBar" Grid.ColumnSpan="3" Title="Partially Automated Network Dependent Assistant" ShowNavigationDrawerButton="True">
+                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Settings">
                             <materialDesign:PackIcon Kind="Settings" Height="24" Width="24" />
                         </Button>
                     </materialDesignExtControls:AppBar>

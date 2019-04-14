@@ -17,7 +17,8 @@ namespace PANDA.ViewModel
         public VersionLogViewModel() : base()
         {
             // Helpers for UNICODE characters
-            string bullet = "\u2022";
+            string bullet      = "\u2022";
+            string placeholder = "";
 
             m_items = new List<VersionLogItem>()
             {
@@ -29,43 +30,54 @@ namespace PANDA.ViewModel
 
                 // Note: Keep TODO entry as top entry
                 new VersionLogItem() { Version     = "TODOs",
-                                       UpdateNotes = bullet + "Make data persistent between views."                                     + "\n" +
-                                                     bullet + "Make data persistent between application launches"                       + "\n" +
-                                                     bullet + "ADD: Central Location for storing meta files"                            + "\n" +
-                                                     bullet + "ADD: Clearcase Branch Helper layout"                                     + "\n" +
-                                                     bullet + "ADD: Buttons to support: EDIT, VTREE, DIFF, REVIEW, CONFIGSPEC EDIT"     + "\n" +
-                                                     bullet + "ADD: Clearcase Branch Manager layout"                                    + "\n" +
-                                                     bullet + "ADD: function to add and remove views"                                   + "\n" +
-                                                     bullet + "ADD: function update views"                                              + "\n" +
-                                                     bullet + "ADD: export and import project"                                          + "\n" +
-                                                     bullet + "ADD: FUNCTION: Build Integrity Analyzer"                                 + "\n" +
-                                                     bullet + "ADD: snackbar for notifications"                                         + "\n" +
-                                                     bullet + "ADD: file review functionality"                                          + "\n" +
-                                                     bullet + "ADD: Mount to Drive functionality"                                       + "\n" +
-                                                     bullet + "ADD: AUTOSTAMP"                                                          + "\n" +
-                                                     bullet + "ADD: Test Descriptor Verifier and Queue"                                 + "\n" +
-                                                     bullet + "ADD: Test ETA"                                                           + "\n" +
-                                                     bullet + "ADD: User Settings"                                                      + "\n" +
-                                                     bullet + "ADD: HOW TO STEPPER SERIES"                                              + "\n" +
-                                                     bullet + "ADD: GITHUB to state the branching strategy"                             + "\n" +
-                                                     bullet + "ADD: Analysis tool: Octal scratchpad"                                    + "\n" +
-                                                     bullet + "ADD: Analysis tool: CSV parser"                                          + "\n" +
-                                                     bullet + "ADD: BranchList change log document generator"                           + "\n" +
-                                                     bullet + "ADD: Dashboard for branch statistics"                                    + "\n" +
-                                                     bullet + "ADD: Learning Seminars - Links to crashcourse PowerPoint"                + "\n" +
-                                                     bullet + "CONSIDER: ADD PIDGIN LIBRARY FOR PARSING SUPPORT"                        + "\n" +
-                                                     bullet + "CONSIDER: ADD DYNAMIC DATA LIBRARY FOR reactive (rx) SUPPORT"            + "\n" +
-                                                     bullet + "REQUEST : FOSS APPROVALS FOR 3RD PARTY LIBRARY SUPPORT"
-                                                     }, // PLACEHOLDER
+                                       UpdateNotes = "CURRENTLY IN DEVELOPMENT"                                                          + "\n" +
+                                                     bullet + "Update View manager to handles its own updates"                           + "\n" +
+                                                     bullet + "Create a helper class for initializing the Navigation Menu"               + "\n" +
+                                                     bullet + "Update Message Naming Scheme"                                             + "\n" +
+                                                     bullet + "Separate logic between periodic updates and periodic messaging frequency" + "\n" +
+                                                     bullet + "Add vob periodic search"                                                  + "\n" +
+                                                     "\nHIGH PRIORITY"                                                                   + "\n" +
+                                                     bullet + "ADD: Clearcase Branch Helper layout"                                      + "\n" +
+                                                     bullet + "ADD: Clearcase Branch Manager layout"                                     + "\n" +
+                                                     bullet + "ADD: function to add and remove views"                                    + "\n" +
+                                                     bullet + "ADD: function update views"                                               + "\n" +                                                     
+                                                     bullet + "ADD: Buttons to support: EDIT, VTREE, DIFF, REVIEW, CONFIGSPEC EDIT"      + "\n" +
+                                                     bullet + "ADD: User Settings"                                                       + "\n" +
+                                                     bullet + "Make data persistent between application launches"                        + "\n" + 
+                                                     bullet + "ADD: Central Location for storing meta files"                             + "\n" +
+                                                     bullet + "ADD: GITHUB to state the branching strategy"                              + "\n" +
+                                                     bullet + "Tidy up includes section in all files prior to official release"          + "\n" +
+                                                     "\nMEDIUM PRIORITY"                                                                 + "\n" +
+                                                     bullet + "ADD: export and import project"                                           + "\n" +
+                                                     bullet + "ADD: FUNCTION: Build Integrity Analyzer"                                  + "\n" +
+                                                     bullet + "ADD: FUNCTION: BranchList CHANGE log document generator"                  + "\n" +
+                                                     bullet + "ADD: export and import project"                                           + "\n" +
+                                                     bullet + "ADD: Dashboard for branch statistics"                                     + "\n" +
+                                                     bullet + "ADD: file review functionality"                                           + "\n" +
+                                                     bullet + "ADD: Mount to Drive functionality"                                        + "\n" +
+                                                     bullet + "ADD: AUTOSTAMP"                                                           + "\n" +
+                                                     bullet + "ADD: Test Descriptor Verifier and Queue"                                  + "\n" +
+                                                     bullet + "ADD: Test ETA"                                                            + "\n" +
+                                                     "\nLOW PRIORITY"                                                                    + "\n" +
+                                                     bullet + "ADD: HOW TO STEPPER SERIES"                                               + "\n" +
+                                                     bullet + "ADD: Analysis tool: Octal scratchpad"                                     + "\n" +
+                                                     bullet + "ADD: Analysis tool: CSV parser"                                           + "\n" +
+                                                     bullet + "ADD: snackbar for notifications"                                          + "\n" +
+                                                     bullet + "ADD: Learning Seminars - Links to crashcourse PowerPoint"                 + "\n" +
+                                                     bullet + "CONSIDER: ADD PIDGIN LIBRARY FOR PARSING SUPPORT"                         + "\n" +
+                                                     bullet + "CONSIDER: ADD DYNAMIC DATA LIBRARY FOR reactive (rx) SUPPORT"             + "\n" +
+                                                     bullet + "REQUEST : FOSS APPROVALS FOR 3RD PARTY LIBRARY SUPPORT"                   + "\n" +
+                                                     placeholder },
 
                 // Note: Version log entries are in descending order (latest version should be the top-most, following the TODO entry).
                 new VersionLogItem() { Version     = "1.0.0",
-                                       UpdateNotes = "Initial release"                                                                   + "\n" +
+                                       UpdateNotes = "INITIAL RELEASE"                                                                   + "\n" +
+                                                     bullet + "Implemented persistent data between viewModel context switches"           + "\n" +
                                                      bullet + "Implemented Navigation Window"                                            + "\n" +
                                                      "\t" + bullet + "Implemented Navigation categories based on current detected mode." + "\n" +
-                                                     bullet + "Implemented Licenses documentation."                                      + "\n" +
-                                                     bullet + "Implemented Version log."
-                                                     + "" /* PLACEHOLDER */ },
+                                                     bullet + "Implemented Licenses log documentation"                                   + "\n" +
+                                                     bullet + "Implemented Version log documentation"                                    + "\n" +
+                                                     placeholder },
             };
         }
     }
