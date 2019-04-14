@@ -1,65 +1,43 @@
 ﻿using System;
-using System.IO;
-using System.Threading;
-using System.Threading.Tasks;
 using System.Windows;
 using TinyMessenger;
 
 namespace PANDA
 {
-    public partial class MainWindow : Window
+    public partial class MessageHubHelper
     {
-        //====================================//
-        // Main Window Message Hub Processing //
-        //====================================//
         public TinyMessengerHub MessageHub { get; private set; }
+        public SupportedNetworkModeHelper m_supportedNetworkModeHelper;
 
-        private async void InitializeMessageHub()
+        public MessageHubHelper(SupportedNetworkModeHelper supportedNetworkModeHelper)
         {
-            // Simple hub creation
             MessageHub = new TinyMessengerHub();
-
-            //var resolvedHub = container.Resolve<ITinyMessengerHub>();
-
-            // Publish Messages Periodically And Asynchronously
-            await PeriodicAsync_ClearcaseManagerUpdate(TimeSpan.FromSeconds(1.0));
+            m_supportedNetworkModeHelper = supportedNetworkModeHelper;
         }
 
-        public async Task PeriodicAsync_ClearcaseManagerUpdate(TimeSpan interval)
+        public async void InitializeMessageHub()
         {
-            CancellationToken cancellationToken;
-            while (true)
+            // Subscribe and Publish to Messages based on network
+            if (m_supportedNetworkModeHelper.CurrentNetworkMode.Name.Equals(SUPPORTED_NETWORK_MODES.DEBUG) ||
+                m_supportedNetworkModeHelper.CurrentNetworkMode.Name.Equals(SUPPORTED_NETWORK_MODES.SERVER_001) ||
+                m_supportedNetworkModeHelper.CurrentNetworkMode.Name.Equals(SUPPORTED_NETWORK_MODES.SERVER_002))
             {
-                string directoryPath = CurrentApplicationMode.NetworkSpecificPath;
+                // Subscribe to Messages
+                MessageHub.Subscribe<ClearcaseManagerMessage>((message) => { ProcessClearcaseManagerMessage(message); }); // temp callback
 
-                if (Directory.Exists(directoryPath))
-                {
-                    //Console.WriteLine("Directory Path: Found");
-                }
-                else
-                {
-                    //Console.WriteLine("Directory Path: Not Found");
-                }
-
-                MessageHub.PublishAsync(new ClearcaseManager_UpdateMessage(this, new ClearcaseManager_UpdateMessage_Content() { Path = directoryPath }), printToConsole);
-                await Task.Delay(interval, cancellationToken);
-            };
+                // Publish Periodic Messages Asynchronously
+                // Disable for now
+                //await MainWindowToClearcaseManagerMessageUpdate(TimeSpan.FromSeconds(1.0));
+            }
         }
 
-        AsyncCallback printToConsole = new AsyncCallback(PrintToConsole);
-        static void PrintToConsole(IAsyncResult result)
+        public void ProcessClearcaseManagerMessage(ClearcaseManagerMessage message)
         {
-            Console.WriteLine("Published Message to ClearcaseManager");
-        }
-
-        public class ClearcaseManager_UpdateMessage : GenericTinyMessage<ClearcaseManager_UpdateMessage_Content>
-        {
-            public ClearcaseManager_UpdateMessage(object sender, ClearcaseManager_UpdateMessage_Content content) : base(sender, content) {}
-        }
-
-        public class ClearcaseManager_UpdateMessage_Content
-        {
-            public string Path { get; set; }
+            if (message.Content.MessageCommand.Equals(ClearcaseManagerMessageCommand.REQUEST_VIEW_ADD))
+            {
+                Console.WriteLine("RECEIVED CLEARCASE MESSAGE COMMAND: " + message.Content.MessageCommand.ToString());
+                Console.WriteLine("RECEIVED CLEARCASE MESSAGE CONTENT: " + message.Content.ClearcaseManagerViewItem.DirectoryName);
+            }
         }
     }
 }

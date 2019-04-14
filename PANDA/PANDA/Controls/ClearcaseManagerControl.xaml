@@ -24,12 +24,15 @@
         <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
                       HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <StackPanel HorizontalAlignment="Stretch" Width="Auto" Orientation="Vertical">
-                <controls:Autocomplete x:Name="autocomplete" AutocompleteSource="{Binding Path=ClearcaseManagerAutocompleteSource}" Height="52" Width="Auto"
-                                       ItemTemplate="{StaticResource itemTemplate}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}">
+                <controls:Autocomplete x:Name="autocomplete" AutocompleteSource="{Binding Path=ClearcaseManagerAutocompleteSource, Mode=TwoWay}" Height="52" Width="Auto"
+                                       ItemTemplate="{StaticResource itemTemplate}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
+                                       IsEnabled="{Binding Path=AutocompleteTextBoxEnabled}" 
+                                       ShowClearButtonOnlyOnSelectedItem="False" >
                     <controls:Autocomplete.Hint>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                            <materialDesign:PackIcon Kind="Magnify" Width="24" Height="24" VerticalAlignment="Center" />
-                            <TextBlock Text="Search available views" FontSize="{Binding Path=FontSize, ElementName=autocomplete}"
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center" >
+                            <materialDesign:PackIcon Kind="{Binding Path=AutocompleteTextBoxIcon}" Width="24" Height="24" VerticalAlignment="Center" />
+                            <TextBlock Text="{Binding Path=ViewSearchTextBoxValue, Mode=TwoWay}" 
+                                       FontSize="{Binding Path=FontSize, ElementName=autocomplete}"
                                        Margin="16,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                     </controls:Autocomplete.Hint>

@@ -10,31 +10,38 @@ namespace PANDA
 {
     public partial class MainWindow : Window
     {
-        //==========================================//
-        // Navigation Menu Determination Processing //
-        //==========================================//
+        //========================//
+        // Navigation Menu Helper //
+        //========================//
         public const string DialogHostName = "dialogHost";
         private List<INavigationItem> m_navigationItems;
-        public List<INavigationItem> NavigationItems
-        {
-            set { this.m_navigationItems = value; } // In TwoWay Binding, there must be a setter defined. Need to test if this works!!!
-            get { return m_navigationItems; }
-        }
+        private Dictionary<string, ViewModel.ViewModel> viewModelMap = new Dictionary<string,ViewModel.ViewModel>();
 
+        private MessageHubHelper m_messageHubHelper;
         public enum NAVIGATION_CATEGORY
         {
-            TESTING         = 0,
-            DASHBOARD       = 1,
-            VERSION_CONTROL = 2,
-            INTEGRATION     = 3,
-            DOCUMENTATION   = 4
+            TESTING,
+            DASHBOARD,
+            VERSION_CONTROL,
+            INTEGRATION,
+            DOCUMENTATION
         };
 
-        private void InitializeNavigationDrawerNav()
+        private void InitializeNavigationDrawerNav(MessageHubHelper messageHubHelper)
         {
+            m_messageHubHelper = messageHubHelper;
             m_navigationItems = new List<INavigationItem>();
+            List<NAVIGATION_CATEGORY> navigationCategoryOrder = new List<NAVIGATION_CATEGORY> { NAVIGATION_CATEGORY.DASHBOARD,
+                                                                                                NAVIGATION_CATEGORY.VERSION_CONTROL,
+                                                                                                NAVIGATION_CATEGORY.INTEGRATION,
+                                                                                                NAVIGATION_CATEGORY.DOCUMENTATION };
 
-            foreach (var supportedNavigationCategory in CurrentApplicationMode.NavigationCategoryOrder)
+#if DEBUG   
+            // Override NavigationItem to default to viewModel undergoing testing for debug mode
+            navigationCategoryOrder.Insert(0, NAVIGATION_CATEGORY.TESTING);
+#endif
+
+            foreach (var supportedNavigationCategory in navigationCategoryOrder)
             {
                 foreach (var NavItem in GetNavigationCategory(supportedNavigationCategory))
                 {
@@ -48,6 +55,29 @@ namespace PANDA
             navigationDrawerNav.DataContext = this;
         }
 
+        private ViewModel.ViewModel GetViewModelFromMap(string key)
+        {
+            // If the requested ViewModel instance does not exist, create it and then return it
+            if (!viewModelMap.ContainsKey(key))
+            {
+                // The expected key pattern is <viewModel_Type>.<unique_Identifier> 
+                // The .<unique_Identifier> is optional but required if multiple instances of the same viewModel are created
+                if (key.Contains("ClearcaseManagerViewModel"))
+                {
+                    viewModelMap.Add(key, new ClearcaseManagerViewModel(m_messageHubHelper));
+                }
+                else if (key.Contains("VersionLogViewModel"))
+                {
+                    viewModelMap.Add(key, new VersionLogViewModel());
+                }
+                else if (key.Contains("LicenseLogViewModel"))
+                {
+                    viewModelMap.Add(key, new LicenseLogViewModel());
+                }
+            }
+            return viewModelMap[key]; ;               
+        }
+
         private List<INavigationItem> GetNavigationCategory(NAVIGATION_CATEGORY NavigationCategory)
         {
             switch (NavigationCategory)
@@ -56,39 +86,39 @@ namespace PANDA
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "TESTING" },
-                        new FirstLevelNavigationItem() { Label = "Currently Testing",           Icon = PackIconKind.Beaker,           NavigationItemSelectedCallback = item => new ClearcaseManagerViewModel() },
+                        new FirstLevelNavigationItem() { Label = "Currently Testing",           Icon = PackIconKind.Beaker,           NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseManagerViewModel.TESTING") },
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.DASHBOARD:
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "DASHBOARD" },
-                        new FirstLevelNavigationItem() { Label = "Task Overview",               Icon = PackIconKind.MonitorDashboard, NavigationItemSelectedCallback = item => new ClearcaseManagerViewModel() },
+                        new FirstLevelNavigationItem() { Label = "Task Overview",               Icon = PackIconKind.MonitorDashboard, NavigationItemSelectedCallback = item => "UNDER CONSTRUCTION: TASK OVERVIEW" },
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.VERSION_CONTROL:
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "VERSION CONTROL" },
-                        new FirstLevelNavigationItem() { Label = "View Manager",                Icon = PackIconKind.GithubFace,       NavigationItemSelectedCallback = item => new ClearcaseManagerViewModel() },
-                        new FirstLevelNavigationItem() { Label = "username-branchname-random1", Icon = PackIconKind.Git,              NavigationItemSelectedCallback = item => new ClearcaseManagerViewModel() },
+                        new FirstLevelNavigationItem() { Label = "Clearcase View Manager",      Icon = PackIconKind.GithubFace,       NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseManagerViewModel") },
+                        new FirstLevelNavigationItem() { Label = "username-branchname-random1", Icon = PackIconKind.Git,              NavigationItemSelectedCallback = item => "UNDER CONSTRUCTION: VIEW BRANCH TEST" },
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.INTEGRATION:
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "INTEGRATION" },
-                        new FirstLevelNavigationItem() { Label = "Test Descriptor Helper",      Icon = PackIconKind.TestTube,         NavigationItemSelectedCallback = item => new ClearcaseManagerViewModel() },
-                        new FirstLevelNavigationItem() { Label = "Queue ETA",                   Icon = PackIconKind.Timetable,        NavigationItemSelectedCallback = item => new ClearcaseManagerViewModel() },
-                        new FirstLevelNavigationItem() { Label = "Artifacts Analyzer",          Icon = PackIconKind.TableSearch,      NavigationItemSelectedCallback = item => new ClearcaseManagerViewModel() },
+                        new FirstLevelNavigationItem() { Label = "Test Descriptor Manager",     Icon = PackIconKind.TestTube,         NavigationItemSelectedCallback = item => "UNDER CONSTRUCTION: TEST DESCRIPTOR MANAGER" },
+                        new FirstLevelNavigationItem() { Label = "Queue ETA",                   Icon = PackIconKind.Timetable,        NavigationItemSelectedCallback = item => "UNDER CONSTRUCTION: QUEUE ETA" },
+                        new FirstLevelNavigationItem() { Label = "Artifacts Analyzer",          Icon = PackIconKind.TableSearch,      NavigationItemSelectedCallback = item => "UNDER CONSTRUCTION: ARTIFACTS ANALYZER" },
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.DOCUMENTATION:
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "DOCUMENTATION" },
-                        new FirstLevelNavigationItem() { Label = "Version Log",                 Icon = PackIconKind.Wunderlist,       NavigationItemSelectedCallback = item => new VersionLogViewModel() },
-                        new FirstLevelNavigationItem() { Label = "Licenses",                    Icon = PackIconKind.BarcodeScanner,   NavigationItemSelectedCallback = item => new LicenseListViewModel() },
+                        new FirstLevelNavigationItem() { Label = "Version Log",                 Icon = PackIconKind.Wunderlist,       NavigationItemSelectedCallback = item => GetViewModelFromMap("VersionLogViewModel") },
+                        new FirstLevelNavigationItem() { Label = "Licenses",                    Icon = PackIconKind.BarcodeScanner,   NavigationItemSelectedCallback = item => GetViewModelFromMap("LicenseLogViewModel") },
                     };
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -115,6 +145,12 @@ namespace PANDA
             {
                 appBar.IsNavigationDrawerOpen = false;
             }
+        }
+
+        // REQUIRED FOR DATABINDING
+        public List<INavigationItem> NavigationItems
+        {
+            get { return m_navigationItems; }
         }
     }
 }
