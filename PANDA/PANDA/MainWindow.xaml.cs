@@ -1,32 +1,26 @@
-﻿using System.Windows;
+﻿using MaterialDesignExtensions.Controls;
+using MaterialDesignExtensions.Model;
+using System;
+using System.Collections.Generic;
+using System.Windows;
 
 namespace PANDA
 {
     public partial class MainWindow : Window
     {
+        public PANDA.ViewModel.MainWindowViewModel mainWindowViewModel;
+
         public MainWindow()
         {
             InitializeComponent();
-            SupportedNetworkModeHelper supportedNetworkModeHelper = InitializeSupportedNetworkModeHelper();
-            MessageHubHelper messageHubHelper                     = InitializeMessageHubHelper(supportedNetworkModeHelper);
-            InitializeNavigationDrawerNav(messageHubHelper); // make a helper class
+            mainWindowViewModel = new ViewModel.MainWindowViewModel(this);
+            mainWindowViewModel.Initialize();
+
         }
 
-        // Main Window Helpers
-        public SupportedNetworkModeHelper InitializeSupportedNetworkModeHelper()
+        public void NavigationItemSelectedHandler(object sender, NavigationItemSelectedEventArgs args)
         {
-            SupportedNetworkModeHelper supportedNetworkModeHelper = new SupportedNetworkModeHelper(this);
-            supportedNetworkModeHelper.Determine_Network_Mode();
-            supportedNetworkModeHelper.Update_Title_Based_On_Network();
-            return supportedNetworkModeHelper;
+            mainWindowViewModel.navigationHelper.SelectNavigationItem(args.NavigationItem);
         }
-
-        public MessageHubHelper InitializeMessageHubHelper(SupportedNetworkModeHelper supportedNetworkModeHelper)
-        {
-            MessageHubHelper messageHubHelper = new MessageHubHelper(supportedNetworkModeHelper);
-            messageHubHelper.InitializeMessageHub();
-            return messageHubHelper;
-        }
-
     }
 }

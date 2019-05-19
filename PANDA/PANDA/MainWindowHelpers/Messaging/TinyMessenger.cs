@@ -384,7 +384,7 @@ namespace TinyMessenger
         /// <typeparam name="TMessage">Type of message</typeparam>
         /// <param name="message">Message to deliver</param>
         /// <param name="callback">AsyncCallback called on completion</param>
-        void PublishAsync<TMessage>(TMessage message, AsyncCallback callback) where TMessage : class, ITinyMessage;
+        void Publish<TMessage>(TMessage message, AsyncCallback callback) where TMessage : class, ITinyMessage;
     }
     #endregion
 
@@ -685,7 +685,7 @@ namespace TinyMessenger
         /// <typeparam name="TMessage">Type of message</typeparam>
         /// <param name="message">Message to deliver</param>
         /// <param name="callback">AsyncCallback called on completion</param>
-        public void PublishAsync<TMessage>(TMessage message, AsyncCallback callback) where TMessage : class, ITinyMessage
+        public void Publish<TMessage>(TMessage message, AsyncCallback callback) where TMessage : class, ITinyMessage
         {
             PublishAsyncInternal<TMessage>(message, callback);
         }

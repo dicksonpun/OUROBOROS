@@ -8,7 +8,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:materialDesignExtControls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
         mc:Ignorable="d"
-        Title="PANDA"  Height="800" Width="1300" 
+        Title="PANDA"  Height="800" Width="1700" 
         WindowStartupLocation="CenterScreen"
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanResizeWithGrip"
@@ -30,32 +30,30 @@
     
     <Grid>
         <materialDesign:DialogHost Identifier="dialogHost">
-            <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding Path=IsNavigationDrawerOpen, ElementName=appBar}" 
-                                       LeftDrawerBackground="{DynamicResource MaterialDesignBackground}">
-                <materialDesign:DrawerHost.LeftDrawerContent>
-                    <materialDesignExtControls:SideNavigation x:Name="navigationDrawerNav" 
-                                                                Items="{Binding Path=NavigationItems, Mode=OneWay}" 
-                                                                Width="320"
-                                                                NavigationItemSelected="NavigationItemSelectedHandler" />
-                </materialDesign:DrawerHost.LeftDrawerContent>
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />  <!--HEIGHT FOR APPBAR-->
-                        <RowDefinition Height="*" />     <!--HEIGHT FOR REST OF WINDOW-->
-                    </Grid.RowDefinitions>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="320" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <!--HEIGHT FOR APPBAR-->
+                    <RowDefinition Height="*" />
+                    <!--HEIGHT FOR REST OF WINDOW-->
+                </Grid.RowDefinitions>
 
-                    <materialDesignExtControls:AppBar Type="Medium" x:Name="appBar" Grid.ColumnSpan="3" Title="Partially Automated Network Dependent Assistant" ShowNavigationDrawerButton="True">
-                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Settings">
-                            <materialDesign:PackIcon Kind="Settings" Height="24" Width="24" />
-                        </Button>
-                    </materialDesignExtControls:AppBar>
+                <materialDesignExtControls:AppBar Type="Dense" x:Name="appBar" Grid.ColumnSpan="3" Title="Partially Automated Network Dependent Assistant" ShowShadow="False">
+                    <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Settings">
+                        <materialDesign:PackIcon Kind="Settings" Height="24" Width="24" />
+                    </Button>
+                </materialDesignExtControls:AppBar>
 
-                    <ContentControl x:Name="contentControl" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></ContentControl>
-                </Grid>
-            </materialDesign:DrawerHost>
+                <Border Grid.Row="1" BorderThickness="0,0,1,0" BorderBrush="{DynamicResource MaterialDesignDivider}">
+                    <materialDesignExtControls:SideNavigation x:Name="sideNav" Items="{Binding Path=NavigationItems, Mode=OneWay, UpdateSourceTrigger=Default}"
+                                                                    NavigationItemSelected="NavigationItemSelectedHandler" />
+                </Border>
+                <ContentControl x:Name="contentControl" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></ContentControl>
+            </Grid>
         </materialDesign:DialogHost>
     </Grid>
 </Window>
