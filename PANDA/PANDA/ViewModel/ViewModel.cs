@@ -14,7 +14,7 @@ namespace PANDA.ViewModel
 
         public ViewModel() { }
 
-        protected void OnPropertyChanged(string propertyName)
+        public void OnPropertyChanged(string propertyName)
         {
             if (PropertyChanged != null && !string.IsNullOrWhiteSpace(propertyName))
             {

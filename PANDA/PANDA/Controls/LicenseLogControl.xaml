@@ -65,7 +65,7 @@
 
         <!-- Populate the column with the appropriate databinding. -->
         <DataGrid.Columns>
-            <DataGridTextColumn Header="Package Name"  IsReadOnly="True" Binding="{Binding PackageName}"  Width="200"/>
+            <DataGridTextColumn Header="Package Name"  IsReadOnly="True" Binding="{Binding PackageName}"  Width="200" />
             <DataGridTextColumn Header="Description"   IsReadOnly="True" Binding="{Binding Description}"  Width="400"/>
             <DataGridTextColumn Header="License"       IsReadOnly="True" Binding="{Binding License}"      Width="100"/>
             <DataGridTextColumn Header="Version"       IsReadOnly="True" Binding="{Binding Version}"      Width="100"/>

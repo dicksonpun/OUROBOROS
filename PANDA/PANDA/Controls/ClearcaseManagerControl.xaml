@@ -10,12 +10,10 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="700">
     <UserControl.Resources>
-        <converters:NullToVisibilityConverter x:Key="notNullToVisibleConverter" NullValue="Collapsed" NotNullValue="Visible" />
-
         <DataTemplate x:Key="itemTemplate">
             <DockPanel>
                 <materialDesign:PackIcon DockPanel.Dock="Left" Kind="{Binding Path=Icon}" Width="24" Height="24" VerticalAlignment="Center" SnapsToDevicePixels="True" />
-                <TextBlock FontSize="14" Text="{Binding Path=DirectoryName}" VerticalAlignment="Center" Margin="24,0,0,0" />
+                <TextBlock FontSize="14" Text="{Binding Path=ViewName}" VerticalAlignment="Center" Margin="24,0,0,0" />
             </DockPanel>
         </DataTemplate>
     </UserControl.Resources>
@@ -26,7 +24,6 @@
             <StackPanel HorizontalAlignment="Stretch" Width="Auto" Orientation="Vertical">
                 <controls:Autocomplete x:Name="autocomplete" AutocompleteSource="{Binding Path=ClearcaseManagerAutocompleteSource, Mode=TwoWay}" Height="52" Width="Auto"
                                        ItemTemplate="{StaticResource itemTemplate}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}"
-                                       IsEnabled="{Binding Path=AutocompleteTextBoxEnabled}" 
                                        ShowClearButtonOnlyOnSelectedItem="False" >
                     <controls:Autocomplete.Hint>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center" >
@@ -37,9 +34,14 @@
                         </StackPanel>
                     </controls:Autocomplete.Hint>
                 </controls:Autocomplete>
-                <StackPanel Orientation="Vertical" Margin="0,32,0,0" Visibility="{Binding Path=SelectedItem, Converter={StaticResource notNullToVisibleConverter}}">
-                    <TextBlock Text="Your selection:" Margin="0,0,0,8" />
-                    <ContentControl Content="{Binding Path=SelectedItem}" ContentTemplate="{StaticResource itemTemplate}" />
+                <StackPanel Orientation="Vertical" Margin="0,0,0,0" >
+                    <ListView ItemsSource="{Binding CurrentActiveViews}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn DisplayMemberBinding="{Binding ViewName}" Header="ACTIVATED VIEWS" Width="200"/>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
                 </StackPanel>
             </StackPanel>
         </ScrollViewer>

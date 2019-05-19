@@ -17,19 +17,8 @@ namespace PANDA.ViewModel
 {
     public class ClearcaseManagerViewModel : ViewModel
     {
-        private MessageHubHelper m_messageHubHelper;
-
-        // REQUIRED FOR DATABINDING
-        private bool m_autocompleteTextBoxEnabled;
-        public bool AutocompleteTextBoxEnabled
-        {
-            get { return m_autocompleteTextBoxEnabled; }
-            set
-            {
-                m_autocompleteTextBoxEnabled = value;
-                OnPropertyChanged(nameof(AutocompleteTextBoxEnabled));
-            }
-        }
+        // Instantiate a Singleton of the Semaphore with a value of 1. This means that only 1 thread can be granted access at a time.
+        private static SemaphoreSlim m_semaphore = new SemaphoreSlim(1, 1);
 
         // REQUIRED FOR DATABINDING
         private PackIconKind m_autocompleteTextBoxIcon;
@@ -38,11 +27,15 @@ namespace PANDA.ViewModel
             get { return m_autocompleteTextBoxIcon; }
             set
             {
-                m_autocompleteTextBoxIcon = value;
-                OnPropertyChanged(nameof(AutocompleteTextBoxIcon));
+                // Only update if it changes
+                if (m_autocompleteTextBoxIcon != value)
+                {
+                    m_autocompleteTextBoxIcon = value;
+                    OnPropertyChanged(nameof(AutocompleteTextBoxIcon));
+                }
             }
         }
-
+        
         // REQUIRED FOR DATABINDING
         private string m_viewSearchTextBoxValue;
         public string ViewSearchTextBoxValue
@@ -50,8 +43,12 @@ namespace PANDA.ViewModel
             get { return m_viewSearchTextBoxValue; }
             set
             {
-                m_viewSearchTextBoxValue = value;
-                OnPropertyChanged(nameof(ViewSearchTextBoxValue));
+                // Only update if it changes
+                if (m_viewSearchTextBoxValue != value)
+                {
+                    m_viewSearchTextBoxValue = value;
+                    OnPropertyChanged(nameof(ViewSearchTextBoxValue));
+                }
             }
         }
 
@@ -80,6 +77,19 @@ namespace PANDA.ViewModel
             }
         }
 
+        // REQUIRED FOR DATABINDING
+        private List<ClearcaseManagerViewItem> m_currentActiveViews;
+        public List<ClearcaseManagerViewItem> CurrentActiveViews
+        {
+            get { return m_currentActiveViews; }
+
+            set
+            {
+                m_currentActiveViews = value;
+                OnPropertyChanged(nameof(CurrentActiveViews));
+            }
+        }
+
         // PropertyChanged event handler
         private void ClearcaseManagerViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
@@ -91,59 +101,51 @@ namespace PANDA.ViewModel
                     // NOTE: NULL case occurs when de-selection occurs
                     if (SelectedItem != null)
                     {
-                        // Set up the message
-                        ClearcaseManagerMessage msg = new ClearcaseManagerMessage(this, new ClearcaseManagerMessage_Content()
+                        m_semaphore.WaitAsync();
+                        try
                         {
-                            MessageCommand = ClearcaseManagerMessageCommand.REQUEST_VIEW_ADD,
-                            ClearcaseManagerViewItem = (ClearcaseManagerViewItem)m_selectedItem
-                        });
-
-                        // Set up callback logic
-                        AsyncCallback printToConsole = new AsyncCallback(PrintToConsole); //temp callback
-                        void PrintToConsole(IAsyncResult result)
-                        {
-                            Console.WriteLine("Print To Console Placeholder");
+                            CurrentActiveViews.Add((ClearcaseManagerViewItem)m_selectedItem);
                         }
-
-                        // Send the message
-                        m_messageHubHelper.MessageHub.PublishAsync(msg, printToConsole);
+                        finally
+                        {
+                            m_semaphore.Release();
+                        }
+                        
                     }
                     break;
                 case (nameof(ClearcaseManagerAutocompleteSource)):
-                    if (CurrentClearcaseManagerViewItemList.Count is 0)
-                    {
-                        ViewSearchTextBoxValue = "Establishing connection...";
-                        AutocompleteTextBoxIcon = PackIconKind.SyncWarning;
-                        //AutocompleteTextBoxEnabled = false;
-                        //SelectedItem = null;
-                    }
-                    else
+                    if (ConnectionAvailable)
                     {
                         ViewSearchTextBoxValue = "Search available views...";
                         AutocompleteTextBoxIcon = PackIconKind.Magnify;
-                        AutocompleteTextBoxEnabled = true;
+                    }
+                    else
+                    {
+                        ViewSearchTextBoxValue = "Establishing connection...";
+                        AutocompleteTextBoxIcon = PackIconKind.SyncWarning;
                     }
                     break;
             }
         }
 
-        public List<ClearcaseManagerViewItem> CurrentClearcaseManagerViewItemList { get; set; }
+        private MessageHubHelper m_messageHubHelper;
+        public bool ConnectionAvailable { get; set; }
 
         // Constructor
         public ClearcaseManagerViewModel(MessageHubHelper messageHubHelper) : base()
         {
+            // NOTE: ONLY CALL THIS CONSTRUCTOR ONCE OR DUPLICATE PERIODIC TASKS WILL BE CREATED AND THEY WILL OVERWRITE EACH OTHER!!!
             m_messageHubHelper = messageHubHelper;
-            ViewSearchTextBoxValue = "Establishing connection...";
-            AutocompleteTextBoxEnabled = false;
-
-            CurrentClearcaseManagerViewItemList = getEmptyClearcaseViewsList();
-            ClearcaseManagerAutocompleteSource = new ClearcaseManagerAutocompleteSource(CurrentClearcaseManagerViewItemList);
-            m_selectedItem = null;
+            
+            ConnectionAvailable                = false;
+            CurrentActiveViews                 = GetEmptyClearcaseManagerViewsList();
+            ClearcaseManagerAutocompleteSource = new ClearcaseManagerAutocompleteSource(GetEmptyClearcaseManagerViewsList());
+            m_selectedItem                     = null;
 
             // Register to the PropertyChanged event in the class Constructor
             this.PropertyChanged += ClearcaseManagerViewModel_PropertyChanged;
 
-            InitializePeriodicUpdates();
+            InitializePeriodicUpdates(); 
         }
 
         // Periodic Update Processing
@@ -151,53 +153,107 @@ namespace PANDA.ViewModel
         public async void InitializePeriodicUpdates()
         {
             PeriodicUpdateCancellationToken = new CancellationToken();
-            await UpdateViewListPeriodically(TimeSpan.FromSeconds(1.0), PeriodicUpdateCancellationToken);
+            await UpdateViewListPeriodically(TimeSpan.FromSeconds(3), PeriodicUpdateCancellationToken);
         }
 
         public async Task UpdateViewListPeriodically(TimeSpan interval, CancellationToken cancellationToken)
         {
-            string directoryPath = m_messageHubHelper.m_supportedNetworkModeHelper.CurrentNetworkMode.NetworkSpecificPath;
+            string directoryPath = m_messageHubHelper.SupportedNetworkModeHelper.CurrentNetworkMode.NetworkSpecificPath;
 
             while (true)
             {
-                List<ClearcaseManagerViewItem> newClearcaseViewsList = getEmptyClearcaseViewsList();
-                if (Directory.Exists(directoryPath))
+                // Asynchronously wait to enter the Semaphore. If no-one has been granted access to the Semaphore, code execution will proceed, otherwise this thread waits here until the m_semaphore is released 
+                await m_semaphore.WaitAsync();
+                try
                 {
-                    foreach (var currentDirectory in Directory.GetDirectories(directoryPath))
+                    List<ClearcaseManagerViewItem> tempClearcaseManagerViewsList = GetEmptyClearcaseManagerViewsList(); // Used to populate the autocomplete list
+                    List<ClearcaseManagerViewItem> tempEligibleUserViewsList     = GetEmptyClearcaseManagerViewsList(); // Used to populate the active views
+                    List<string> tempCurrentActive = m_messageHubHelper.GetListOfViews(CurrentActiveViews);
+
+                    if (Directory.Exists(directoryPath))
                     {
-                        var dir = new DirectoryInfo(currentDirectory);
-                        newClearcaseViewsList.Add(new ClearcaseManagerViewItem() { Icon = PackIconKind.SourceBranch, DirectoryName = dir.Name, DirectoryPath = dir.FullName });
+                        string tempUserName = "dickson"; // TODO: NEED to build user settings profile
+
+                        foreach (var currentDirectory in Directory.GetDirectories(directoryPath))
+                        {
+                            var dir = new DirectoryInfo(currentDirectory);
+                            tempClearcaseManagerViewsList.Add(new ClearcaseManagerViewItem() { Icon = PackIconKind.SourceBranch, ViewName = dir.Name, ViewPath = dir.FullName });
+
+                            // Build list of eligible user views
+                            if (dir.Name.StartsWith(tempUserName) || tempCurrentActive.Contains(dir.Name))
+                            {
+                                tempEligibleUserViewsList.Add(new ClearcaseManagerViewItem() { Icon = PackIconKind.SourceBranch, ViewName = dir.Name, ViewPath = dir.FullName });
+                            }
+                        }
+                        
+                        CurrentActiveViews = new List<ClearcaseManagerViewItem>(tempEligibleUserViewsList);
+
+                        // Send updated list to Main Window for processing
+                        SendClearCaseManagerMessage(tempEligibleUserViewsList);
+
+                        ConnectionAvailable = true; // NOTE: Must be set prior to ClearcaseManagerAutocompleteSource property change
                     }
+                    else
+                    {
+                        // NOTE: Do not bother sending empty list to Main Window since the connection is not available and the results are invalid.
+                        ConnectionAvailable = false; // NOTE: Must be set prior to ClearcaseManagerAutocompleteSource property change
+                    }
+
+                    ClearcaseManagerAutocompleteSource = new ClearcaseManagerAutocompleteSource(tempClearcaseManagerViewsList);
+
+                    await Task.Delay(interval, cancellationToken);
                 }
-
-                ClearcaseManagerAutocompleteSource = new ClearcaseManagerAutocompleteSource(newClearcaseViewsList);
-                CurrentClearcaseManagerViewItemList = newClearcaseViewsList;
-
-                await Task.Delay(interval, cancellationToken);
+                finally
+                {
+                    // When the task is ready, release the m_semaphore. It is vital to ALWAYS release the m_semaphore when we are ready, or else we will end up with a Semaphore that is forever locked.
+                    // This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
+                    m_semaphore.Release();
+                }
             };
         }
 
-        public List<ClearcaseManagerViewItem> getEmptyClearcaseViewsList()
+        public List<ClearcaseManagerViewItem> GetEmptyClearcaseManagerViewsList()
         {
             return new List<ClearcaseManagerViewItem>() { };
+        }
+
+        public void SendClearCaseManagerMessage(List<ClearcaseManagerViewItem> clearcaseManagerViewItemsList)
+        {
+            // Set up the message
+            ClearcaseManagerMessage msg = new ClearcaseManagerMessage(this, new ClearcaseManagerMessage_Content()
+            {
+                ClearcaseManagerViewItemsList = clearcaseManagerViewItemsList
+            });
+
+            // Set up callback logic		
+            AsyncCallback printToConsole = new AsyncCallback(PrintToConsole); //temp callback		
+            void PrintToConsole(IAsyncResult result)
+            {
+                foreach (ClearcaseManagerViewItem item in clearcaseManagerViewItemsList)
+                {
+                    Console.WriteLine("Sent ClearCaseManagerMessage - Command: " + " Viewname: " + item.ViewName);
+                }
+            }
+
+            // Send the message
+            m_messageHubHelper.MessageHub.Publish(msg, printToConsole);
         }
     }
 
     public class ClearcaseManagerViewItem
     {
         public PackIconKind Icon { get; set; }
-        public string DirectoryName { get; set; }
-        public string DirectoryPath { get; set; }
+        public string ViewName { get; set; }
+        public string ViewPath { get; set; }
         public ClearcaseManagerViewItem() { }
     }
 
-    //IAutocompleteSource
     public class ClearcaseManagerAutocompleteSource : AutocompleteSourceChangingItems<ClearcaseManagerViewItem>
     {
-        public List<ClearcaseManagerViewItem> ClearcaseManagerViewItems { get; set; }
+        private List<ClearcaseManagerViewItem> m_clearcaseManagerViewItems { get; set; }
         public ClearcaseManagerAutocompleteSource(List<ClearcaseManagerViewItem> newList)
         {
-            ClearcaseManagerViewItems = newList;
+            m_clearcaseManagerViewItems = newList;
             OnAutocompleteSourceItemsChanged();
         }
         public override IEnumerable<ClearcaseManagerViewItem> Search(string searchTerm)
@@ -205,7 +261,10 @@ namespace PANDA.ViewModel
             searchTerm = searchTerm ?? string.Empty;
             searchTerm = searchTerm.ToLower();
 
-            return ClearcaseManagerViewItems.Where(item => item.DirectoryName.ToLower().Contains(searchTerm));
+            // Also update upon new search term
+            OnAutocompleteSourceItemsChanged();
+
+            return m_clearcaseManagerViewItems.Where(item => item.ViewName.ToLower().Contains(searchTerm));
         }
     }
 }
