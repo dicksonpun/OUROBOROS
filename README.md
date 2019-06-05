@@ -1,2 +1,4 @@
 # PANDA
-C# Desktop GUI Application - Educational Purposes
+Program AND Automate
+
+Desktop GUI Demo based on C# and Material Design in XAML
