@@ -14,6 +14,7 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -26,7 +27,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -65,8 +65,8 @@
     <Reference Include="MaterialDesignColors, Version=1.1.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignColors.1.1.3\lib\net45\MaterialDesignColors.dll</HintPath>
     </Reference>
-    <Reference Include="MaterialDesignExtensions, Version=2.5.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MaterialDesignExtensions.2.5.0.1\lib\net45\MaterialDesignExtensions.dll</HintPath>
+    <Reference Include="MaterialDesignExtensions, Version=2.6.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MaterialDesignExtensions.2.6.0\lib\net45\MaterialDesignExtensions.dll</HintPath>
     </Reference>
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.5.1.1345, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.5.1\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
@@ -102,10 +102,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Controls\ClearcaseManagerControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
     <Page Include="Controls\VersionLogControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -122,21 +118,15 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Controls\ClearcaseManagerControl.xaml.cs">
-      <DependentUpon>ClearcaseManagerControl.xaml</DependentUpon>
-    </Compile>
     <Compile Include="DebugHelper.cs" />
-    <Compile Include="MainWindowHelpers\Messaging\Messages\ClearcaseManagerMessage.cs" />
-    <Compile Include="MainWindowHelpers\Messaging\MessageHubHelper.cs" />
     <Compile Include="MainWindowHelpers\NavigationHelper.cs" />
     <Compile Include="MainWindowHelpers\SupportedNetworkModeHelper.cs" />
-    <Compile Include="MainWindowHelpers\Messaging\TinyMessenger.cs" />
-    <Compile Include="MainWindowHelpers\Messaging\TinyIoC.cs" />
-    <Compile Include="ViewModel\ClearcaseManagerViewModel.cs" />
     <Compile Include="MainWindowHelpers\CommandHelper.cs" />
     <Compile Include="Controls\VersionLogControl.xaml.cs">
       <DependentUpon>VersionLogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModel\AlertDialogViewModel.cs" />
+    <Compile Include="ViewModel\ClearcaseManagerViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\VersionLogViewModel.cs" />
     <Compile Include="Controls\LicenseLogControl.xaml.cs">

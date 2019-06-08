@@ -1,5 +1,6 @@
 ﻿using MaterialDesignExtensions.Controls;
 using MaterialDesignExtensions.Model;
+using PANDA.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Windows;
@@ -8,19 +9,19 @@ namespace PANDA
 {
     public partial class MainWindow : Window
     {
-        public PANDA.ViewModel.MainWindowViewModel mainWindowViewModel;
+        public MainWindowViewModel mainWindowViewModel;
+        public const string DialogHostName = "dialogHost";
 
         public MainWindow()
         {
             InitializeComponent();
-            mainWindowViewModel = new ViewModel.MainWindowViewModel(this);
+            mainWindowViewModel = new MainWindowViewModel(this);
             mainWindowViewModel.Initialize();
-
         }
 
         public void NavigationItemSelectedHandler(object sender, NavigationItemSelectedEventArgs args)
         {
-            mainWindowViewModel.navigationHelper.SelectNavigationItem(args.NavigationItem);
+            mainWindowViewModel.NavigationHelper.SelectNavigationItem(args.NavigationItem);
         }
     }
 }

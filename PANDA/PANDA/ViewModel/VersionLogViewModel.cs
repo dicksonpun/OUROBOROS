@@ -31,15 +31,11 @@ namespace PANDA.ViewModel
                 // Note: Keep TODO entry as top entry
                 new VersionLogItem() { Version     = "TODOs - GUI Only",
                                        UpdateNotes = "CURRENTLY IN DEVELOPMENT"                                                          + "\n" +
-                                                     bullet + "Create a helper class for initializing the Navigation Menu"               + "\n" +
-                                                     "\t" + bullet + "Update: navigation menu to handle dynamic updates"                 + "\n" +
-                                                     "\t" + bullet + "Update: navigation menu to respond to dynamic updates"             + "\n" +
-                                                     bullet + "ADD: Clearcase Branch Manager layout, handle updates and load status"     + "\n" +
                                                      bullet + "Add vob periodic search"                                                  + "\n" +
                                                      "\nHIGH PRIORITY"                                                                   + "\n" +
                                                      bullet + "ADD: Clearcase Branch Helper layout"                                      + "\n" +
                                                      bullet + "ADD: function to add and remove views"                                    + "\n" +
-                                                     bullet + "ADD: function update views"                                               + "\n" +                                                     
+                                                     bullet + "ADD: function update views - config spec"                                 + "\n" +                                                     
                                                      bullet + "ADD: Buttons to support: EDIT, VTREE, DIFF, REVIEW, CONFIGSPEC EDIT"      + "\n" +
                                                      bullet + "ADD: User Settings"                                                       + "\n" +
                                                      bullet + "Make data persistent between application launches"                        + "\n" + 
@@ -62,8 +58,6 @@ namespace PANDA.ViewModel
                                                      bullet + "ADD: Analysis tool: Octal scratchpad"                                     + "\n" +
                                                      bullet + "ADD: Analysis tool: CSV parser"                                           + "\n" +
                                                      bullet + "ADD: snackbar for notifications"                                          + "\n" +
-                                                     bullet + "CONSIDER: ADD PIDGIN LIBRARY FOR PARSING SUPPORT"                         + "\n" +
-                                                     bullet + "CONSIDER: ADD DYNAMIC DATA LIBRARY FOR reactive (rx) SUPPORT"             + "\n" +
                                                      placeholder },
                 // Note: Keep TODO entry as top entry
                 new VersionLogItem() { Version     = "Pinocchio Endgame",
@@ -71,13 +65,7 @@ namespace PANDA.ViewModel
                                                      "\nHIGH PRIORITY"                                                                   + "\n" +
                                                      bullet + "Implement functionality for real for the following:"                      + "\n" +
                                                      "\t" + bullet + "FUNCTION: "                         + "\n" +
-                                                     "\t" + bullet + "FUNCTION: "                         + "\n" +
-                                                     "\t" + bullet + "FUNCTION: "                         + "\n" +
-                                                     "\t" + bullet + "FUNCTION: "                         + "\n" +
-                                                     "\t" + bullet + "FUNCTION: "                         + "\n" +
-                                                     "\t" + bullet + "FUNCTION: "                         + "\n" +
                                                      bullet + "ADD: Clearcase Branch Helper layout"                                      + "\n" +
-                                                     bullet + "ADD: Clearcase Branch Manager layout"                                     + "\n" +
                                                      bullet + "ADD: function to add and remove views"                                    + "\n" +
                                                      bullet + "ADD: function update views"                                               + "\n" +
                                                      bullet + "ADD: Buttons to support: EDIT, VTREE, DIFF, REVIEW, CONFIGSPEC EDIT"      + "\n" +
@@ -98,23 +86,17 @@ namespace PANDA.ViewModel
                                                      bullet + "ADD: Test ETA"                                                            + "\n" +
                                                      "\nLOW PRIORITY"                                                                    + "\n" +
                                                      bullet + "ADD: HOW TO STEPPER SERIES"                                               + "\n" +
-                                                     bullet + "ADD: Learning Seminars - Links to crashcourse PowerPoint"                 + "\n" +
-                                                     bullet + "CONSIDER: ADD PIDGIN LIBRARY FOR PARSING SUPPORT"                         + "\n" +
-                                                     bullet + "CONSIDER: ADD DYNAMIC DATA LIBRARY FOR reactive (rx) SUPPORT"             + "\n" +
-                                                     bullet + "REQUEST : FOSS APPROVALS FOR 3RD PARTY LIBRARY SUPPORT"                   + "\n" +
+                                                     bullet + "ADD: Learning Seminars - Links to slides"                                 + "\n" +
                                                      placeholder },
 
                 // Note: Version log entries are in descending order (latest version should be the top-most, following the TODO entry).
                 new VersionLogItem() { Version     = "1.0.0",
                                        UpdateNotes = "INITIAL RELEASE"                                                                   + "\n" +
                                                      bullet + "Implemented persistent data between viewModel context switches"           + "\n" +
-                                                     bullet + "Implemented Clearcase Manager"                                            + "\n" +
-                                                     "\t" + bullet + "Implemented asynchronous periodic updates"                         + "\n" +
                                                      bullet + "Implemented Navigation Window"                                            + "\n" +
-                                                     "\t" + bullet + "Implemented Navigation categories based on current detected mode"  + "\n" +
+                                                     "\t" + bullet + "Implemented asynchronous periodic updates"                         + "\n" +
                                                      bullet + "Implemented Licenses log documentation"                                   + "\n" +
                                                      bullet + "Implemented Version log documentation"                                    + "\n" +
-                                                     bullet + "Implemented Message Hub"                                                  + "\n" +
                                                      placeholder },
             };
         }

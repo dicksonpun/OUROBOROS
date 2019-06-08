@@ -11,6 +11,9 @@ using System.Windows;
 
 using System.Diagnostics;
 using System.Threading;
+using System.Threading.Tasks;
+using System.IO;
+using System.Collections.ObjectModel;
 
 namespace PANDA
 {
@@ -24,27 +27,32 @@ namespace PANDA
 
     public class NavigationHelper
     {
-        public const string DialogHostName = "dialogHost";
-        private MessageHubHelper m_messageHubHelper;
-        private SupportedNetworkModeHelper m_supportedNetworkModeHelper;
-        private MainWindow m_mainWindow;
+        // Instantiate a Singleton of the Semaphore with a value of 1. This means that only 1 thread can be granted access at a time.
+        private static SemaphoreSlim m_semaphore = new SemaphoreSlim(1, 1);
 
-        public NavigationHelper(MainWindow currentMainWindow, MessageHubHelper messageHubHelper)
+        // Helpers
+        private readonly SupportedNetworkModeHelper m_supportedNetworkModeHelper;
+
+        // Members
+        private readonly MainWindow m_mainWindow;
+        public List<ClearcaseManagerViewItem> navigationClearcaseViews;
+
+        public NavigationHelper(MainWindow currentMainWindow, SupportedNetworkModeHelper supportedNetworkModeHelper)
         {
-            m_mainWindow       = currentMainWindow;
-            m_messageHubHelper = messageHubHelper;
+            m_mainWindow                 = currentMainWindow;
+            m_supportedNetworkModeHelper = supportedNetworkModeHelper;
+            navigationClearcaseViews     = new List<ClearcaseManagerViewItem>();
         }
 
         public void InitializeNavigationDrawerNav()
         {
-            m_supportedNetworkModeHelper = m_messageHubHelper.SupportedNetworkModeHelper;
-
-            NavigationItems = new List<INavigationItem>();
+            NavigationItems = new ObservableCollection<INavigationItem>();
             List<NAVIGATION_CATEGORY> navigationCategoryOrder = new List<NAVIGATION_CATEGORY> { NAVIGATION_CATEGORY.DASHBOARD,
                                                                                                 NAVIGATION_CATEGORY.VERSION_CONTROL,
                                                                                                 NAVIGATION_CATEGORY.INTEGRATION,
                                                                                                 NAVIGATION_CATEGORY.DOCUMENTATION };
 
+            // Populate navigation menu
             foreach (var supportedNavigationCategory in navigationCategoryOrder)
             {
                 foreach (var NavItem in GetNavigationCategory(supportedNavigationCategory))
@@ -54,119 +62,187 @@ namespace PANDA
             }
 
             SetNavigationSelection(1);
-
-            // Subscribe to updates for navigation items (ACTIVATED VIEWS)
-            InitializeMessageHub();
+            StartAutoRefresh();
         }
 
         public void SetNavigationSelection(int index)
         {
-            // NOTE: This function was broken out of the Navigation initialization function to ensure object is created and in scope first
+            if (m_mainWindow.sideNav.SelectedItem != null)
+            {
+                // De-select previous item
+                m_mainWindow.sideNav.SelectedItem.IsSelected = false;
+            }
+
+            // Select current item
             NavigationItems[index].IsSelected = true;
             m_mainWindow.sideNav.SelectedItem = NavigationItems[index];
             m_mainWindow.DataContext = this;
         }
 
-        private void InitializeMessageHub()
+        public List<string> GetListOfViews(List<ClearcaseManagerViewItem> viewList)
         {
-            // Subscribe and Publish to Messages based on network
-            if (m_supportedNetworkModeHelper.CurrentNetworkMode.Name.Equals(SUPPORTED_NETWORK_MODES.DEBUG) ||
-                m_supportedNetworkModeHelper.CurrentNetworkMode.Name.Equals(SUPPORTED_NETWORK_MODES.SERVER_001) ||
-                m_supportedNetworkModeHelper.CurrentNetworkMode.Name.Equals(SUPPORTED_NETWORK_MODES.SERVER_002))
-            {
-                // Subscribe to Messages
-                m_messageHubHelper.MessageHub.Subscribe<ClearcaseManagerMessage>((message) => { ProcessClearcaseManagerMessage(message); }); 
-            }
+            List<string> result = new List<string>();
+
+            foreach (var view in viewList)
+                result.Add(view.ViewName);
+
+            return result;
         }
 
-        private void ProcessClearcaseManagerMessage(ClearcaseManagerMessage message)
+        public CancellationToken PeriodicUpdateCancellationToken { get; set; }
+        public async void StartAutoRefresh()
         {
-            List<string> currentActiveClearcaseViews  = GetCurrentNavigationClearcaseViews();
-            List<string> reportedActiveClearcaseViews = m_messageHubHelper.GetListOfViews(message.Content.ClearcaseManagerViewItemsList);
+            await RefreshClearcaseViewsPeriodically(TimeSpan.FromSeconds(3), PeriodicUpdateCancellationToken);
+        }
 
-            // Only parse and update if something changed.
-            if (!currentActiveClearcaseViews.SequenceEqual(reportedActiveClearcaseViews))
+        public async Task RefreshClearcaseViewsPeriodically(TimeSpan interval, CancellationToken cancellationToken)
+        {
+            string directoryPath = m_supportedNetworkModeHelper.CurrentNetworkMode.NetworkSpecificPath;
+
+            while (true)
             {
-                IEnumerable<string> itemsToRemove = currentActiveClearcaseViews.Except(reportedActiveClearcaseViews);
-                IEnumerable<string> itemsToAdd    = reportedActiveClearcaseViews.Except(currentActiveClearcaseViews);
-
-                foreach (ClearcaseManagerViewItem clearcaseItem in message.Content.ClearcaseManagerViewItemsList)
+                // Asynchronously wait to enter the Semaphore. If no-one has been granted access to the Semaphore, code execution will proceed, otherwise this thread waits here until the m_semaphore is released 
+                await m_semaphore.WaitAsync();
+                try
                 {
-                    Console.WriteLine("RECEIVED CLEARCASE MESSAGE: " + " VIEW: " + clearcaseItem.ViewName);
+                    List<ClearcaseManagerViewItem> updatedClearcaseViews = new List<ClearcaseManagerViewItem>(); // Used to populate the active views
+                    List<string> navigationViews = GetListOfViews(navigationClearcaseViews);
 
-                    if (itemsToRemove.Contains(clearcaseItem.ViewName))
+                    // Ensure connection is not lost.  Only perform update if directory is accessible.
+                    if (Directory.Exists(directoryPath))
                     {
-                    }
+                        string myUsername = "dickson"; // TODO: NEED to build user settings profile
 
-                    if (itemsToAdd.Contains(clearcaseItem.ViewName))
-                    {
-                        // WHY WONT YOU DISPLAY???
-
-                        // Add to viewModelMap
-                        //GetViewModelFromMap("ClearcaseViewViewModel." + clearcaseItem.ViewName);
-
-                        //INavigationItem navigationItem = new FirstLevelNavigationItem() { Label = clearcaseItem.ViewName, Icon = PackIconKind.Git, NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseViewViewModel." + clearcaseItem.ViewName) };
-                        //m_navigationItems.Add(navigationItem);
-
-                        //*
-                        foreach (INavigationItem navItem in NavigationItems)
+                        foreach (var currentDirectory in Directory.GetDirectories(directoryPath))
                         {
-                            if (navItem.GetType().IsEquivalentTo(new FirstLevelNavigationItem().GetType()))
-                            {
-                                FirstLevelNavigationItem temp = (FirstLevelNavigationItem)navItem;
-                                if (temp.Label.Equals("Clearcase View Manager"))
-                                {
-                                    // Add to viewModelMap
-                                    GetViewModelFromMap("ClearcaseViewViewModel." + clearcaseItem.ViewName);
+                            var dir = new DirectoryInfo(currentDirectory);
 
-                                    // Add to navigation
+                            // Build list of eligible user views (User views + User previously selected views)
+                            if (dir.Name.StartsWith(myUsername) || navigationViews.Contains(dir.Name))
+                            {
+                                updatedClearcaseViews.Add(new ClearcaseManagerViewItem() { Icon = PackIconKind.SourceBranch, ViewName = dir.Name, ViewPath = dir.FullName });
+                            }
+                        }
+
+                        // Generate list of strings for easier comparison
+                        List<string> newClearcaseViews = GetListOfViews(updatedClearcaseViews);
+                        IEnumerable<string> itemsToRemove = navigationViews.Except(newClearcaseViews);
+                        IEnumerable<string> itemsToAdd = newClearcaseViews.Except(navigationViews);
+
+                        // Sort by alphabetical order by viewnames
+                        updatedClearcaseViews.OrderBy(p => p.ViewName);
+                        navigationClearcaseViews.OrderBy(p => p.ViewName);
+
+                        // Loop through all navigation items 
+                        for (int i = 0; i < NavigationItems.Count; i++)
+                        {
+                            INavigationItem navItem = NavigationItems[i];
+
+                            if (navItem.GetType().IsEquivalentTo(new SubheaderNavigationItem().GetType()))
+                            {
+                                SubheaderNavigationItem temp = (SubheaderNavigationItem)navItem;
+                                if (temp.Subheader.Equals("VERSION CONTROL"))
+                                {
+                                    // Set index to entry after "VERSION CONTROL"
                                     int index = NavigationItems.IndexOf(temp) + 1;
-                                    INavigationItem navigationItem = new FirstLevelNavigationItem() { Label = clearcaseItem.ViewName, Icon = PackIconKind.Git, NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseViewViewModel." + clearcaseItem.ViewName) };
-                                    NavigationItems.Insert(index, navigationItem);
+
+                                    // Remove views to the navigation menu
+                                    foreach (ClearcaseManagerViewItem clearcaseItem in navigationClearcaseViews)
+                                    {
+                                        string key = "ClearcaseViewViewModel." + clearcaseItem.ViewName;
+                                        if (itemsToRemove.Contains(clearcaseItem.ViewName))
+                                        {
+                                            // Remove from navigation
+                                            NavigationItems.RemoveAt(index);
+
+                                            // Remove from ViewModelMap
+                                            RemoveViewModelFromMap(key);
+                                        }
+                                        else
+                                        {
+                                            // Only increment if current iteration did not remove item, to prevent index mismatch from shifting
+                                            index++;
+                                        }
+                                    }
+
+                                    // Reset index to entry after "VERSION CONTROL"
+                                    index = NavigationItems.IndexOf(temp) + 1;
+
+                                    // Add views to the navigation menu
+                                    foreach (ClearcaseManagerViewItem clearcaseItem in updatedClearcaseViews)
+                                    {
+                                        string key = "ClearcaseViewViewModel." + clearcaseItem.ViewName;
+
+                                        if (itemsToAdd.Contains(clearcaseItem.ViewName))
+                                        {
+                                            // Add to ViewModelMap
+                                            GetViewModelFromMap(key);
+
+                                            // Add to navigation
+                                            INavigationItem navigationItem = new FirstLevelNavigationItem() { Label = clearcaseItem.ViewName, Icon = PackIconKind.Git, NavigationItemSelectedCallback = item => GetViewModelFromMap(key) };
+                                            NavigationItems.Insert(index, navigationItem);
+                                        }
+                                        // Increment index regardless of insertion
+                                        index++;
+                                    }
+                                    // Update to latest clearcase views for navigation menu
+                                    navigationClearcaseViews = updatedClearcaseViews;
                                     break;
                                 }
                             }
                         }
-                        //*/
                     }
+                    await Task.Delay(interval, cancellationToken);
                 }
-            }
+                finally
+                {
+                    // When the task is ready, release the m_semaphore. It is vital to ALWAYS release the m_semaphore when we are ready, or else we will end up with a Semaphore that is forever locked.
+                    // This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
+                    m_semaphore.Release();
+                }
+            };
         }
 
-        private Dictionary<string, ViewModel.ViewModel> viewModelMap = new Dictionary<string, ViewModel.ViewModel>();
+        public Dictionary<string, ViewModel.ViewModel> ViewModelMap = new Dictionary<string, ViewModel.ViewModel>();
 
         public ViewModel.ViewModel GetViewModelFromMap(string key)
         {
             // If the requested ViewModel instance does not exist, create it and then return it
-            if (!viewModelMap.ContainsKey(key))
+            if (!ViewModelExist(key))
             {
                 // The expected key pattern is <viewModel_Type>.<unique_Identifier> 
                 // The .<unique_Identifier> is optional but required if multiple instances of the same viewModel are created
-                if (key.StartsWith("ClearcaseManagerViewModel"))
-                {
-                    viewModelMap.Add(key, new ClearcaseManagerViewModel(m_messageHubHelper));
-                }
                 if (key.StartsWith("ClearcaseViewViewModel"))
                 {
-                    viewModelMap.Add(key, new ViewModel.ViewModel()); // temp
+                    ViewModelMap.Add(key, new ViewModel.ViewModel()); // temp
                 }
                 else if (key.StartsWith("VersionLogViewModel"))
                 {
-                    viewModelMap.Add(key, new VersionLogViewModel());
+                    ViewModelMap.Add(key, new VersionLogViewModel());
                 }
                 else if (key.StartsWith("LicenseLogViewModel"))
                 {
-                    viewModelMap.Add(key, new LicenseLogViewModel());
+                    ViewModelMap.Add(key, new LicenseLogViewModel());
                 }
             }
-            return viewModelMap[key]; ;
+            return ViewModelMap[key]; ;
+        }
+
+        public void RemoveViewModelFromMap(string key)
+        {
+            ViewModelMap.Remove(key);
+        }
+
+        public bool ViewModelExist(string key)
+        {
+            return ViewModelMap.ContainsKey(key);
         }
 
         public List<string> GetCurrentNavigationClearcaseViews()
         {
             List<string> result = new List<string>();
 
-            foreach (KeyValuePair<string, ViewModel.ViewModel> entry in viewModelMap)
+            foreach (KeyValuePair<string, ViewModel.ViewModel> entry in ViewModelMap)
             {
                 if (entry.Key.StartsWith("ClearcaseViewViewModel."))
                     result.Add(entry.Key.Substring(entry.Key.LastIndexOf('.') + 1));
@@ -193,11 +269,9 @@ namespace PANDA
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.VERSION_CONTROL:
-                    AddToViewModelMap(new List<string> { "ClearcaseManagerViewModel" });
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "VERSION CONTROL" },
-                        new FirstLevelNavigationItem() { Label = "Clearcase View Manager", Icon = PackIconKind.GithubFace,          NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseManagerViewModel") },
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.INTEGRATION:
@@ -210,7 +284,7 @@ namespace PANDA
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.DOCUMENTATION:
-                    AddToViewModelMap(new List<string> { "VersionLogViewModel",
+                    AddToViewModelMap(new List<string> { "VersionLogViewModel",            // Instantiate viewModels
                                                          "LicenseLogViewModel" });
                     return new List<INavigationItem>()
                     {
@@ -236,9 +310,9 @@ namespace PANDA
             }
         }
 
-        private List<INavigationItem> m_navigationItems;
+        private ObservableCollection<INavigationItem> m_navigationItems;
 
-        public List<INavigationItem> NavigationItems
+        public ObservableCollection<INavigationItem> NavigationItems
         {
             get { return m_navigationItems; }
             set { m_navigationItems = value; }

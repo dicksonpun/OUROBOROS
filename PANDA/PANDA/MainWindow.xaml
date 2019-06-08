@@ -3,12 +3,13 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:controls="clr-namespace:PANDA.Controls"
         xmlns:viewModel="clr-namespace:PANDA.ViewModel"
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:materialDesignExtControls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
         mc:Ignorable="d"
-        Title="PANDA"  Height="800" Width="1700" 
+        Title="PANDA"  Height="600" Width="1000" 
         WindowStartupLocation="CenterScreen"
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanResizeWithGrip"
@@ -17,8 +18,16 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
     <Window.Resources>
         <!-- Add new view models and their controls here so it is in scope when binding is needed below. -->
-        <DataTemplate DataType="{x:Type viewModel:ClearcaseManagerViewModel}">
-            <controls:ClearcaseManagerControl />
+        <DataTemplate DataType="{x:Type viewModel:AlertDialogViewModel}">
+            <StackPanel Orientation="Vertical">
+                <TextBlock Margin="24" Text="{Binding Path=Message}"></TextBlock>
+                <Button Style="{DynamicResource MaterialDesignFlatButton}" Content="OK" Margin="8" HorizontalAlignment="Right"
+                        Command="materialDesign:DialogHost.CloseDialogCommand">
+                    <Button.CommandParameter>
+                        <system:Boolean>True</system:Boolean>
+                    </Button.CommandParameter>
+                </Button>
+            </StackPanel>
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:LicenseLogViewModel}">
             <controls:LicenseLogControl />
@@ -32,7 +41,7 @@
         <materialDesign:DialogHost Identifier="dialogHost">
             <Grid>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="320" />
+                    <ColumnDefinition Width="275" />
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
@@ -41,8 +50,8 @@
                     <RowDefinition Height="*" />
                     <!--HEIGHT FOR REST OF WINDOW-->
                 </Grid.RowDefinitions>
-
-                <materialDesignExtControls:AppBar Type="Dense" x:Name="appBar" Grid.ColumnSpan="3" Title="Partially Automated Network Dependent Assistant" ShowShadow="False">
+                <!--Partially Automated Network Dependent Assistant-->
+                <materialDesignExtControls:AppBar Type="Dense" x:Name="appBar" Grid.ColumnSpan="3" Title="Program AND Automate" ShowShadow="True">
                     <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Settings">
                         <materialDesign:PackIcon Kind="Settings" Height="24" Width="24" />
                     </Button>

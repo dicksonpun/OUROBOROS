@@ -64,6 +64,18 @@
             <param name="useCache"></param>
             <returns></returns>
         </member>
+        <member name="T:MaterialDesignExtensions.Controllers.FileNameHelper">
+            <summary>
+            Helper class for operations on file names.
+            </summary>
+        </member>
+        <member name="M:MaterialDesignExtensions.Controllers.FileNameHelper.CheckFileName(System.String)">
+            <summary>
+            Checks the specified file name if it is OK for the operation system.
+            </summary>
+            <param name="fileName">The file name to check</param>
+            <returns>boolean indication if teh file name is OK or not</returns>
+        </member>
         <member name="T:MaterialDesignExtensions.Controllers.FileSystemController">
             <summary>
             Controller behind the <see cref="T:MaterialDesignExtensions.Controls.OpenDirectoryControl" />, <see cref="T:MaterialDesignExtensions.Controls.OpenFileControl" /> and <see cref="T:MaterialDesignExtensions.Controls.SaveFileControl" />.
@@ -186,6 +198,12 @@
             </summary>
             <param name="fileFilters"></param>
             <param name="fileFilterToApply"></param>
+        </member>
+        <member name="M:MaterialDesignExtensions.Controllers.FileSystemController.CreateNewDirectory(System.String)">
+            <summary>
+            Creates a new directory with the specified name.
+            </summary>
+            <param name="newDirectoryName">The name of the new directory</param>
         </member>
         <member name="T:MaterialDesignExtensions.Controllers.FileFilterHelper">
             <summary>
@@ -1019,6 +1037,21 @@
             Internal command used by the XAML template (public to be available in the XAML template). Not intended for external usage.
             </summary>
         </member>
+        <member name="F:MaterialDesignExtensions.Controls.FileSystemControl.ShowCreateNewDirectoryCommand">
+            <summary>
+            Internal command used by the XAML template (public to be available in the XAML template). Not intended for external usage.
+            </summary>
+        </member>
+        <member name="F:MaterialDesignExtensions.Controls.FileSystemControl.CancelNewDirectoryCommand">
+            <summary>
+            Internal command used by the XAML template (public to be available in the XAML template). Not intended for external usage.
+            </summary>
+        </member>
+        <member name="F:MaterialDesignExtensions.Controls.FileSystemControl.CreateNewDirectoryCommand">
+            <summary>
+            Internal command used by the XAML template (public to be available in the XAML template). Not intended for external usage.
+            </summary>
+        </member>
         <member name="F:MaterialDesignExtensions.Controls.FileSystemControl.CancelEvent">
             <summary>
             An event raised by canceling the operation.
@@ -1032,6 +1065,16 @@
         <member name="P:MaterialDesignExtensions.Controls.FileSystemControl.Controller">
             <summary>
             The underlying controller for file system logic. This property is intended for internal use only.
+            </summary>
+        </member>
+        <member name="F:MaterialDesignExtensions.Controls.FileSystemControl.CreateNewDirectoryEnabledProperty">
+            <summary>
+            Enables the feature to create new directories.
+            </summary>
+        </member>
+        <member name="P:MaterialDesignExtensions.Controls.FileSystemControl.CreateNewDirectoryEnabled">
+            <summary>
+            Enables the feature to create new directories.
             </summary>
         </member>
         <member name="F:MaterialDesignExtensions.Controls.FileSystemControl.CurrentDirectoryProperty">
@@ -1057,6 +1100,16 @@
         <member name="P:MaterialDesignExtensions.Controls.FileSystemControl.ItemsScrollViewer">
             <summary>
             The ScrollViewer of the ItemsControls with the file system entries.
+            </summary>
+        </member>
+        <member name="F:MaterialDesignExtensions.Controls.FileSystemControl.NewDirectoryNameProperty">
+            <summary>
+            The name for the new directory.
+            </summary>
+        </member>
+        <member name="P:MaterialDesignExtensions.Controls.FileSystemControl.NewDirectoryName">
+            <summary>
+            The name for the new directory.
             </summary>
         </member>
         <member name="F:MaterialDesignExtensions.Controls.FileSystemControl.ShowHiddenFilesAndDirectoriesProperty">
@@ -1103,6 +1156,16 @@
         <member name="T:MaterialDesignExtensions.Controls.FileSystemDialog">
             <summary>
             The base class with common logic for <see cref="T:MaterialDesignExtensions.Controls.OpenDirectoryDialog" />, <see cref="T:MaterialDesignExtensions.Controls.OpenFileDialog" /> and <see cref="T:MaterialDesignExtensions.Controls.SaveFileDialog" />.
+            </summary>
+        </member>
+        <member name="F:MaterialDesignExtensions.Controls.FileSystemDialog.CreateNewDirectoryEnabledProperty">
+            <summary>
+            Enables the feature to create new directories.
+            </summary>
+        </member>
+        <member name="P:MaterialDesignExtensions.Controls.FileSystemDialog.CreateNewDirectoryEnabled">
+            <summary>
+            Enables the feature to create new directories.
             </summary>
         </member>
         <member name="F:MaterialDesignExtensions.Controls.FileSystemDialog.CurrentDirectoryProperty">
@@ -1158,6 +1221,11 @@
         <member name="P:MaterialDesignExtensions.Controls.FileSystemDialogArguments.CurrentDirectory">
             <summary>
             The current directory of the dialog.
+            </summary>
+        </member>
+        <member name="P:MaterialDesignExtensions.Controls.FileSystemDialogArguments.CreateNewDirectoryEnabled">
+            <summary>
+            Enables the feature to create new directories.
             </summary>
         </member>
         <member name="P:MaterialDesignExtensions.Controls.FileSystemDialogArguments.ShowHiddenFilesAndDirectories">
@@ -2797,6 +2865,11 @@
               Sucht eine lokalisierte Zeichenfolge, die Close ähnelt.
             </summary>
         </member>
+        <member name="P:MaterialDesignExtensions.Localization.Strings.Create">
+            <summary>
+              Sucht eine lokalisierte Zeichenfolge, die Create ähnelt.
+            </summary>
+        </member>
         <member name="P:MaterialDesignExtensions.Localization.Strings.Created">
             <summary>
               Sucht eine lokalisierte Zeichenfolge, die Created ähnelt.
@@ -2867,6 +2940,11 @@
               Sucht eine lokalisierte Zeichenfolge, die Music ähnelt.
             </summary>
         </member>
+        <member name="P:MaterialDesignExtensions.Localization.Strings.NewDirectoryName">
+            <summary>
+              Sucht eine lokalisierte Zeichenfolge, die New directory name ähnelt.
+            </summary>
+        </member>
         <member name="P:MaterialDesignExtensions.Localization.Strings.Open">
             <summary>
               Sucht eine lokalisierte Zeichenfolge, die Open ähnelt.
@@ -2905,6 +2983,21 @@
         <member name="P:MaterialDesignExtensions.Localization.Strings.SelectDirectory">
             <summary>
               Sucht eine lokalisierte Zeichenfolge, die Select folder ähnelt.
+            </summary>
+        </member>
+        <member name="P:MaterialDesignExtensions.Localization.Strings.TheDirectoryNameIsInvalid">
+            <summary>
+              Sucht eine lokalisierte Zeichenfolge, die The directory name is invalid ähnelt.
+            </summary>
+        </member>
+        <member name="P:MaterialDesignExtensions.Localization.Strings.TheDirectoryNameMustNotBeEmpty">
+            <summary>
+              Sucht eine lokalisierte Zeichenfolge, die The directory name must not be empty ähnelt.
+            </summary>
+        </member>
+        <member name="P:MaterialDesignExtensions.Localization.Strings.TheDirectoryXAlreadyExists">
+            <summary>
+              Sucht eine lokalisierte Zeichenfolge, die The directory &apos;{0}&apos; already exists ähnelt.
             </summary>
         </member>
         <member name="P:MaterialDesignExtensions.Localization.Strings.User">
@@ -3136,6 +3229,39 @@
               Überschreibt die CurrentUICulture-Eigenschaft des aktuellen Threads für alle
               Ressourcenzuordnungen, die diese stark typisierte Ressourcenklasse verwenden.
             </summary>
+        </member>
+        <member name="T:MaterialDesignExtensions.Themes.PaletteHelper">
+            <summary>
+            Helper class for themes based on MaterialDesignThemes.Wpf.PaletteHelper.
+            </summary>
+        </member>
+        <member name="M:MaterialDesignExtensions.Themes.PaletteHelper.#ctor">
+            <summary>
+            Creates a new <see cref="T:MaterialDesignExtensions.Themes.PaletteHelper" />.
+            </summary>
+        </member>
+        <member name="M:MaterialDesignExtensions.Themes.PaletteHelper.SetLightDark(System.Boolean)">
+            <summary>
+            Replaces the current theme with the light or dark theme. The implementation is based on MaterialDesignThemes.Wpf.PaletteHelper.SetLightDark(bool isDark).
+            </summary>
+            <param name="isDark"></param>
+        </member>
+        <member name="M:MaterialDesignExtensions.Themes.PaletteHelper.SwitchTheme">
+            <summary>
+            Switches the theme to the respective other theme (light or dark).
+            </summary>
+        </member>
+        <member name="M:MaterialDesignExtensions.Themes.PaletteHelper.IsLightTheme">
+            <summary>
+            Is the light theme applied?
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MaterialDesignExtensions.Themes.PaletteHelper.IsDarkTheme">
+            <summary>
+            Is the dark theme applied?
+            </summary>
+            <returns></returns>
         </member>
         <member name="T:XamlGeneratedNamespace.GeneratedInternalTypeHelper">
             <summary>
