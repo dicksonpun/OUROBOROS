@@ -5,30 +5,25 @@ namespace PANDA.ViewModel
     public class MainWindowViewModel : ViewModel
     {
         public MainWindow mainWindow;
-        public SupportedNetworkModeHelper supportedNetworkModeHelper;
-        public MessageHubHelper messageHubHelper;
-        public NavigationHelper navigationHelper;
 
+        public SupportedNetworkModeHelper SupportedNetworkModeHelper;
+        public NavigationHelper NavigationHelper;
 
         public MainWindowViewModel(MainWindow currentMainWindow) : base()
         {
             mainWindow                 = currentMainWindow;
-            supportedNetworkModeHelper = new SupportedNetworkModeHelper(mainWindow);
-            messageHubHelper           = new MessageHubHelper(supportedNetworkModeHelper);
-            navigationHelper           = new NavigationHelper(mainWindow, messageHubHelper);
+            SupportedNetworkModeHelper = new SupportedNetworkModeHelper(mainWindow);
+            NavigationHelper           = new NavigationHelper(mainWindow, SupportedNetworkModeHelper);
         }
 
         public void Initialize()
         {
             // SupportedNetworkModeHelper
-            supportedNetworkModeHelper.Determine_Network_Mode();
-            supportedNetworkModeHelper.Update_Title_Based_On_Network();
-
-            // MessageHubHelper
-            //messageHubHelper.InitializeMessageHub();
+            SupportedNetworkModeHelper.Determine_Network_Mode();
+            SupportedNetworkModeHelper.Update_Title_Based_On_Network();
 
             // NavigationHelper
-            navigationHelper.InitializeNavigationDrawerNav();
+            NavigationHelper.InitializeNavigationDrawerNav();
         }
     }
 }

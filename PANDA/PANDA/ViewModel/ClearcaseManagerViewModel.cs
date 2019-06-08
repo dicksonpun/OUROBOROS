@@ -11,7 +11,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Controls;
-using TinyMessenger;
 
 namespace PANDA.ViewModel
 {
@@ -35,7 +34,7 @@ namespace PANDA.ViewModel
                 }
             }
         }
-        
+
         // REQUIRED FOR DATABINDING
         private string m_viewSearchTextBoxValue;
         public string ViewSearchTextBoxValue
@@ -110,7 +109,7 @@ namespace PANDA.ViewModel
                         {
                             m_semaphore.Release();
                         }
-                        
+
                     }
                     break;
                 case (nameof(ClearcaseManagerAutocompleteSource)):
@@ -128,26 +127,24 @@ namespace PANDA.ViewModel
             }
         }
 
-        private MessageHubHelper m_messageHubHelper;
         public bool ConnectionAvailable { get; set; }
 
         // Constructor
-        public ClearcaseManagerViewModel(MessageHubHelper messageHubHelper) : base()
+        public ClearcaseManagerViewModel() : base()
         {
-            // NOTE: ONLY CALL THIS CONSTRUCTOR ONCE OR DUPLICATE PERIODIC TASKS WILL BE CREATED AND THEY WILL OVERWRITE EACH OTHER!!!
-            m_messageHubHelper = messageHubHelper;
-            
-            ConnectionAvailable                = false;
-            CurrentActiveViews                 = GetEmptyClearcaseManagerViewsList();
+            ConnectionAvailable = false;
+            CurrentActiveViews = GetEmptyClearcaseManagerViewsList();
             ClearcaseManagerAutocompleteSource = new ClearcaseManagerAutocompleteSource(GetEmptyClearcaseManagerViewsList());
-            m_selectedItem                     = null;
+            m_selectedItem = null;
 
             // Register to the PropertyChanged event in the class Constructor
             this.PropertyChanged += ClearcaseManagerViewModel_PropertyChanged;
 
-            InitializePeriodicUpdates(); 
+            //InitializePeriodicUpdates();
         }
 
+
+        /*
         // Periodic Update Processing
         public CancellationToken PeriodicUpdateCancellationToken { get; set; }
         public async void InitializePeriodicUpdates()
@@ -156,9 +153,10 @@ namespace PANDA.ViewModel
             await UpdateViewListPeriodically(TimeSpan.FromSeconds(3), PeriodicUpdateCancellationToken);
         }
 
+
         public async Task UpdateViewListPeriodically(TimeSpan interval, CancellationToken cancellationToken)
         {
-            string directoryPath = m_messageHubHelper.SupportedNetworkModeHelper.CurrentNetworkMode.NetworkSpecificPath;
+            string directoryPath = SupportedNetworkModeHelper.CurrentNetworkMode.NetworkSpecificPath;
 
             while (true)
             {
@@ -167,8 +165,8 @@ namespace PANDA.ViewModel
                 try
                 {
                     List<ClearcaseManagerViewItem> tempClearcaseManagerViewsList = GetEmptyClearcaseManagerViewsList(); // Used to populate the autocomplete list
-                    List<ClearcaseManagerViewItem> tempEligibleUserViewsList     = GetEmptyClearcaseManagerViewsList(); // Used to populate the active views
-                    List<string> tempCurrentActive = m_messageHubHelper.GetListOfViews(CurrentActiveViews);
+                    List<ClearcaseManagerViewItem> tempEligibleUserViewsList = GetEmptyClearcaseManagerViewsList(); // Used to populate the active views
+                    List<string> tempCurrentActive = GetListOfViews(navigationClearcaseViews);
 
                     if (Directory.Exists(directoryPath))
                     {
@@ -185,11 +183,8 @@ namespace PANDA.ViewModel
                                 tempEligibleUserViewsList.Add(new ClearcaseManagerViewItem() { Icon = PackIconKind.SourceBranch, ViewName = dir.Name, ViewPath = dir.FullName });
                             }
                         }
-                        
-                        CurrentActiveViews = new List<ClearcaseManagerViewItem>(tempEligibleUserViewsList);
 
-                        // Send updated list to Main Window for processing
-                        SendClearCaseManagerMessage(tempEligibleUserViewsList);
+                        navigationClearcaseViews = new List<ClearcaseManagerViewItem>(tempEligibleUserViewsList);
 
                         ConnectionAvailable = true; // NOTE: Must be set prior to ClearcaseManagerAutocompleteSource property change
                     }
@@ -211,32 +206,10 @@ namespace PANDA.ViewModel
                 }
             };
         }
-
+        */
         public List<ClearcaseManagerViewItem> GetEmptyClearcaseManagerViewsList()
         {
             return new List<ClearcaseManagerViewItem>() { };
-        }
-
-        public void SendClearCaseManagerMessage(List<ClearcaseManagerViewItem> clearcaseManagerViewItemsList)
-        {
-            // Set up the message
-            ClearcaseManagerMessage msg = new ClearcaseManagerMessage(this, new ClearcaseManagerMessage_Content()
-            {
-                ClearcaseManagerViewItemsList = clearcaseManagerViewItemsList
-            });
-
-            // Set up callback logic		
-            AsyncCallback printToConsole = new AsyncCallback(PrintToConsole); //temp callback		
-            void PrintToConsole(IAsyncResult result)
-            {
-                foreach (ClearcaseManagerViewItem item in clearcaseManagerViewItemsList)
-                {
-                    Console.WriteLine("Sent ClearCaseManagerMessage - Command: " + " Viewname: " + item.ViewName);
-                }
-            }
-
-            // Send the message
-            m_messageHubHelper.MessageHub.Publish(msg, printToConsole);
         }
     }
 

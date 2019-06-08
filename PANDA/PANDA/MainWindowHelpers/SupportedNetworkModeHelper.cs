@@ -47,7 +47,7 @@ namespace PANDA
 
         public void Update_Title_Based_On_Network()
         {
-            m_mainWindow.Title = "[ " + CurrentNetworkMode.Name + " ]";
+            m_mainWindow.Title = "[ " + CurrentNetworkMode.Name + " ]" + "   Partially Automated Network Dependent Assistant";
         }
 
         public SupportedNetworkModeHelper(MainWindow currentMainWindow)
