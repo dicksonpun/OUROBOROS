@@ -35,13 +35,15 @@ namespace PANDA.ViewModel
                                                      "\nHIGH PRIORITY"                                                                   + "\n" +
                                                      bullet + "ADD: Clearcase Branch Helper layout"                                      + "\n" +
                                                      bullet + "ADD: function to add and remove views"                                    + "\n" +
-                                                     bullet + "ADD: function update views - config spec"                                 + "\n" +                                                     
+                                                     bullet + "ADD: function update views - config spec"                                 + "\n" +
                                                      bullet + "ADD: Buttons to support: EDIT, VTREE, DIFF, REVIEW, CONFIGSPEC EDIT"      + "\n" +
                                                      bullet + "ADD: User Settings"                                                       + "\n" +
                                                      bullet + "Make data persistent between application launches"                        + "\n" + 
                                                      bullet + "ADD: Central Location for storing meta files"                             + "\n" +
                                                      bullet + "ADD: GITHUB to state the branching strategy"                              + "\n" +
-                                                     bullet + "Tidy up includes section in all files prior to official release"          + "\n" +
+                                                     bullet + "Tidy up all files prior to official release"                              + "\n" +
+                                                     "\t" + bullet + "Includes section"                                                  + "\n" +
+                                                     "\t" + bullet + "Comments / Documentation"                                          + "\n" +
                                                      "\nMEDIUM PRIORITY"                                                                 + "\n" +
                                                      bullet + "ADD: export and import project"                                           + "\n" +
                                                      bullet + "ADD: FUNCTION: Build Integrity Analyzer"                                  + "\n" +
@@ -49,7 +51,6 @@ namespace PANDA.ViewModel
                                                      bullet + "ADD: export and import project"                                           + "\n" +
                                                      bullet + "ADD: Dashboard for branch statistics"                                     + "\n" +
                                                      bullet + "ADD: file review functionality"                                           + "\n" +
-                                                     bullet + "ADD: Mount to Drive functionality"                                        + "\n" +
                                                      bullet + "ADD: AUTOSTAMP"                                                           + "\n" +
                                                      bullet + "ADD: Test Descriptor Verifier and Queue"                                  + "\n" +
                                                      bullet + "ADD: Test ETA"                                                            + "\n" +
@@ -64,7 +65,7 @@ namespace PANDA.ViewModel
                                        UpdateNotes = "CURRENTLY IN DEVELOPMENT"                                                          + "\n" +
                                                      "\nHIGH PRIORITY"                                                                   + "\n" +
                                                      bullet + "Implement functionality for real for the following:"                      + "\n" +
-                                                     "\t" + bullet + "FUNCTION: "                         + "\n" +
+                                                     "\t" + bullet + "FUNCTION: "                               + "\n" +
                                                      bullet + "ADD: Clearcase Branch Helper layout"                                      + "\n" +
                                                      bullet + "ADD: function to add and remove views"                                    + "\n" +
                                                      bullet + "ADD: function update views"                                               + "\n" +
@@ -80,7 +81,6 @@ namespace PANDA.ViewModel
                                                      bullet + "ADD: FUNCTION: BranchList CHANGE log document generator"                  + "\n" +
                                                      bullet + "ADD: Dashboard for branch statistics"                                     + "\n" +
                                                      bullet + "ADD: file review functionality"                                           + "\n" +
-                                                     bullet + "ADD: Mount to Drive functionality"                                        + "\n" +
                                                      bullet + "ADD: AUTOSTAMP"                                                           + "\n" +
                                                      bullet + "ADD: Test Descriptor Verifier and Queue"                                  + "\n" +
                                                      bullet + "ADD: Test ETA"                                                            + "\n" +
@@ -92,11 +92,11 @@ namespace PANDA.ViewModel
                 // Note: Version log entries are in descending order (latest version should be the top-most, following the TODO entry).
                 new VersionLogItem() { Version     = "1.0.0",
                                        UpdateNotes = "INITIAL RELEASE"                                                                   + "\n" +
-                                                     bullet + "Implemented persistent data between viewModel context switches"           + "\n" +
                                                      bullet + "Implemented Navigation Window"                                            + "\n" +
                                                      "\t" + bullet + "Implemented asynchronous periodic updates"                         + "\n" +
                                                      bullet + "Implemented Licenses log documentation"                                   + "\n" +
                                                      bullet + "Implemented Version log documentation"                                    + "\n" +
+                                                     bullet + "Implemented Mount to Drive functionality"                                 + "\n" +
                                                      placeholder },
             };
         }

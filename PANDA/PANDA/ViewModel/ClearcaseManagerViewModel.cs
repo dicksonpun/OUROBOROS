@@ -160,8 +160,8 @@ namespace PANDA.ViewModel
 
             while (true)
             {
-                // Asynchronously wait to enter the Semaphore. If no-one has been granted access to the Semaphore, code execution will proceed, otherwise this thread waits here until the m_semaphore is released 
-                await m_semaphore.WaitAsync();
+                // Asynchronously wait to enter the Semaphore. If no-one has been granted access to the Semaphore, code execution will proceed, otherwise this thread waits here until the navigationUpdate_Mutex is released 
+                await navigationUpdate_Mutex.WaitAsync();
                 try
                 {
                     List<ClearcaseManagerViewItem> tempClearcaseManagerViewsList = GetEmptyClearcaseManagerViewsList(); // Used to populate the autocomplete list
@@ -200,9 +200,9 @@ namespace PANDA.ViewModel
                 }
                 finally
                 {
-                    // When the task is ready, release the m_semaphore. It is vital to ALWAYS release the m_semaphore when we are ready, or else we will end up with a Semaphore that is forever locked.
+                    // When the task is ready, release the navigationUpdate_Mutex. It is vital to ALWAYS release the navigationUpdate_Mutex when we are ready, or else we will end up with a Semaphore that is forever locked.
                     // This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
-                    m_semaphore.Release();
+                    navigationUpdate_Mutex.Release();
                 }
             };
         }
