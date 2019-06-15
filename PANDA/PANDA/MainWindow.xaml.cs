@@ -1,5 +1,6 @@
 ﻿using MaterialDesignExtensions.Controls;
 using MaterialDesignExtensions.Model;
+using MaterialDesignThemes.Wpf;
 using PANDA.ViewModel;
 using System;
 using System.Collections.Generic;
@@ -17,11 +18,31 @@ namespace PANDA
             InitializeComponent();
             mainWindowViewModel = new MainWindowViewModel(this);
             mainWindowViewModel.Initialize();
+
+#if DEBUG
+            // Suppresses benign binding errors like : 
+            // "System.Windows.Data Error: 4 : Cannot find source for binding with reference 'RelativeSource FindAncestor, AncestorType=..."
+            System.Diagnostics.PresentationTraceSources.DataBindingSource.Switch.Level = System.Diagnostics.SourceLevels.Critical;
+#endif
         }
 
         public void NavigationItemSelectedHandler(object sender, NavigationItemSelectedEventArgs args)
         {
             mainWindowViewModel.NavigationHelper.SelectNavigationItem(args.NavigationItem);
+        }
+
+        private void Button_Click_Mount(object sender, RoutedEventArgs e)
+        {
+            mainWindowViewModel.YDriveMounter.Mount(@"C:\Users\Dickson\Desktop\testViews\dickson-branchname-1");
+            mainWindowViewModel.NavigationHelper.StartAutoRefresh();
+        }
+
+
+        private void Button_Click_Unmount(object sender, RoutedEventArgs e)
+        {
+            //mainWindowViewModel.YDriveMounter.Mount(@"C:\Users\Dickson\Desktop\testViews\dickson-branchname-3");
+            mainWindowViewModel.YDriveMounter.Mount("");
+            mainWindowViewModel.NavigationHelper.StopAutoRefresh();
         }
     }
 }

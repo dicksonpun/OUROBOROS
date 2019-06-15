@@ -8,12 +8,13 @@ namespace PANDA.ViewModel
 
         public SupportedNetworkModeHelper SupportedNetworkModeHelper;
         public NavigationHelper NavigationHelper;
-
+        public DriveMounter YDriveMounter;
         public MainWindowViewModel(MainWindow currentMainWindow) : base()
         {
             mainWindow                 = currentMainWindow;
+            YDriveMounter              = new DriveMounter("Y:");
             SupportedNetworkModeHelper = new SupportedNetworkModeHelper(mainWindow);
-            NavigationHelper           = new NavigationHelper(mainWindow, SupportedNetworkModeHelper);
+            NavigationHelper           = new NavigationHelper(mainWindow, SupportedNetworkModeHelper, YDriveMounter);
         }
 
         public void Initialize()

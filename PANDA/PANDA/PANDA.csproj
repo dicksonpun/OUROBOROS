@@ -102,6 +102,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\ClearcaseViewTabControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\VersionLogControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -118,15 +122,20 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\ClearcaseViewTabControl.xaml.cs">
+      <DependentUpon>ClearcaseViewTabControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DebugHelper.cs" />
-    <Compile Include="MainWindowHelpers\NavigationHelper.cs" />
-    <Compile Include="MainWindowHelpers\SupportedNetworkModeHelper.cs" />
-    <Compile Include="MainWindowHelpers\CommandHelper.cs" />
+    <Compile Include="Helpers\DriveMounter.cs" />
+    <Compile Include="Helpers\Navigation\NavigationHelper.cs" />
+    <Compile Include="Helpers\Navigation\NavigationRefresh.cs" />
+    <Compile Include="Helpers\Navigation\NavigationViewModelMap.cs" />
+    <Compile Include="Helpers\SupportedNetworkModeHelper.cs" />
     <Compile Include="Controls\VersionLogControl.xaml.cs">
       <DependentUpon>VersionLogControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel\AlertDialogViewModel.cs" />
     <Compile Include="ViewModel\ClearcaseManagerViewModel.cs" />
+    <Compile Include="ViewModel\ClearcaseViewTabControlViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\VersionLogViewModel.cs" />
     <Compile Include="Controls\LicenseLogControl.xaml.cs">
@@ -140,7 +149,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MainWindowHelpers\NavigationItem.cs" />
+    <Compile Include="Helpers\Navigation\NavigationItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -183,5 +192,6 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
