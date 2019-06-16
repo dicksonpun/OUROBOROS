@@ -2,7 +2,7 @@
 
 Desktop GUI Demo based on C# and Material Design in XAML.
 
-This C# application demonstrates a proof of concept regarding how UI elements are used and referenced.
+This C# project is a proof of concept on how Material Design in XAML is used and referenced in an WPF application.
 
 The prototype demo consists primarily of GUI logic. 
 
