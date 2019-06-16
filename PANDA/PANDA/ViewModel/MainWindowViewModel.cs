@@ -4,11 +4,13 @@ namespace PANDA.ViewModel
 {
     public class MainWindowViewModel : ViewModel
     {
+        // Members
         public MainWindow mainWindow;
-
         public SupportedNetworkModeHelper SupportedNetworkModeHelper;
         public NavigationHelper NavigationHelper;
         public DriveMounter YDriveMounter;
+
+        // Constructor
         public MainWindowViewModel(MainWindow currentMainWindow) : base()
         {
             mainWindow                 = currentMainWindow;

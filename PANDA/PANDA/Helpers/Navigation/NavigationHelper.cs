@@ -3,7 +3,6 @@ using MaterialDesignThemes.Wpf;
 using PANDA.ViewModel;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Collections.ObjectModel;
 
 namespace PANDA
@@ -18,16 +17,17 @@ namespace PANDA
 
     public partial class NavigationHelper
     {
-        // Helpers
-        private readonly SupportedNetworkModeHelper m_supportedNetworkModeHelper;
-        private DriveMounter m_YDriveMounter;
-
         // Members
         private readonly MainWindow m_mainWindow;
         public List<ClearcaseManagerViewItem> navigationClearcaseViews;
         public string RequestedAddView;
         public string RequestedRemoveView;
 
+        // Helpers
+        private readonly SupportedNetworkModeHelper m_supportedNetworkModeHelper;
+        private DriveMounter m_YDriveMounter;
+
+        // Constructors
         public NavigationHelper(MainWindow currentMainWindow, 
                                 SupportedNetworkModeHelper supportedNetworkModeHelper,
                                 DriveMounter YDriveMounter)
@@ -39,6 +39,11 @@ namespace PANDA
             RequestedAddView             = string.Empty;
         }
 
+        // ----------------------------------------------------------------------------------------
+        // Class       : NavigationHelper
+        // Method      : InitializeNavigationDrawerNav
+        // Description : Helper function to initialize the navigation menu.
+        // ----------------------------------------------------------------------------------------
         public void InitializeNavigationDrawerNav()
         {
             PopulateNavigation();
@@ -46,6 +51,11 @@ namespace PANDA
             StartAutoRefresh();
         }
 
+        // ----------------------------------------------------------------------------------------
+        // Class       : NavigationHelper
+        // Method      : PopulateNavigation
+        // Description : Populates the navigation menu based on a provided category order.
+        // ----------------------------------------------------------------------------------------
         public void PopulateNavigation()
         {
             List<NAVIGATION_CATEGORY> navigationCategoryOrder = new List<NAVIGATION_CATEGORY> { NAVIGATION_CATEGORY.DASHBOARD,
@@ -63,6 +73,13 @@ namespace PANDA
             }
         }
 
+        // ----------------------------------------------------------------------------------------
+        // Class       : NavigationHelper
+        // Method      : SetNavigationSelection
+        // Description : Sets the index of the navigation menu and DataContext of the mainwindow accordingly.
+        // Parameters  :
+        // - index (int) : Index of selected item. 
+        // ----------------------------------------------------------------------------------------
         public void SetNavigationSelection(int index)
         {
             if (m_mainWindow.sideNav.SelectedItem != null)
@@ -77,6 +94,14 @@ namespace PANDA
             m_mainWindow.DataContext = this;
         }
 
+        // ----------------------------------------------------------------------------------------
+        // Class       : NavigationHelper
+        // Method      : GetNavigationCategory
+        // Description : Returns the requested category-related INavigation items in a list.
+        //               If the requested category does not exist, throw an exception.
+        // Parameters  :
+        // - NavigationCategory (enum NAVIGATION_CATEGORY) : Navigation categories enumeration. 
+        // ----------------------------------------------------------------------------------------
         public List<INavigationItem> GetNavigationCategory(NAVIGATION_CATEGORY NavigationCategory)
         {
             switch (NavigationCategory)
@@ -89,9 +114,12 @@ namespace PANDA
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.VERSION_CONTROL:
+                    // Instantiate ViewModels
+                    GetViewModelFromMap("ClearcaseManagerViewModel");
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "VERSION CONTROL" },
+                        new FirstLevelNavigationItem() { Label = "Clearcase Manager",  Icon = PackIconKind.GithubFace,       NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseManagerViewModel") },
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.INTEGRATION:
@@ -104,6 +132,9 @@ namespace PANDA
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.DOCUMENTATION:
+                    // Instantiate ViewModels
+                    GetViewModelFromMap("VersionLogViewModel");
+                    GetViewModelFromMap("LicenseLogViewModel");
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "DOCUMENTATION" },

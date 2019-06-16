@@ -19,6 +19,9 @@
         FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
     <Window.Resources>
         <!-- Add new view models and their controls here so it is in scope when binding is needed below. -->
+        <DataTemplate DataType="{x:Type viewModel:ClearcaseManagerViewModel}">
+            <controls:ClearcaseManagerControl />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:ClearcaseViewTabControlViewModel}">
             <controls:ClearcaseViewTabControl />
         </DataTemplate>
