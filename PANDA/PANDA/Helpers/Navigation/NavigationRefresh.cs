@@ -3,6 +3,7 @@ using MaterialDesignThemes.Wpf;
 using PANDA.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -13,9 +14,29 @@ namespace PANDA
     public partial class NavigationHelper
     {
         // Instantiate a Singleton of the Semaphore with a value of 1. This means that only 1 thread can be granted access at a time.
-        private static readonly SemaphoreSlim navigationUpdate_Mutex = new SemaphoreSlim(1, 1);
+        private static readonly SemaphoreSlim m_mutex = new SemaphoreSlim(1, 1);
 
         private CancellationTokenSource cancellationTokenSource;
+
+        public Dictionary<string, ClearcaseManagerViewItem> ClearcaseViewDictionary = new Dictionary<string, ClearcaseManagerViewItem>();
+
+        public async void RequestLock()
+        {
+            // Asynchronously wait to enter the Semaphore. 
+            // If no-one has been granted access to the Semaphore, code execution will proceed.
+            // Otherwise, this thread waits here until the m_mutex is released.
+            await m_mutex.WaitAsync();
+        }
+
+        public void ReleaseLock()
+        {
+            // TLDR: Make sure you ALWAYS call this function from the 'finally' clause of a try-catch-finally statement.
+            // When the task is ready, release the m_mutex. It is vital to ALWAYS release the 
+            // m_mutex when we are ready, or else we will end up with a Semaphore that is forever locked.
+            // This is why it is important to do the Release within a try...finally clause; program execution may crash or 
+            // take a different path, this way you are guaranteed execution.
+            m_mutex.Release();
+        }
 
         public async void StartAutoRefresh()
         {
@@ -35,7 +56,6 @@ namespace PANDA
             cancellationTokenSource.Cancel();
         }
 
-
         public List<string> GetListOfViews(List<ClearcaseManagerViewItem> viewList)
         {
             List<string> result = new List<string>();
@@ -46,15 +66,160 @@ namespace PANDA
             return result;
         }
 
+        public bool IsViewMountedToYDrive(string viewname)
+        {
+            bool result = false;
+
+            string yDrivePath = m_YDriveMounter.volumeFunctions.DriveIsMappedTo("Y:");
+            string mountedView = yDrivePath.Split('\\').Last();
+            // Check if view is mounted to Y-Drive
+            if (mountedView.Equals(viewname))
+            {
+                result = true;
+            }
+            return result;
+        }
+
+        public void GetLatestAvailableViews(string directoryPath)
+        {
+            ClearcaseViewDictionary.Clear(); // Clear all entries to account for removals.
+            foreach (var currentDirectory in Directory.GetDirectories(directoryPath))
+            {
+                var dir = new DirectoryInfo(currentDirectory);
+                // The Add method throws an exception if the new key is already in the dictionary. (Unlikely since all entries were cleared prior.)
+                try
+                {
+                    PackIconKind icon = PackIconKind.Git;
+                    if (IsViewMountedToYDrive(dir.Name))
+                    {
+                        icon = PackIconKind.AlphaYBox;
+                    }
+                    ClearcaseManagerViewItem viewItem = new ClearcaseManagerViewItem { Icon = icon, ViewName = dir.Name, ViewPath = dir.FullName };
+
+                    ClearcaseViewDictionary.Add(dir.Name, viewItem);
+                }
+                catch (ArgumentException)
+                {
+                    Console.WriteLine("An element with Key = " + dir.Name + " already exists.");
+                }
+            }
+        }
+
+        public int GetIndexAfterSubheader(string subheader)
+        {
+            int result = 0;
+            // Loop through all navigation items 
+            for (int i = 0; i < NavigationItems.Count; i++)
+            {
+                INavigationItem navItem = NavigationItems[i];
+                if (navItem.GetType().IsEquivalentTo(new SubheaderNavigationItem().GetType()))
+                {
+                    SubheaderNavigationItem temp = (SubheaderNavigationItem)navItem;
+                    if (temp.Subheader.Equals(subheader))
+                    {
+                        // Set index to entry after subheader
+                        result = NavigationItems.IndexOf(temp) + 1;
+                        break;
+                    }
+                }
+            }
+            return result;
+        }
+
+        public void UpdateNavigationRemovals()
+        {
+            List<string> allViews = GetListOfViews(ClearcaseViewDictionary.Values.ToList());
+            IEnumerable<string> viewsToRemove = GetListOfViews(navigationClearcaseViews).Except(allViews);
+
+            if (!string.IsNullOrEmpty(RequestedRemoveView))
+            {
+                // Add non-username view via Union to prevent duplicates. 
+                viewsToRemove = viewsToRemove.Union(new List<string> { RequestedRemoveView }).ToList();
+                RequestedRemoveView = string.Empty;   // Clear request.
+            }
+
+            // Remove views to the navigation menu
+            int removeIndex = GetIndexAfterSubheader("VERSION CONTROL");
+            foreach (ClearcaseManagerViewItem clearcaseItem in navigationClearcaseViews)
+            {
+                // Remove views
+                string key = "ClearcaseViewTabControlViewModel." + clearcaseItem.ViewName;
+                if (viewsToRemove.Contains(clearcaseItem.ViewName))
+                {
+                    // Remove from navigation
+                    NavigationItems.RemoveAt(removeIndex);
+
+                    // Remove from ViewModelMap
+                    RemoveViewModelFromMap(key);
+                }
+                else
+                {
+                    // Only increment if current iteration did not remove item, to prevent index mismatch from shifting
+                    removeIndex++;
+                }
+            }
+            // Set current views to latest views (post-removals)
+            navigationClearcaseViews.RemoveAll(x => viewsToRemove.ToList().Contains(x.ViewName));
+        }
+
+        public void UpdateNavigationAdditions()
+        {
+            string myUsername = "dickson"; // TODO: NEED to build user settings profile
+            List<string> currentNavigationViews = GetListOfViews(navigationClearcaseViews);
+            List<string> requestedAdds = GetListOfViews(ClearcaseViewDictionary.Values.Where(d => d.ViewName.StartsWith(myUsername)).ToList()); // Username
+            if (!string.IsNullOrEmpty(RequestedAddView))
+            {
+                // Add non-username view via Union to prevent duplicates. 
+                requestedAdds = requestedAdds.Union(new List<string> { RequestedAddView }).ToList();
+                RequestedAddView = string.Empty;   // Clear request.
+            }
+            requestedAdds = requestedAdds.Union(currentNavigationViews).ToList();
+            requestedAdds.Sort();
+            IEnumerable<string> viewsToAdd = requestedAdds.Except(currentNavigationViews);
+
+            // Generate updated list of navigation views
+            List<ClearcaseManagerViewItem> updatedClearcaseViews = new List<ClearcaseManagerViewItem>();
+            foreach (string view in requestedAdds)
+            {
+                ClearcaseManagerViewItem value;
+                if (ClearcaseViewDictionary.TryGetValue(view, out value))
+                {
+                    updatedClearcaseViews.Add(value);
+                }
+                else
+                {
+                    // Unable to access value, must be unused. Remove associated viewModel to free memory.
+                    RemoveViewModelFromMap("ClearcaseViewTabControlViewModel." + view);
+                }
+            }
+
+            // Add views to the navigation menu
+            int addIndex = GetIndexAfterSubheader("VERSION CONTROL");
+            foreach (ClearcaseManagerViewItem clearcaseItem in updatedClearcaseViews)
+            {
+                string key = "ClearcaseViewTabControlViewModel." + clearcaseItem.ViewName;
+
+                if (viewsToAdd.Contains(clearcaseItem.ViewName))
+                {
+                    // Add to navigation
+                    GetViewModelFromMap(key, clearcaseItem.ViewPath); // Ensure viewModel is instantiated
+                    INavigationItem navigationItem = new FirstLevelNavigationItem() { Label = clearcaseItem.ViewName, Icon = clearcaseItem.Icon, NavigationItemSelectedCallback = item => GetViewModelFromMap(key, clearcaseItem.ViewPath) };
+                    NavigationItems.Insert(addIndex, navigationItem);
+                }
+                // Increment index regardless of insertion
+                addIndex++;
+            }
+            // Set current views to latest views (post-additions)
+            navigationClearcaseViews = updatedClearcaseViews;
+        }
+
         public async Task RefreshClearcaseViewsPeriodically(TimeSpan interval, CancellationToken cancellationToken)
         {
             string directoryPath = m_supportedNetworkModeHelper.CurrentNetworkMode.NetworkSpecificPath;
-            string myUsername = "dickson"; // TODO: NEED to build user settings profile
 
             while (true)
             {
-                // Asynchronously wait to enter the Semaphore. If no-one has been granted access to the Semaphore, code execution will proceed, otherwise this thread waits here until the navigationUpdate_Mutex is released 
-                await navigationUpdate_Mutex.WaitAsync();
+                RequestLock();
                 try
                 {
                     // Ensure connection is not lost.  Only perform update if directory is accessible.
@@ -63,102 +228,10 @@ namespace PANDA
                         continue;
                     }
 
-                    // Build list of eligible user views (User views + User previously selected views)
-                    List<ClearcaseManagerViewItem> updatedClearcaseViews = new List<ClearcaseManagerViewItem>();
-                    List<string> navigationViews = GetListOfViews(navigationClearcaseViews);
-                    foreach (var currentDirectory in Directory.GetDirectories(directoryPath))
-                    {
-                        var dir = new DirectoryInfo(currentDirectory);
-                        if (dir.Name.StartsWith(myUsername) || navigationViews.Contains(dir.Name))
-                        {
-                            updatedClearcaseViews.Add(new ClearcaseManagerViewItem() { Icon = PackIconKind.Git, ViewName = dir.Name, ViewPath = dir.FullName });
-                        }
-                    }
+                    GetLatestAvailableViews(directoryPath);
+                    UpdateNavigationRemovals();
+                    UpdateNavigationAdditions();
 
-                    // Generate list of strings for easier comparison
-                    List<string> newClearcaseViews = GetListOfViews(updatedClearcaseViews);
-                    IEnumerable<string> itemsToRemove = navigationViews.Except(newClearcaseViews);
-                    IEnumerable<string> itemsToAdd = newClearcaseViews.Except(navigationViews);
-
-                    // Sort by alphabetical order by viewnames
-                    updatedClearcaseViews.OrderBy(p => p.ViewName);
-                    navigationClearcaseViews.OrderBy(p => p.ViewName);
-
-                    // Loop through all navigation items 
-                    for (int i = 0; i < NavigationItems.Count; i++)
-                    {
-                        INavigationItem navItem = NavigationItems[i];
-
-                        if (navItem.GetType().IsEquivalentTo(new SubheaderNavigationItem().GetType()))
-                        {
-                            SubheaderNavigationItem temp = (SubheaderNavigationItem)navItem;
-                            if (temp.Subheader.Equals("VERSION CONTROL"))
-                            {
-                                // Check if mounted to Y-Drive
-                                string yDrivePath = m_YDriveMounter.volumeFunctions.DriveIsMappedTo("Y:");
-                                string mountedView = yDrivePath.Split('\\').Last();
-
-                                // Set index to entry after "VERSION CONTROL"
-                                int index = NavigationItems.IndexOf(temp) + 1;
-
-                                // Remove views to the navigation menu
-                                foreach (ClearcaseManagerViewItem clearcaseItem in navigationClearcaseViews)
-                                {
-                                    // Set icon for Y-Drive accordingly
-                                    // NOTE: Only need to update in removal loop from this update.
-                                    //       The "additions" from this update will get processed on the next update's removal loop.
-                                    INavigationItem navClearcaseItem = NavigationItems[index];
-                                    FirstLevelNavigationItem tempClearcaseItem = (FirstLevelNavigationItem)navClearcaseItem;
-
-                                    // Set default icon
-                                    PackIconKind viewIcon = PackIconKind.Git;
-                                    if (clearcaseItem.Icon == PackIconKind.Git && mountedView.Equals(clearcaseItem.ViewName))
-                                    {
-                                        // Upgrade to Y-Drive icon
-                                        viewIcon = PackIconKind.LetterYBox;
-                                    }
-                                    tempClearcaseItem.Icon = viewIcon;
-
-                                    // Remove views
-                                    string key = "ClearcaseViewTabControlViewModel." + clearcaseItem.ViewName;
-                                    if (itemsToRemove.Contains(clearcaseItem.ViewName))
-                                    {
-                                        // Remove from navigation
-                                        NavigationItems.RemoveAt(index);
-
-                                        // Remove from ViewModelMap
-                                        RemoveViewModelFromMap(key);
-                                    }
-                                    else
-                                    {
-                                        // Only increment if current iteration did not remove item, to prevent index mismatch from shifting
-                                        index++;
-                                    }
-                                }
-
-                                // Reset index to entry after "VERSION CONTROL"
-                                index = NavigationItems.IndexOf(temp) + 1;
-
-                                // Add views to the navigation menu
-                                foreach (ClearcaseManagerViewItem clearcaseItem in updatedClearcaseViews)
-                                {
-                                    string key = "ClearcaseViewTabControlViewModel." + clearcaseItem.ViewName;
-
-                                    if (itemsToAdd.Contains(clearcaseItem.ViewName))
-                                    {
-                                        // Add to navigation
-                                        INavigationItem navigationItem = new FirstLevelNavigationItem() { Label = clearcaseItem.ViewName, Icon = clearcaseItem.Icon, NavigationItemSelectedCallback = item => GetViewModelFromMap(key, clearcaseItem.ViewPath) };
-                                        NavigationItems.Insert(index, navigationItem);
-                                    }
-                                    // Increment index regardless of insertion
-                                    index++;
-                                }
-                                // Update to latest clearcase views for navigation menu
-                                navigationClearcaseViews = updatedClearcaseViews;
-                                break;
-                            }
-                        }
-                    }
                     await Task.Delay(interval, cancellationToken);
                 }
                 catch (OperationCanceledException)
@@ -170,11 +243,7 @@ namespace PANDA
                 }
                 finally
                 {
-                    // When the task is ready, release the navigationUpdate_Mutex. It is vital to ALWAYS release the 
-                    // navigationUpdate_Mutex when we are ready, or else we will end up with a Semaphore that is forever locked.
-                    // This is why it is important to do the Release within a try...finally clause; program execution may crash or 
-                    // take a different path, this way you are guaranteed execution.
-                    navigationUpdate_Mutex.Release();
+                    ReleaseLock();
                 }
             };
         }

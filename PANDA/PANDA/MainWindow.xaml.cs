@@ -33,16 +33,37 @@ namespace PANDA
 
         private void Button_Click_Mount(object sender, RoutedEventArgs e)
         {
-            mainWindowViewModel.YDriveMounter.Mount(@"C:\Users\Dickson\Desktop\testViews\dickson-branchname-1");
-            mainWindowViewModel.NavigationHelper.StartAutoRefresh();
+            //mainWindowViewModel.YDriveMounter.Mount(@"C:\Users\Dickson\Desktop\testViews\dickson-branchname-1");
+            //mainWindowViewModel.NavigationHelper.StartAutoRefresh();
+
+            // TEST ADDING NON USER VIEW
+            AddSelectedView("aaaaa-tehee");
+            //AddSelectedView("username-branchname-3");
         }
 
+        public void AddSelectedView(string view)
+        {
+            mainWindowViewModel.NavigationHelper.RequestLock();
+            mainWindowViewModel.NavigationHelper.RequestedAddView = view;
+            mainWindowViewModel.NavigationHelper.ReleaseLock();
+        }
+
+        public void RemoveSelectedView(string view)
+        {
+            mainWindowViewModel.NavigationHelper.RequestLock();
+            mainWindowViewModel.NavigationHelper.RequestedRemoveView = view;
+            mainWindowViewModel.NavigationHelper.ReleaseLock();
+        }
 
         private void Button_Click_Unmount(object sender, RoutedEventArgs e)
         {
             //mainWindowViewModel.YDriveMounter.Mount(@"C:\Users\Dickson\Desktop\testViews\dickson-branchname-3");
-            mainWindowViewModel.YDriveMounter.Mount("");
-            mainWindowViewModel.NavigationHelper.StopAutoRefresh();
+            //mainWindowViewModel.YDriveMounter.Mount("");
+            //mainWindowViewModel.NavigationHelper.StopAutoRefresh();
+
+            // TEST ADDING NON USER VIEW
+            
+            RemoveSelectedView("aaaaa-tehee");
         }
     }
 }
