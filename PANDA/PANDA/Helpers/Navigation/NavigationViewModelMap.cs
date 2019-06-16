@@ -23,6 +23,10 @@ namespace PANDA
             // Only add if the key doesn't already exist
             if (!ViewModelMap.ContainsKey(key))
             {
+                if (key.StartsWith("ClearcaseManagerViewModel"))
+                {
+                    ViewModelMap.Add(key, new ClearcaseManagerViewModel());
+                }
                 if (key.StartsWith("ClearcaseViewTabControlViewModel"))
                 {
                     string viewPath = arg1;
@@ -40,6 +44,13 @@ namespace PANDA
             return ViewModelMap[key]; ;
         }
 
+        // ----------------------------------------------------------------------------------------
+        // Class       : NavigationHelper
+        // Method      : RemoveViewModelFromMap
+        // Description : Removes the requested ViewModel From ViewModelMap, if it exists.
+        // Parameters  :
+        // - key (string)  : Key to ViewModelMap
+        // ----------------------------------------------------------------------------------------
         public void RemoveViewModelFromMap(string key)
         {
             // Note: The out parameter is discarded since it is not used/needed.

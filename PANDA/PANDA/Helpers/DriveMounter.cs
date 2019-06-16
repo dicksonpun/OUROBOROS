@@ -1,21 +1,20 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows;
-using PANDA.ViewModel;
 
 namespace PANDA
 {
     public class DriveMounter
     {
+        // Members
         private readonly string DriveLetter;
         private string DrivePath { get; set; }
 
+        // Helpers
         public VolumeFunctions volumeFunctions;
 
+        // Constructors
         public DriveMounter(string driveLetter)
         {
             volumeFunctions = new VolumeFunctions();
@@ -23,6 +22,13 @@ namespace PANDA
             DrivePath = volumeFunctions.DriveIsMappedTo(driveLetter);
         }
 
+        // ----------------------------------------------------------------------------------------
+        // Class       : DriveMounter
+        // Method      : Mount
+        // Description : Mounts the folder to a drive letter.
+        // Parameters  :
+        // - newPath (string) : Full path to folder to be mounted to class drive letter
+        // ----------------------------------------------------------------------------------------
         public void Mount(string newPath)
         {
             // Only mount if path changed
