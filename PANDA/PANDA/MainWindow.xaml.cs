@@ -31,28 +31,15 @@ namespace PANDA
             mainWindowViewModel.NavigationHelper.SelectNavigationItem(args.NavigationItem);
         }
 
+        // EXPERIMENTAL BUTTONS
         private void Button_Click_Mount(object sender, RoutedEventArgs e)
         {
             //mainWindowViewModel.YDriveMounter.Mount(@"C:\Users\Dickson\Desktop\testViews\dickson-branchname-1");
             //mainWindowViewModel.NavigationHelper.StartAutoRefresh();
 
             // TEST ADDING NON USER VIEW
-            AddSelectedView("aaaaa-tehee");
+            mainWindowViewModel.NavigationHelper.AddSelectedView("aaaaa-tehee");
             //AddSelectedView("username-branchname-3");
-        }
-
-        public void AddSelectedView(string view)
-        {
-            mainWindowViewModel.NavigationHelper.RequestLock();
-            mainWindowViewModel.NavigationHelper.RequestedAddView = view;
-            mainWindowViewModel.NavigationHelper.ReleaseLock();
-        }
-
-        public void RemoveSelectedView(string view)
-        {
-            mainWindowViewModel.NavigationHelper.RequestLock();
-            mainWindowViewModel.NavigationHelper.RequestedRemoveView = view;
-            mainWindowViewModel.NavigationHelper.ReleaseLock();
         }
 
         private void Button_Click_Unmount(object sender, RoutedEventArgs e)
@@ -62,8 +49,7 @@ namespace PANDA
             //mainWindowViewModel.NavigationHelper.StopAutoRefresh();
 
             // TEST ADDING NON USER VIEW
-            
-            RemoveSelectedView("aaaaa-tehee");
+            mainWindowViewModel.NavigationHelper.RemoveSelectedView("aaaaa-tehee");
         }
     }
 }

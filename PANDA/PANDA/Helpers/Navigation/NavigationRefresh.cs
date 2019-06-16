@@ -3,6 +3,7 @@ using MaterialDesignThemes.Wpf;
 using PANDA.ViewModel;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Threading;
@@ -43,6 +44,30 @@ namespace PANDA
         public void ReleaseLock()
         {
             m_mutex.Release();
+        }
+
+        // ----------------------------------------------------------------------------------------
+        // Class       : NavigationHelper
+        // Method      : AddSelectedView
+        // Description : Sets the RequestedAddView parameter to the requested view under lock.
+        // ----------------------------------------------------------------------------------------
+        public void AddSelectedView(string view)
+        {
+            RequestLock();
+            RequestedAddView = view;
+            ReleaseLock();
+        }
+
+        // ----------------------------------------------------------------------------------------
+        // Class       : NavigationHelper
+        // Method      : RemoveSelectedView
+        // Description : Sets the RequestedRemoveView parameter to the requested view under lock.
+        // ----------------------------------------------------------------------------------------
+        public void RemoveSelectedView(string view)
+        {
+            RequestLock();
+            RequestedRemoveView = view;
+            ReleaseLock();
         }
 
         // ----------------------------------------------------------------------------------------
@@ -148,13 +173,6 @@ namespace PANDA
                     Console.WriteLine("An element with Key = " + dir.Name + " already exists."); // Should never happen.
                 }
             }
-            test();
-        }
-
-        public void test()
-        {
-            ClearcaseManagerViewModel viewModel = (ClearcaseManagerViewModel) GetViewModelFromMap("ClearcaseManagerViewModel");
-            viewModel.ClearcaseManagerAutocompleteSource = new ClearcaseManagerAutocompleteSource(ClearcaseViewDictionary.Values.ToList());
         }
 
         // ----------------------------------------------------------------------------------------
@@ -299,8 +317,21 @@ namespace PANDA
 
         // ----------------------------------------------------------------------------------------
         // Class       : NavigationHelper
+        // Method      : UpdateClearcaseManagerAutocompleteSource
+        // Description : Sets the ClearcaseManagerAutocompleteSource to the latest views update.
+        // ----------------------------------------------------------------------------------------
+        public void UpdateClearcaseManagerAutocompleteSource()
+        {
+            ClearcaseManagerViewModel viewModel = (ClearcaseManagerViewModel)GetViewModelFromMap("ClearcaseManagerViewModel");
+            viewModel.ClearcaseManagerAutocompleteSource = new ClearcaseManagerAutocompleteSource(ClearcaseViewDictionary.Values.ToList());
+            viewModel.ClearcaseManagerBackgroundRefreshSource = new ObservableCollection<ClearcaseManagerViewItem>(navigationClearcaseViews.ToList());
+        }
+
+        // ----------------------------------------------------------------------------------------
+        // Class       : NavigationHelper
         // Method      : RefreshClearcaseViewsPeriodically
         // Description : This asynchronous Task refreshes the available views periodically.
+        //               The update processing handles both internal and external updates.
         // ----------------------------------------------------------------------------------------
         public async Task RefreshClearcaseViewsPeriodically(TimeSpan interval, CancellationToken cancellationToken)
         {
@@ -317,9 +348,13 @@ namespace PANDA
                         continue;
                     }
 
+                    // Internal Updates
                     GetLatestAvailableViews(directoryPath);
                     UpdateNavigationRemovals();
                     UpdateNavigationAdditions();
+
+                    // External Updates
+                    UpdateClearcaseManagerAutocompleteSource();
 
                     await Task.Delay(interval, cancellationToken);
                 }
