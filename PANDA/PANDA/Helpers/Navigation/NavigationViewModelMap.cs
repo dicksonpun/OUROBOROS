@@ -20,7 +20,8 @@ namespace PANDA
         // ----------------------------------------------------------------------------------------
         public ViewModel.ViewModel GetViewModelFromMap(string key, string arg1 = null)
         {
-            if (!ViewModelExist(key))
+            // Only add if the key doesn't already exist
+            if (!ViewModelMap.ContainsKey(key))
             {
                 if (key.StartsWith("ClearcaseViewTabControlViewModel"))
                 {
@@ -38,19 +39,15 @@ namespace PANDA
             }
             return ViewModelMap[key]; ;
         }
-        public bool ViewModelExist(string key)
-        {
-            return ViewModelMap.ContainsKey(key);
-        }
 
         public void RemoveViewModelFromMap(string key)
         {
-            ViewModelMap.Remove(key);
-        }
-
-        public void AddToViewModelMap(string viewToAdd)
-        {
-            GetViewModelFromMap(viewToAdd);
+            // Note: The out parameter is discarded since it is not used/needed.
+            if (ViewModelMap.TryGetValue(key, out _))
+            {
+                // Only remove the entry if it currently exists.
+                ViewModelMap.Remove(key);
+            }
         }
     }
 }

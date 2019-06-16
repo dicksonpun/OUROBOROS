@@ -25,6 +25,8 @@ namespace PANDA
         // Members
         private readonly MainWindow m_mainWindow;
         public List<ClearcaseManagerViewItem> navigationClearcaseViews;
+        public string RequestedAddView;
+        public string RequestedRemoveView;
 
         public NavigationHelper(MainWindow currentMainWindow, 
                                 SupportedNetworkModeHelper supportedNetworkModeHelper,
@@ -34,6 +36,7 @@ namespace PANDA
             m_supportedNetworkModeHelper = supportedNetworkModeHelper;
             m_YDriveMounter              = YDriveMounter;
             navigationClearcaseViews     = new List<ClearcaseManagerViewItem>();
+            RequestedAddView             = string.Empty;
         }
 
         public void InitializeNavigationDrawerNav()
@@ -128,11 +131,17 @@ namespace PANDA
         }
 
         private ObservableCollection<INavigationItem> m_navigationItems;
-
         public ObservableCollection<INavigationItem> NavigationItems
         {
             get { return m_navigationItems; }
             set { m_navigationItems = value; }
+        }
+
+        private ObservableCollection<string> m_availableViews;
+        public ObservableCollection<string> AvailableViews
+        {
+            get { return m_availableViews; }
+            set { m_availableViews = value; }
         }
     }
 }
