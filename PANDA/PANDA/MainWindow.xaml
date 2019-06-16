@@ -42,10 +42,8 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" />
-                    <!--HEIGHT FOR APPBAR-->
-                    <RowDefinition Height="*" />
-                    <!--HEIGHT FOR REST OF WINDOW-->
+                    <RowDefinition Height="Auto" /> <!--HEIGHT FOR APPBAR-->
+                    <RowDefinition Height="*" />    <!--HEIGHT FOR REST OF WINDOW-->
                 </Grid.RowDefinitions>
 
                 <materialDesignExtControls:AppBar Type="Medium" x:Name="appBar" Grid.ColumnSpan="3" Title="P A N D A" ShowShadow="True" AppIcon="{StaticResource AppBarIcon}">

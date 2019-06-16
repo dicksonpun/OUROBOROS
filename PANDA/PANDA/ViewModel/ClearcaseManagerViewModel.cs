@@ -1,51 +1,15 @@
 ﻿using MaterialDesignExtensions.Model;
 using MaterialDesignThemes.Wpf;
-using PANDA;
-using System;
-using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Windows.Controls;
 
 namespace PANDA.ViewModel
 {
     public class ClearcaseManagerViewModel : ViewModel
     {
-        private PackIconKind m_autocompleteTextBoxIcon;
-        public PackIconKind AutocompleteTextBoxIcon
-        {
-            get { return m_autocompleteTextBoxIcon; }
-            set
-            {
-                // Only update if it changes
-                if (m_autocompleteTextBoxIcon != value)
-                {
-                    m_autocompleteTextBoxIcon = value;
-                    OnPropertyChanged(nameof(AutocompleteTextBoxIcon));
-                }
-            }
-        }
-
-        private string m_viewSearchTextBoxValue;
-        public string ViewSearchTextBoxValue
-        {
-            get { return m_viewSearchTextBoxValue; }
-            set
-            {
-                // Only update if it changes
-                if (m_viewSearchTextBoxValue != value)
-                {
-                    m_viewSearchTextBoxValue = value;
-                    OnPropertyChanged(nameof(ViewSearchTextBoxValue));
-                }
-            }
-        }
-
+        // Autocomplete Databinding
         private AutocompleteSourceChangingItems<ClearcaseManagerViewItem> m_clearcaseManagerAutocompleteSource;
         public AutocompleteSourceChangingItems<ClearcaseManagerViewItem> ClearcaseManagerAutocompleteSource
         {
@@ -57,6 +21,7 @@ namespace PANDA.ViewModel
             }
         }
 
+        // Selected Item Databinding
         private object m_selectedItem;
         public object SelectedItem
         {
@@ -65,42 +30,55 @@ namespace PANDA.ViewModel
             set
             {
                 m_selectedItem = value;
-                OnPropertyChanged(nameof(SelectedItem));
+                if (m_selectedItem != null)
+                {
+                    // Only invoke property change if valid item was selected
+                    OnPropertyChanged(nameof(SelectedItem));
+                }
+                
             }
+        }
+
+        // Background Refresh Settings Databinding
+        private ObservableCollection<ClearcaseManagerViewItem> m_clearcaseManagerBackgroundRefreshSource;
+        public ObservableCollection<ClearcaseManagerViewItem> ClearcaseManagerBackgroundRefreshSource
+        {
+            get { return m_clearcaseManagerBackgroundRefreshSource; }
+            set
+            {
+                m_clearcaseManagerBackgroundRefreshSource = value;
+                OnPropertyChanged(nameof(ClearcaseManagerBackgroundRefreshSource));
+            }
+        }
+
+        // Members
+        NavigationHelper m_navigationHelper;
+
+        // Constructor
+        public ClearcaseManagerViewModel(NavigationHelper navigationHelper) : base()
+        {
+            ClearcaseManagerAutocompleteSource = new ClearcaseManagerAutocompleteSource(new List<ClearcaseManagerViewItem>());
+            ClearcaseManagerBackgroundRefreshSource = new ObservableCollection<ClearcaseManagerViewItem>();
+            m_selectedItem = null;
+
+            // Initialize Helper
+            m_navigationHelper = navigationHelper;
+
+            // Register to the PropertyChanged event in the class Constructor
+            this.PropertyChanged += ClearcaseManagerViewModel_PropertyChanged;
         }
 
         // PropertyChanged event handler
         private void ClearcaseManagerViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Console.WriteLine("A property has changed: " + e.PropertyName);
-
+            // Console.WriteLine("A property has changed: " + e.PropertyName);
             switch (e.PropertyName)
             {
-                case (nameof(ClearcaseManagerAutocompleteSource)):
-                    if (ConnectionAvailable)
-                    {
-                        ViewSearchTextBoxValue = "Search available views...";
-                        AutocompleteTextBoxIcon = PackIconKind.Magnify;
-                    }
-                    else
-                    {
-                        ViewSearchTextBoxValue = "Establishing connection...";
-                        AutocompleteTextBoxIcon = PackIconKind.SyncWarning;
-                    }
+                case (nameof(SelectedItem)):
+                    ClearcaseManagerViewItem viewItem = (ClearcaseManagerViewItem)SelectedItem;
+                    m_navigationHelper.AddSelectedView(viewItem.ViewName);
                     break;
             }
-        }
-
-        public bool ConnectionAvailable { get; set; }
-
-        public ClearcaseManagerViewModel() : base()
-        {
-            ConnectionAvailable = false;
-            ClearcaseManagerAutocompleteSource = new ClearcaseManagerAutocompleteSource(new List<ClearcaseManagerViewItem>());
-            m_selectedItem = null;
-
-            // Register to the PropertyChanged event in the class Constructor
-            this.PropertyChanged += ClearcaseManagerViewModel_PropertyChanged;
         }
     }
 
@@ -114,7 +92,7 @@ namespace PANDA.ViewModel
 
     public class ClearcaseManagerAutocompleteSource : AutocompleteSourceChangingItems<ClearcaseManagerViewItem>
     {
-        private List<ClearcaseManagerViewItem> m_clearcaseManagerViewItems { get; set; }
+        private List<ClearcaseManagerViewItem> m_clearcaseManagerViewItems;
         public ClearcaseManagerAutocompleteSource(List<ClearcaseManagerViewItem> newList)
         {
             m_clearcaseManagerViewItems = newList;

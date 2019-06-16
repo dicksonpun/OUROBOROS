@@ -4,7 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PANDA.Controls"
-             xmlns:wpfLib="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
              xmlns:converters="clr-namespace:MaterialDesignExtensions.Converters;assembly=MaterialDesignExtensions"
              mc:Ignorable="d" 
@@ -12,38 +12,50 @@
     <UserControl.Resources>
         <converters:NullToVisibilityConverter x:Key="notNullToVisibleConverter" NullValue="Collapsed" NotNullValue="Visible" />
 
-        <DataTemplate x:Key="itemTemplate">
+        <DataTemplate x:Key="itemTemplate_Autocomplete">
             <DockPanel>
-                <wpfLib:PackIcon DockPanel.Dock="Left" Kind="{Binding Path=Icon}" Width="24" Height="24" VerticalAlignment="Center" SnapsToDevicePixels="True" />
+                <materialDesign:PackIcon DockPanel.Dock="Left" Kind="{Binding Path=Icon}" Width="24" Height="24" VerticalAlignment="Center" SnapsToDevicePixels="True" />
                 <TextBlock FontSize="14" Text="{Binding Path=ViewName}" VerticalAlignment="Center" Margin="24,0,0,0" />
             </DockPanel>
         </DataTemplate>
 
-        <DataTemplate x:Key="itemTemplateDense">
+        <DataTemplate x:Key="itemTemplate_BackgroundRefreshSettings">
             <DockPanel>
-                <wpfLib:PackIcon DockPanel.Dock="Left" Kind="{Binding Path=Icon}" Width="12" Height="12" VerticalAlignment="Center" SnapsToDevicePixels="True" />
-                <TextBlock FontSize="12" Text="{Binding Path=ViewName}" VerticalAlignment="Center" Margin="24,0,0,0" />
+                <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}"/>
+                <TextBlock Text="{Binding Path=ViewName}" Margin="20,15,0,15"/>
             </DockPanel>
         </DataTemplate>
     </UserControl.Resources>
+
     <Grid>
         <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="16"
                       HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <StackPanel HorizontalAlignment="Center" Width="700" Orientation="Vertical">
-                <controls:Autocomplete x:Name="autocomplete" AutocompleteSource="{Binding Path=ClearcaseManagerAutocompleteSource}" Height="52" Margin="0,0,0,0"
-                                       ItemTemplate="{StaticResource itemTemplate}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}">
+            <StackPanel HorizontalAlignment="Center" Width="600" Orientation="Vertical">
+                <controls:Autocomplete x:Name="autocomplete" AutocompleteSource="{Binding Path=ClearcaseManagerAutocompleteSource}" Height="50" Margin="0,0,0,0"
+                                       ItemTemplate="{StaticResource itemTemplate_Autocomplete}" SelectedItem="{Binding Path=SelectedItem, Mode=TwoWay}">
                     <controls:Autocomplete.Hint>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
-                            <wpfLib:PackIcon Kind="Magnify" Width="24" Height="24" VerticalAlignment="Center" />
-                            <TextBlock Text="Select Available Views" FontSize="{Binding Path=FontSize, ElementName=autocomplete}"
-                                       Margin="16,0,0,0" VerticalAlignment="Center" />
+                            <materialDesign:PackIcon Kind="Magnify" Width="24" Height="24" VerticalAlignment="Center" />
+                            <TextBlock Text="Add View" FontSize="{Binding Path=FontSize, ElementName=autocomplete}"
+                                    Margin="16,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                     </controls:Autocomplete.Hint>
                 </controls:Autocomplete>
-                <StackPanel Orientation="Vertical" Margin="0,32,0,0" Visibility="{Binding Path=SelectedItem, Converter={StaticResource notNullToVisibleConverter}}">
-                    <TextBlock Text="Your selection:" Margin="0,0,0,8" />
-                    <ContentControl Content="{Binding Path=SelectedItem}" ContentTemplate="{StaticResource itemTemplate}" />
+
+                <StackPanel>
+                    <Expander HorizontalAlignment="Stretch" Header="Background Refresh Settings" Margin="0,10,0,0">
+                        <StackPanel Orientation="Horizontal" TextBlock.Foreground="{DynamicResource MaterialDesignBody}" Margin="24,8,24,16">
+                            <ItemsControl ItemsSource="{Binding Path=ClearcaseManagerBackgroundRefreshSource}" ItemTemplate="{StaticResource itemTemplate_BackgroundRefreshSettings}" >
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <VirtualizingStackPanel Orientation="Vertical"/>
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Expander>
                 </StackPanel>
+
             </StackPanel>
         </ScrollViewer>
     </Grid>

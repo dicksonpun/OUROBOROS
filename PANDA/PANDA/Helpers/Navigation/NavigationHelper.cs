@@ -115,7 +115,7 @@ namespace PANDA
                     };
                 case NAVIGATION_CATEGORY.VERSION_CONTROL:
                     // Instantiate ViewModels
-                    GetViewModelFromMap("ClearcaseManagerViewModel");
+                    GetViewModelFromMap("ClearcaseManagerViewModel", this);
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "VERSION CONTROL" },
