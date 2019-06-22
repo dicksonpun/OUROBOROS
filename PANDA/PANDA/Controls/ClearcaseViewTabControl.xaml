@@ -9,7 +9,7 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800" Background="Transparent">
     <TabControl ItemsSource="{Binding ClearcaseViewTabItems}" SelectedIndex="{Binding SelectedIndex}"
-                Style="{StaticResource MaterialDesignTabControl}" mde:TabControlAssist.TabHeaderAlignment="Left">
+                Style="{StaticResource MaterialDesignTabControl}" mde:TabControlAssist.TabHeaderAlignment="Stretch">
         <TabControl.ItemTemplate>
             <DataTemplate>
                 <StackPanel Orientation="Horizontal">
@@ -22,9 +22,7 @@
         </TabControl.ItemTemplate>
         <TabControl.ContentTemplate>
             <DataTemplate>
-                <StackPanel>
-                    <TextBlock Text="{Binding Header}" />
-                </StackPanel>
+                <ContentControl Content="{Binding TabChildViewModel}" />
             </DataTemplate>
         </TabControl.ContentTemplate>
     </TabControl>

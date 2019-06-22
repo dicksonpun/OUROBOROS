@@ -20,10 +20,13 @@
         </DataTemplate>
 
         <DataTemplate x:Key="itemTemplate_BackgroundRefreshSettings">
-            <DockPanel>
-                <ToggleButton Style="{StaticResource MaterialDesignSwitchToggleButton}"/>
-                <TextBlock Text="{Binding Path=ViewName}" Margin="20,15,0,15"/>
-            </DockPanel>
+            <Button Style="{StaticResource MaterialDesignRaisedButton}" Click="BackgroundRefreshBadgeButton_OnClick" Margin="0,10,0,0">
+                <StackPanel Orientation="Horizontal" >
+                    <TextBlock FontSize="14" Text="{Binding Path=ViewName}" VerticalAlignment="Center" Width="340"/>
+                    <materialDesign:PackIcon Kind="SyncWarning" Width="24" Height="24" SnapsToDevicePixels="True"/>
+                    <TextBlock FontSize="14" Text="Auto-Refreshing..." VerticalAlignment="Center" Width="130" Margin="20,0,0,0"/>
+                </StackPanel>
+            </Button>
         </DataTemplate>
     </UserControl.Resources>
 
@@ -36,17 +39,17 @@
                     <controls:Autocomplete.Hint>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="Magnify" Width="24" Height="24" VerticalAlignment="Center" />
-                            <TextBlock Text="Add View" FontSize="{Binding Path=FontSize, ElementName=autocomplete}"
+                            <TextBlock Text="Search for views..." FontSize="{Binding Path=FontSize, ElementName=autocomplete}"
                                     Margin="16,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                     </controls:Autocomplete.Hint>
                 </controls:Autocomplete>
 
                 <StackPanel>
-                    <Expander HorizontalAlignment="Stretch" Header="Background Refresh Settings" Margin="0,10,0,0">
+                    <Expander Header="Background Refresh Settings" HorizontalAlignment="Stretch" Margin="0,10,0,0">
                         <StackPanel Orientation="Horizontal" TextBlock.Foreground="{DynamicResource MaterialDesignBody}" Margin="24,8,24,16">
                             <ItemsControl ItemsSource="{Binding Path=ClearcaseManagerBackgroundRefreshSource}" ItemTemplate="{StaticResource itemTemplate_BackgroundRefreshSettings}" >
-                                <ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemsPanel >
                                     <ItemsPanelTemplate>
                                         <VirtualizingStackPanel Orientation="Vertical"/>
                                     </ItemsPanelTemplate>

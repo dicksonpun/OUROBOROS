@@ -31,16 +31,15 @@ namespace PANDA.ViewModel
                 // Note: Keep TODO entry as top entry
                 new VersionLogItem() { Version     = "TODOs - GUI Only",
                                        UpdateNotes = "CURRENTLY IN DEVELOPMENT"                                                          + "\n" +
-                                                     bullet + "Add vob periodic search"                                                  + "\n" +
+                                                     bullet + "Update tabcontrol ui / vob search / filter"                               + "\n" +
+                                                     bullet + "Add FileSystemWatcher for monitoring file and folder changes"             + "\n" +
                                                      "\nHIGH PRIORITY"                                                                   + "\n" +
-                                                     bullet + "ADD: Clearcase Branch Helper layout"                                      + "\n" +
-                                                     bullet + "ADD: function to add and remove views"                                    + "\n" +
+                                                     bullet + "ADD: function to remove views from navigation menu"                       + "\n" +
                                                      bullet + "ADD: function update views - config spec"                                 + "\n" +
                                                      bullet + "ADD: Buttons to support: EDIT, VTREE, DIFF, REVIEW, CONFIGSPEC EDIT"      + "\n" +
                                                      bullet + "ADD: User Settings"                                                       + "\n" +
                                                      bullet + "Make data persistent between application launches"                        + "\n" + 
                                                      bullet + "ADD: Central Location for storing meta files"                             + "\n" +
-                                                     bullet + "ADD: GITHUB to state the branching strategy"                              + "\n" +
                                                      bullet + "Tidy up all files prior to official release"                              + "\n" +
                                                      "\t" + bullet + "Includes section"                                                  + "\n" +
                                                      "\t" + bullet + "Comments / Documentation"                                          + "\n" +
@@ -68,7 +67,6 @@ namespace PANDA.ViewModel
                                                      "\t" + bullet + "FUNCTION: "                               + "\n" +
                                                      bullet + "ADD: Clearcase Branch Helper layout"                                      + "\n" +
                                                      bullet + "ADD: function to add and remove views"                                    + "\n" +
-                                                     bullet + "ADD: function update views"                                               + "\n" +
                                                      bullet + "ADD: Buttons to support: EDIT, VTREE, DIFF, REVIEW, CONFIGSPEC EDIT"      + "\n" +
                                                      bullet + "ADD: User Settings"                                                       + "\n" +
                                                      bullet + "Make data persistent between application launches"                        + "\n" +
@@ -92,8 +90,11 @@ namespace PANDA.ViewModel
                 // Note: Version log entries are in descending order (latest version should be the top-most, following the TODO entry).
                 new VersionLogItem() { Version     = "1.0.0",
                                        UpdateNotes = "INITIAL RELEASE"                                                                   + "\n" +
-                                                     bullet + "Implemented Navigation Window"                                            + "\n" +
+                                                     bullet + "Implemented Navigation Menu"                                              + "\n" +
                                                      "\t" + bullet + "Implemented asynchronous periodic updates"                         + "\n" +
+                                                     bullet + "Implemented Clearcase Manager ViewModel"                                  + "\n" +
+                                                     "\t" + bullet + "Implemented function to add view to navigation menu"               + "\n" +
+                                                     bullet + "Implemented Project Source Helper"                                        + "\n" +
                                                      bullet + "Implemented Licenses log documentation"                                   + "\n" +
                                                      bullet + "Implemented Version log documentation"                                    + "\n" +
                                                      bullet + "Implemented Mount to Drive functionality"                                 + "\n" +
