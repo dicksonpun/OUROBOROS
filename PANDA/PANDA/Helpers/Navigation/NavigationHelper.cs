@@ -10,7 +10,7 @@ namespace PANDA
     public enum NAVIGATION_CATEGORY
     {
         DASHBOARD,
-        VERSION_CONTROL,
+        SOURCE_CONTROL,
         INTEGRATION,
         DOCUMENTATION
     };
@@ -25,7 +25,7 @@ namespace PANDA
 
         // Helpers
         private readonly SupportedNetworkModeHelper m_supportedNetworkModeHelper;
-        private DriveMounter m_YDriveMounter;
+        private readonly DriveMounter m_YDriveMounter;
 
         // Constructors
         public NavigationHelper(MainWindow currentMainWindow, 
@@ -59,7 +59,7 @@ namespace PANDA
         public void PopulateNavigation()
         {
             List<NAVIGATION_CATEGORY> navigationCategoryOrder = new List<NAVIGATION_CATEGORY> { NAVIGATION_CATEGORY.DASHBOARD,
-                                                                                                NAVIGATION_CATEGORY.VERSION_CONTROL,
+                                                                                                NAVIGATION_CATEGORY.SOURCE_CONTROL,
                                                                                                 NAVIGATION_CATEGORY.INTEGRATION,
                                                                                                 NAVIGATION_CATEGORY.DOCUMENTATION };
             // Populate navigation menu
@@ -113,12 +113,12 @@ namespace PANDA
                         new FirstLevelNavigationItem() { Label = "Task Overview",      Icon = PackIconKind.MonitorDashboard, NavigationItemSelectedCallback = item => "UNDER CONSTRUCTION: TASK OVERVIEW" },
                         new DividerNavigationItem(),
                     };
-                case NAVIGATION_CATEGORY.VERSION_CONTROL:
+                case NAVIGATION_CATEGORY.SOURCE_CONTROL:
                     // Instantiate ViewModels
                     GetViewModelFromMap("ClearcaseManagerViewModel", this);
                     return new List<INavigationItem>()
                     {
-                        new SubheaderNavigationItem()  { Subheader = "VERSION CONTROL" },
+                        new SubheaderNavigationItem()  { Subheader = "SOURCE CONTROL" },
                         new FirstLevelNavigationItem() { Label = "Clearcase Manager",  Icon = PackIconKind.GithubFace,       NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseManagerViewModel") },
                         new DividerNavigationItem(),
                     };

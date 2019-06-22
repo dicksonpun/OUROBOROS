@@ -52,7 +52,7 @@ namespace PANDA.ViewModel
         }
 
         // Members
-        NavigationHelper m_navigationHelper;
+        readonly NavigationHelper m_navigationHelper;
 
         // Constructor
         public ClearcaseManagerViewModel(NavigationHelper navigationHelper) : base()
@@ -92,7 +92,7 @@ namespace PANDA.ViewModel
 
     public class ClearcaseManagerAutocompleteSource : AutocompleteSourceChangingItems<ClearcaseManagerViewItem>
     {
-        private List<ClearcaseManagerViewItem> m_clearcaseManagerViewItems;
+        private readonly List<ClearcaseManagerViewItem> m_clearcaseManagerViewItems;
         public ClearcaseManagerAutocompleteSource(List<ClearcaseManagerViewItem> newList)
         {
             m_clearcaseManagerViewItems = newList;

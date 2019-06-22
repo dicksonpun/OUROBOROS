@@ -8,7 +8,7 @@
     <OutputType>WinExe</OutputType>
     <RootNamespace>PANDA</RootNamespace>
     <AssemblyName>PANDA</AssemblyName>
-    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
@@ -29,6 +29,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -102,6 +103,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="Controls\ClearcaseViewTabCodeControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\ClearcaseManagerControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -126,6 +131,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Controls\ClearcaseViewTabCodeControl.xaml.cs">
+      <DependentUpon>ClearcaseViewTabCodeControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ClearcaseManagerControl.xaml.cs">
       <DependentUpon>ClearcaseManagerControl.xaml</DependentUpon>
     </Compile>
@@ -133,15 +141,18 @@
       <DependentUpon>ClearcaseViewTabControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="DebugHelper.cs" />
+    <Compile Include="Helpers\ProjectSource\ProjectSourceHelper.cs" />
     <Compile Include="Helpers\DriveMounter.cs" />
     <Compile Include="Helpers\Navigation\NavigationHelper.cs" />
     <Compile Include="Helpers\Navigation\NavigationRefresh.cs" />
     <Compile Include="Helpers\Navigation\NavigationViewModelMap.cs" />
+    <Compile Include="Helpers\ProjectSource\ProjectSourceUpdate.cs" />
     <Compile Include="Helpers\SupportedNetworkModeHelper.cs" />
     <Compile Include="Controls\VersionLogControl.xaml.cs">
       <DependentUpon>VersionLogControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\ClearcaseManagerViewModel.cs" />
+    <Compile Include="ViewModel\ClearcaseViewTabCodeViewModel.cs" />
     <Compile Include="ViewModel\ClearcaseViewTabControlViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
     <Compile Include="ViewModel\VersionLogViewModel.cs" />

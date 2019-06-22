@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PANDA.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,6 +24,12 @@ namespace PANDA.Controls
         public ClearcaseManagerControl()
         {
             InitializeComponent();
+        }
+        private void BackgroundRefreshBadgeButton_OnClick(object sender, RoutedEventArgs e)
+        {
+            // Handle the event for the selected button.
+            ClearcaseManagerViewItem selectedViewItem = (ClearcaseManagerViewItem)(e.Source as Button).DataContext;
+            string selectedView = selectedViewItem.ViewName;
         }
     }
 }

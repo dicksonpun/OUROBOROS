@@ -16,6 +16,7 @@ namespace PANDA
         // Members
         private CancellationTokenSource cancellationTokenSource;
         public Dictionary<string, ClearcaseManagerViewItem> ClearcaseViewDictionary = new Dictionary<string, ClearcaseManagerViewItem>();
+        public bool UpdateDetectedChanges; // Flag for detecting additions or removals from navigation menu for Clearcase views
 
         // Instantiate a Singleton of the Semaphore with a value of 1. This means that only 1 thread can be granted access at a time.
         private static readonly SemaphoreSlim m_mutex = new SemaphoreSlim(1, 1);
@@ -83,7 +84,7 @@ namespace PANDA
             CancellationToken PeriodicUpdateCancellationToken = cancellationTokenSource.Token;
             try
             {
-                await RefreshClearcaseViewsPeriodically(TimeSpan.FromSeconds(3), PeriodicUpdateCancellationToken);
+                await RefreshClearcaseViewsPeriodically(TimeSpan.FromSeconds(1), PeriodicUpdateCancellationToken);
             }
             catch
             {
@@ -143,36 +144,47 @@ namespace PANDA
 
         // ----------------------------------------------------------------------------------------
         // Class       : NavigationHelper
-        // Method      : GetLatestAvailableViews
+        // Method      : UpdateViews
         // Description : Gets all of the latest available views.
         //               The Dictionary mapping view to ClearcaseManagerViewItem is cleared to account for removals.
         //               The Dictionary is then re-populated with all the latest views.
         //                  - During population, Y-Drive is determined and the icon for the view is updated accordingly.
         //                  - NOTE: Do not need to account for previous Y-Drive mapped view because it was cleared from the start.
         // ----------------------------------------------------------------------------------------
-        public void GetLatestAvailableViews(string directoryPath)
+        public void UpdateViews(string directoryPath)
         {
-            ClearcaseViewDictionary.Clear(); // Clear all entries to account for removals.
-            foreach (var currentDirectory in Directory.GetDirectories(directoryPath))
-            {
-                var dir = new DirectoryInfo(currentDirectory);
-                // The Add method throws an exception if the new key is already in the dictionary. (Unlikely since all entries were cleared prior.)
-                try
-                {
-                    PackIconKind icon = PackIconKind.Git;
-                    if (IsViewMountedToYDrive(dir.Name))
-                    {
-                        icon = PackIconKind.AlphaYBox;
-                    }
-                    ClearcaseManagerViewItem viewItem = new ClearcaseManagerViewItem { Icon = icon, ViewName = dir.Name, ViewPath = dir.FullName };
+            // Clear all entries to account for removals.
+            ClearcaseViewDictionary.Clear();
 
-                    ClearcaseViewDictionary.Add(dir.Name, viewItem);
-                }
-                catch (ArgumentException)
+            // The GetDirectories method throws a variety of exceptions, catch them all and write to log
+            try
+            {
+                foreach (var currentDirectory in Directory.GetDirectories(directoryPath))
                 {
-                    Console.WriteLine("An element with Key = " + dir.Name + " already exists."); // Should never happen.
+                    var dir = new DirectoryInfo(currentDirectory);
+                    // The Add method throws an exception if the new key is already in the dictionary. (Unlikely since all entries were cleared prior.)
+                    try
+                    {
+                        PackIconKind icon = PackIconKind.Git;
+                        if (IsViewMountedToYDrive(dir.Name))
+                        {
+                            icon = PackIconKind.AlphaYBox;
+                        }
+                        ClearcaseManagerViewItem viewItem = new ClearcaseManagerViewItem { Icon = icon, ViewName = dir.Name, ViewPath = dir.FullName };
+
+                        ClearcaseViewDictionary.Add(dir.Name, viewItem);
+                    }
+                    catch (ArgumentException)
+                    {
+                        Console.WriteLine("An element with Key = " + dir.Name + " already exists."); // Should never happen.
+                    }
                 }
             }
+            // TODO: Implement console log
+            catch (UnauthorizedAccessException) { }
+            catch (ArgumentException)           { }
+            catch (PathTooLongException)        { }
+            catch (IOException)                 { }
         }
 
         // ----------------------------------------------------------------------------------------
@@ -238,6 +250,9 @@ namespace PANDA
 
                     // Remove from ViewModelMap
                     RemoveViewModelFromMap(key);
+
+                    // Update change detected flag
+                    UpdateDetectedChanges = true;
                 }
                 else
                 {
@@ -283,8 +298,7 @@ namespace PANDA
             List<ClearcaseManagerViewItem> updatedClearcaseViews = new List<ClearcaseManagerViewItem>();
             foreach (string view in requestedAdds)
             {
-                ClearcaseManagerViewItem value;
-                if (ClearcaseViewDictionary.TryGetValue(view, out value))
+                if (ClearcaseViewDictionary.TryGetValue(view, out ClearcaseManagerViewItem value))
                 {
                     updatedClearcaseViews.Add(value);
                 }
@@ -307,6 +321,9 @@ namespace PANDA
                     GetViewModelFromMap(key, clearcaseItem.ViewPath); // Ensure viewModel is instantiated
                     INavigationItem navigationItem = new FirstLevelNavigationItem() { Label = clearcaseItem.ViewName, Icon = clearcaseItem.Icon, NavigationItemSelectedCallback = item => GetViewModelFromMap(key, clearcaseItem.ViewPath) };
                     NavigationItems.Insert(addIndex, navigationItem);
+
+                    // Update change detected flag
+                    UpdateDetectedChanges = true;
                 }
                 // Increment index regardless of insertion
                 addIndex++;
@@ -348,13 +365,20 @@ namespace PANDA
                         continue;
                     }
 
+                    // Reset flag for detected change in current update
+                    UpdateDetectedChanges = false;
+
                     // Internal Updates
-                    GetLatestAvailableViews(directoryPath);
+                    UpdateViews(directoryPath);
                     UpdateNavigationRemovals();
                     UpdateNavigationAdditions();
 
-                    // External Updates
-                    UpdateClearcaseManagerAutocompleteSource();
+                    // Only update external sources if changes detected
+                    if (UpdateDetectedChanges)
+                    {
+                        // External Updates
+                        UpdateClearcaseManagerAutocompleteSource();
+                    }
 
                     await Task.Delay(interval, cancellationToken);
                 }
