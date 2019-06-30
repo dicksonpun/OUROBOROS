@@ -37,11 +37,10 @@ namespace PANDA.ViewModel
 
             m_clearcaseViewTabItems = new ObservableCollection<ClearcaseViewTabItem>()
             {
-                new ClearcaseViewTabItem() { Header = "Code"    , Kind = PackIconKind.CodeTags       , TabChildViewModel = new ClearcaseViewTabCodeViewModel(viewPath, m_isUserView)},
-                new ClearcaseViewTabItem() { Header = "Memo"    , Kind = PackIconKind.BookOpenOutline, TabChildViewModel = new LicenseLogViewModel()},
-                new ClearcaseViewTabItem() { Header = "Tools"   , Kind = PackIconKind.ServiceToolbox , TabChildViewModel = new LicenseLogViewModel()},
-                new ClearcaseViewTabItem() { Header = "Insights", Kind = PackIconKind.ChartBar       , TabChildViewModel = new LicenseLogViewModel()},
-                new ClearcaseViewTabItem() { Header = "Settings", Kind = PackIconKind.Gear           , TabChildViewModel = new LicenseLogViewModel()}
+                new ClearcaseViewTabItem() { Header = "Code"         , Kind = PackIconKind.CodeTags       , TabChildViewModel = new ClearcaseViewTabCodeViewModel(viewPath, m_isUserView)},
+                new ClearcaseViewTabItem() { Header = "Tools"        , Kind = PackIconKind.ServiceToolbox , TabChildViewModel = new LicenseLogViewModel()},
+                new ClearcaseViewTabItem() { Header = "Insights"     , Kind = PackIconKind.ChartBar       , TabChildViewModel = new LicenseLogViewModel()},
+                new ClearcaseViewTabItem() { Header = "Settings"     , Kind = PackIconKind.Gear           , TabChildViewModel = new LicenseLogViewModel()}
             };
         }
 

@@ -10,7 +10,7 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:materialDesignExtControls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
         mc:Ignorable="d"
-        Title="PANDA"  Height="700" Width="1100" 
+        Height="800" Width="1200" 
         WindowStartupLocation="CenterScreen"
         WindowStyle="SingleBorderWindow"
         ResizeMode="CanResizeWithGrip"
@@ -39,34 +39,39 @@
     
     <Grid>
         <materialDesign:DialogHost Identifier="dialogHost">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="290" />
-                    <ColumnDefinition Width="*" />
-                </Grid.ColumnDefinitions>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto" /> <!--HEIGHT FOR APPBAR-->
-                    <RowDefinition Height="*" />    <!--HEIGHT FOR REST OF WINDOW-->
-                </Grid.RowDefinitions>
-
-                <materialDesignExtControls:AppBar Type="Medium" x:Name="appBar" Grid.ColumnSpan="3" Title="P A N D A" ShowShadow="True" AppIcon="{StaticResource AppBarIcon}">
-                    <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Mount" Click="Button_Click_Mount">
-                        <materialDesign:PackIcon Kind="PlusNetwork" Height="24" Width="24" />
-                    </Button>
-                    <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Unmount" Click="Button_Click_Unmount">
-                        <materialDesign:PackIcon Kind="MinusNetwork" Height="24" Width="24" />
-                    </Button>
-                    <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Settings">
-                        <materialDesign:PackIcon Kind="Settings" Height="24" Width="24" />
-                    </Button>
-                </materialDesignExtControls:AppBar>
-
-                <Border Grid.Row="1" BorderThickness="0,0,1,0" BorderBrush="{DynamicResource MaterialDesignDivider}">
-                    <materialDesignExtControls:SideNavigation x:Name="sideNav" Items="{Binding Path=NavigationItems, Mode=OneWay, UpdateSourceTrigger=Default}"
+            <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding Path=IsNavigationDrawerOpen, ElementName=appBar}" 
+                                       LeftDrawerBackground="{DynamicResource MaterialDesignBackground}">
+                <materialDesign:DrawerHost.LeftDrawerContent>
+                    <materialDesignExtControls:SideNavigation x:Name="navigationDrawerNav" 
+                                                                Items="{Binding Path=NavigationItems, Mode=TwoWay}" 
+                                                                Width="320"
                                                                 NavigationItemSelected="NavigationItemSelectedHandler" />
-                </Border>
-                <ContentControl x:Name="contentControl" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></ContentControl>
-            </Grid>
+                </materialDesign:DrawerHost.LeftDrawerContent>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />      <!--HEIGHT FOR APPBAR-->
+                        <RowDefinition Height="*" />         <!--HEIGHT FOR REST OF WINDOW-->
+                    </Grid.RowDefinitions>
+
+                    <materialDesignExtControls:AppBar x:Name="appBar" Type="Medium" Grid.ColumnSpan="3" ShowShadow="True" ShowNavigationDrawerButton="True">
+                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Mount" Click="Button_Click_Mount">
+                            <materialDesign:PackIcon Kind="PlusNetwork" Height="24" Width="24" />
+                        </Button>
+                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Unmount" Click="Button_Click_Unmount">
+                            <materialDesign:PackIcon Kind="MinusNetwork" Height="24" Width="24" />
+                        </Button>
+                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Settings">
+                            <materialDesign:PackIcon Kind="Settings" Height="24" Width="24" />
+                        </Button>
+                    </materialDesignExtControls:AppBar>
+
+                    <ContentControl x:Name="contentControl" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></ContentControl>
+                </Grid>
+            </materialDesign:DrawerHost>
         </materialDesign:DialogHost>
     </Grid>
 </Window>

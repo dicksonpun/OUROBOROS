@@ -39,7 +39,7 @@
                     <controls:Autocomplete.Hint>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
                             <materialDesign:PackIcon Kind="Magnify" Width="24" Height="24" VerticalAlignment="Center" />
-                            <TextBlock Text="Search for views..." FontSize="{Binding Path=FontSize, ElementName=autocomplete}"
+                            <TextBlock Text="Search for non-user views..." FontSize="{Binding Path=FontSize, ElementName=autocomplete}"
                                     Margin="16,0,0,0" VerticalAlignment="Center" />
                         </StackPanel>
                     </controls:Autocomplete.Hint>

@@ -141,13 +141,14 @@
       <DependentUpon>ClearcaseViewTabControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="DebugHelper.cs" />
-    <Compile Include="Helpers\ProjectSource\ProjectSourceHelper.cs" />
-    <Compile Include="Helpers\DriveMounter.cs" />
-    <Compile Include="Helpers\Navigation\NavigationHelper.cs" />
-    <Compile Include="Helpers\Navigation\NavigationRefresh.cs" />
-    <Compile Include="Helpers\Navigation\NavigationViewModelMap.cs" />
-    <Compile Include="Helpers\ProjectSource\ProjectSourceUpdate.cs" />
-    <Compile Include="Helpers\SupportedNetworkModeHelper.cs" />
+    <Compile Include="Models\ProjectSource\ProjectSourceHelper.cs" />
+    <Compile Include="Models\DriveMounter.cs" />
+    <Compile Include="Models\Navigation\NavigationHelper.cs" />
+    <Compile Include="Models\Navigation\NavigationRefresh.cs" />
+    <Compile Include="Models\Navigation\NavigationViewModelMap.cs" />
+    <Compile Include="Models\ProjectSource\ProjectSourceUpdate.cs" />
+    <Compile Include="Models\Command\RelayCommand.cs" />
+    <Compile Include="Models\SupportedNetworkModeHelper.cs" />
     <Compile Include="Controls\VersionLogControl.xaml.cs">
       <DependentUpon>VersionLogControl.xaml</DependentUpon>
     </Compile>
@@ -167,7 +168,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Helpers\Navigation\NavigationItem.cs" />
+    <Compile Include="Models\Navigation\NavigationItem.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

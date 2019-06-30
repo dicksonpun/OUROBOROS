@@ -82,15 +82,15 @@ namespace PANDA
         // ----------------------------------------------------------------------------------------
         public void SetNavigationSelection(int index)
         {
-            if (m_mainWindow.sideNav.SelectedItem != null)
+            if (m_mainWindow.navigationDrawerNav.SelectedItem != null)
             {
                 // De-select previous item
-                m_mainWindow.sideNav.SelectedItem.IsSelected = false;
+                m_mainWindow.navigationDrawerNav.SelectedItem.IsSelected = false;
             }
 
             // Select current item
             NavigationItems[index].IsSelected = true;
-            m_mainWindow.sideNav.SelectedItem = NavigationItems[index];
+            m_mainWindow.navigationDrawerNav.SelectedItem = NavigationItems[index];
             m_mainWindow.DataContext = this;
         }
 

@@ -29,6 +29,9 @@ namespace PANDA
         public void NavigationItemSelectedHandler(object sender, NavigationItemSelectedEventArgs args)
         {
             mainWindowViewModel.NavigationHelper.SelectNavigationItem(args.NavigationItem);
+
+            // Update Appbar Title
+            mainWindowViewModel.mainWindow.appBar.Title = ((FirstLevelNavigationItem)args.NavigationItem).Label;
         }
 
         // EXPERIMENTAL BUTTONS

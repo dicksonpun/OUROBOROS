@@ -40,10 +40,11 @@ namespace PANDA
             // Create ProjectSourceInfoItem instance and then update it.
             ProjectSourceInfoItem infoItem = new ProjectSourceInfoItem
             {
-                DirInfo = dirInfo,
-                VOBFullPath = VOBFullPath_,
+                IsSelected    = false,
+                DirInfo       = dirInfo,
+                VOBFullPath   = VOBFullPath_,
                 VOBParentPath = VOBParentPath_,
-                Icon    = DetermineProjectSourceIcon(dirInfo),
+                Icon          = DetermineProjectSourceIcon(dirInfo),
                 // Placeholder items
                 SourceControlledStatus = SOURCE_CONTROLLED_STATUS.NOT_SOURCE_CONTROLLED,
                 SourceVersion = 0
@@ -73,8 +74,8 @@ namespace PANDA
                     ProjectSourceDictionary.Add(currentPath, GenerateProjectSourceInfoItem(projectPath, currentPath));
                 }
 
-                // Update AutocompleteSource
-                m_clearcaseViewTabCodeViewModel.ClearcaseCodeAutocompleteSource = new ClearcaseCodeAutocompleteSource(ProjectSourceDictionary.Values.ToList());
+                // Update SearchSourceUnfiltered
+                m_clearcaseViewTabCodeViewModel.SearchSourceUnfiltered = new ObservableCollection<ProjectSourceInfoItem>(ProjectSourceDictionary.Values.ToList());
             }
             // TODO: Implement console log
             catch (UnauthorizedAccessException) { }
@@ -112,6 +113,8 @@ namespace PANDA
                     case ".h"   : return PackIconKind.AlphabetHBox;
                     case ".html": return PackIconKind.LanguageHtml5;
                     case ".java": return PackIconKind.LanguageJava;
+                    case ".jpeg": return PackIconKind.FileImage;
+                    case ".jpg" : return PackIconKind.FileImage;
                     case ".js"  : return PackIconKind.LanguageJavascript;
                     case ".json": return PackIconKind.Json;
                     case ".one" : return PackIconKind.Onenote;
@@ -120,6 +123,7 @@ namespace PANDA
                     case ".penv": return PackIconKind.AlphabetJBox;
                     case ".pjov": return PackIconKind.AlphabetJBox;
                     case ".php" : return PackIconKind.LanguagePhp;
+                    case ".png" : return PackIconKind.FileImage;
                     case ".pprc": return PackIconKind.AlphabetJBox;
                     case ".ppt" : return PackIconKind.FilePowerpoint;
                     case ".py"  : return PackIconKind.LanguagePythonText;
