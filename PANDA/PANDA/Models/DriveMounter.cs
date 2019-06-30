@@ -5,6 +5,11 @@ using System.Text;
 
 namespace PANDA
 {
+    // ----------------------------------------------------------------------------------------
+    // Class       : DriveMounter
+    // Description : A wrapper class to utilize methods from helper class VolumeFunctions
+    //               to create drive mappings interactively.
+    // ----------------------------------------------------------------------------------------
     public class DriveMounter
     {
         // Members
@@ -51,6 +56,11 @@ namespace PANDA
             }
         }
 
+        // ----------------------------------------------------------------------------------------
+        // Class       : VolumeFunctions
+        // Description : Helper class and methods to create drive mappings interactively.
+        // Credit      : https://bytes.com/topic/c-sharp/answers/665910-mounting-virtual-drive
+        // ----------------------------------------------------------------------------------------
         public class VolumeFunctions
         {
             [DllImport("kernel32.dll")]
