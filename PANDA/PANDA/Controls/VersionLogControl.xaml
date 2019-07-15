@@ -8,43 +8,55 @@
              xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
              xmlns:converters="clr-namespace:MaterialDesignExtensions.Converters;assembly=MaterialDesignExtensions"
              mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="700">
-    <DataGrid ItemsSource="{Binding VersionLogItems}" Name="VersionLogDataGrid"
-              AutoGenerateColumns  ="False"
-              CanUserAddRows       ="False" 
-              CanUserDeleteRows    ="False"
-              CanUserReorderColumns="False"
-              CanUserResizeColumns ="False"
-              CanUserResizeRows    ="False"
-              CanUserSortColumns   ="False" >
+             d:DesignHeight="450" d:DesignWidth="900">
+    <UserControl.Resources>
+        <DataTemplate x:Key="itemTemplate_UpdateNotes">
+            <StackPanel Orientation="Vertical">
+                <TextBlock  Text="{Binding Path=Header}"       Style="{StaticResource MaterialDesignTitleTextBlock}"       Margin="25,5"  />
+                <TextBlock  Text="{Binding Path=Description}"  Style="{StaticResource MaterialDesignSubheadingTextBlock}"  Margin="25,5"  />
+            </StackPanel>
+        </DataTemplate>
 
-        <!-- Change selection borders to be transparent. -->
-        <DataGrid.CellStyle>
-            <Style BasedOn="{StaticResource {x:Type DataGridCell}}" TargetType="{x:Type DataGridCell}">
-                <Style.Triggers>
-                    <Trigger Property="DataGridCell.IsSelected" Value="True">
-                        <Setter Property="BorderBrush">
-                            <Setter.Value>
-                                <SolidColorBrush Color="LightGray"/>
-                            </Setter.Value>
-                        </Setter>
-                        <Setter Property="Foreground"
-                            Value="{DynamicResource
-                                   {x:Static SystemColors.ControlTextBrushKey}}"/>
-                        <Setter Property="Background">
-                            <Setter.Value>
-                                <SolidColorBrush Color="LightGray"/>
-                            </Setter.Value>
-                        </Setter>
-                    </Trigger>
-                </Style.Triggers>
-            </Style>
-        </DataGrid.CellStyle>
+        <DataTemplate x:Key="itemTemplate">
+            <materialDesign:Card Background="{DynamicResource MaterialDesignPaper}" Margin="0,10">
+                <StackPanel Width="800">
+                    <Expander>
 
-        <!-- Populate the column with the appropriate databinding. -->
-        <DataGrid.Columns>
-            <DataGridTextColumn Header="Version"      IsReadOnly="True" Binding="{Binding Version}"     Width="150"/>
-            <DataGridTextColumn Header="Update Notes" IsReadOnly="True" Binding="{Binding UpdateNotes}" Width="*" />
-        </DataGrid.Columns>
-    </DataGrid>
+                        <Expander.Header>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock  Text="{Binding Path=Version}"
+                                            Style="{StaticResource MaterialDesignDisplay1TextBlock}"/>
+                            </StackPanel>
+                        </Expander.Header>
+
+                        <ItemsControl ItemsSource="{Binding Path=UpdateNotes}" 
+                              ItemTemplate="{StaticResource itemTemplate_UpdateNotes}" >
+                            <ItemsControl.ItemsPanel >
+                                <ItemsPanelTemplate>
+                                    <VirtualizingStackPanel Orientation="Vertical"/>
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                        </ItemsControl>
+
+                    </Expander>
+                </StackPanel>
+            </materialDesign:Card>
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <ScrollViewer HorizontalAlignment="Stretch"            VerticalAlignment="Stretch" 
+                  HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" >
+        <VirtualizingStackPanel HorizontalAlignment="Center" Orientation="Vertical" >
+            <ItemsControl ItemsSource="{Binding Path=VersionLogItems}" 
+                          ItemTemplate="{StaticResource itemTemplate}"
+                          Margin="0,20">
+                <ItemsControl.ItemsPanel >
+                    <ItemsPanelTemplate>
+                        <VirtualizingStackPanel Orientation="Vertical"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+            </ItemsControl>
+        </VirtualizingStackPanel>
+    </ScrollViewer>
+ 
 </UserControl>

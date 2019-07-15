@@ -20,11 +20,29 @@ namespace PANDA
 
     public class SupportedNetworkModeHelper
     {
+        // Class members
         public NetworkMode CurrentNetworkMode   { get; private set; }
         public List<NetworkMode> SupportedNetworkModes { get; private set; }
+        private MainWindow m_mainWindow;
 
-        private readonly MainWindow m_mainWindow;
+        // Constructor
+        public SupportedNetworkModeHelper(MainWindow mainWindow)
+        {
+            m_mainWindow = mainWindow;
 
+            SupportedNetworkModes = new List<NetworkMode>()
+            {
+                new NetworkMode  {  Name = SUPPORTED_NETWORK_MODES.DEBUG,      NetworkSpecificPath = @"C:\Users\Dickson\Desktop\testViews"},
+                new NetworkMode  {  Name = SUPPORTED_NETWORK_MODES.SERVER_001, NetworkSpecificPath = "ABC1"},
+                new NetworkMode  {  Name = SUPPORTED_NETWORK_MODES.SERVER_002, NetworkSpecificPath = "ABC2"},
+                new NetworkMode  {  Name = SUPPORTED_NETWORK_MODES.OFFLINE,    NetworkSpecificPath = "" },
+            };
+
+            Determine_Network_Mode();
+            Update_Title_Based_On_Network();
+        }
+
+        // Helper functions
         public void Determine_Network_Mode()
         {
             foreach (var SupportedNetworkMode in SupportedNetworkModes)
@@ -46,19 +64,6 @@ namespace PANDA
         public void Update_Title_Based_On_Network()
         {
             m_mainWindow.Title = "[ " + CurrentNetworkMode.Name + " ]" + "   Partially Automated Network Dependent Assistant";
-        }
-
-        public SupportedNetworkModeHelper(MainWindow currentMainWindow)
-        {
-            m_mainWindow = currentMainWindow;
-
-            SupportedNetworkModes = new List<NetworkMode>()
-            {
-                new NetworkMode  {  Name = SUPPORTED_NETWORK_MODES.DEBUG,      NetworkSpecificPath = @"C:\Users\Dickson\Desktop\testViews"},
-                new NetworkMode  {  Name = SUPPORTED_NETWORK_MODES.SERVER_001, NetworkSpecificPath = "ABC1"},
-                new NetworkMode  {  Name = SUPPORTED_NETWORK_MODES.SERVER_002, NetworkSpecificPath = "ABC2"},
-                new NetworkMode  {  Name = SUPPORTED_NETWORK_MODES.OFFLINE,    NetworkSpecificPath = "" },
-            };
         }
     }
 }

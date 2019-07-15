@@ -16,7 +16,9 @@ namespace PANDA
         // Members
         private CancellationTokenSource cancellationTokenSource;
         public Dictionary<string, ClearcaseManagerViewItem> ClearcaseViewDictionary = new Dictionary<string, ClearcaseManagerViewItem>();
-        public bool UpdateDetectedChanges; // Flag for detecting additions or removals from navigation menu for Clearcase views
+        public bool UpdateDetectedChanges;      // Flag for detecting additions or removals from navigation menu for Clearcase views
+        public bool UpdateDetectedYMountChange; // Flag for detecting mounted Y-Drive changed
+        private string PreviousYDriveMountedView = string.Empty;
 
         // Instantiate a Singleton of the Semaphore with a value of 1. This means that only 1 thread can be granted access at a time.
         private static readonly SemaphoreSlim m_mutex = new SemaphoreSlim(1, 1);
@@ -132,7 +134,7 @@ namespace PANDA
         {
             bool result = false;
 
-            string yDrivePath = m_YDriveMounter.volumeFunctions.DriveIsMappedTo("Y:");
+            string yDrivePath = AccessYDriveMounter.volumeFunctions.DriveIsMappedTo("Y:");
             string mountedView = yDrivePath.Split('\\').Last();
             // Check if view is mounted to Y-Drive
             if (mountedView.Equals(viewname))
@@ -148,13 +150,14 @@ namespace PANDA
         // Description : Gets all of the latest available views.
         //               The Dictionary mapping view to ClearcaseManagerViewItem is cleared to account for removals.
         //               The Dictionary is then re-populated with all the latest views.
-        //                  - During population, Y-Drive is determined and the icon for the view is updated accordingly.
-        //                  - NOTE: Do not need to account for previous Y-Drive mapped view because it was cleared from the start.
+        //               Y-Drive is determined and the icon for the Navigation item is updated accordingly.
         // ----------------------------------------------------------------------------------------
         public void UpdateViews(string directoryPath)
         {
             // Clear all entries to account for removals.
             ClearcaseViewDictionary.Clear();
+
+            string currentYDriveMountedView = string.Empty;
 
             // The GetDirectories method throws a variety of exceptions, catch them all and write to log
             try
@@ -169,8 +172,16 @@ namespace PANDA
                         if (IsViewMountedToYDrive(dir.Name))
                         {
                             icon = PackIconKind.AlphaYBox;
+                            currentYDriveMountedView = dir.Name;
                         }
-                        ClearcaseManagerViewItem viewItem = new ClearcaseManagerViewItem { Icon = icon, ViewName = dir.Name, ViewPath = dir.FullName };
+
+                        ClearcaseManagerViewItem viewItem = new ClearcaseManagerViewItem
+                        {
+                            Icon = icon,
+                            ViewName = dir.Name,
+                            ViewPath = dir.FullName,
+                            IsUserView = AccessUserSettingsHelper.DetermineUserOrNonuserView(dir.FullName)
+                        };
 
                         ClearcaseViewDictionary.Add(dir.Name, viewItem);
                     }
@@ -178,6 +189,33 @@ namespace PANDA
                     {
                         Console.WriteLine("An element with Key = " + dir.Name + " already exists."); // Should never happen.
                     }
+                }
+
+                // Check if mounted Y: Drive changed
+                if (!currentYDriveMountedView.Equals(PreviousYDriveMountedView))
+                {
+                    // Loop through all navigation items 
+                    foreach (INavigationItem navItem in NavigationItems)
+                    {
+                        if (navItem.GetType().IsEquivalentTo(new FirstLevelNavigationItem().GetType()))
+                        {
+                            FirstLevelNavigationItem viewNavItem = (FirstLevelNavigationItem)navItem;
+
+                            // Update icons if currently in navigation menu
+                            if (viewNavItem.Label.Equals(PreviousYDriveMountedView) ||
+                                viewNavItem.Label.Equals(currentYDriveMountedView))
+                            {
+                                if (ClearcaseViewDictionary.TryGetValue(viewNavItem.Label, out ClearcaseManagerViewItem buffer)) // Returns true.
+                                {
+                                    viewNavItem.Icon = buffer.Icon;
+                                }
+                            }
+                        }
+                    }
+
+                    // Update mounted view and flag
+                    PreviousYDriveMountedView = currentYDriveMountedView; 
+                    UpdateDetectedYMountChange = true;
                 }
             }
             // TODO: Implement console log
@@ -196,23 +234,21 @@ namespace PANDA
         // ----------------------------------------------------------------------------------------
         public int GetStartingNavigationIndexForClearcaseViews()
         {
-            int result = 0;
             // Loop through all navigation items 
-            for (int i = 0; i < NavigationItems.Count; i++)
+            foreach (INavigationItem navItem in NavigationItems)
             {
-                INavigationItem navItem = NavigationItems[i];
                 if (navItem.GetType().IsEquivalentTo(new FirstLevelNavigationItem().GetType()))
                 {
-                    FirstLevelNavigationItem temp = (FirstLevelNavigationItem)navItem;
-                    if (temp.Label.Equals("Clearcase Manager"))
+                    FirstLevelNavigationItem viewNavItem = (FirstLevelNavigationItem)navItem;
+                    if (viewNavItem.Label.Equals("Clearcase Manager"))
                     {
                         // Set index to entry after found entry
-                        result = NavigationItems.IndexOf(temp) + 1;
-                        break;
+                        return (NavigationItems.IndexOf(viewNavItem) + 1);
                     }
                 }
             }
-            return result;
+
+            return 0; // This should never happen.
         }
 
         // ----------------------------------------------------------------------------------------
@@ -279,9 +315,12 @@ namespace PANDA
         // ----------------------------------------------------------------------------------------
         public void UpdateNavigationAdditions()
         {
-            string myUsername = "dickson"; // TODO: NEED to build user settings profile
+            // Get username
+            string username = AccessUserSettingsHelper.UserProfile.Username.ToString();
+
             List<string> currentNavigationViews = GetListOfViews(navigationClearcaseViews);
-            List<string> requestedAdds = GetListOfViews(ClearcaseViewDictionary.Values.Where(d => d.ViewName.StartsWith(myUsername)).ToList()); // Username views
+            List<string> requestedAdds = GetListOfViews(ClearcaseViewDictionary.Values
+                                        .Where(d => d.ViewName.Split('-').First().Equals(username)).ToList()); // Username views
 
             if (!string.IsNullOrEmpty(RequestedAddView))
             {
@@ -291,7 +330,7 @@ namespace PANDA
             }
 
             requestedAdds = requestedAdds.Union(currentNavigationViews).ToList();
-            requestedAdds.Sort();
+            requestedAdds.Sort(); // Sort before populating list so the list on navigation menu is sorted
             IEnumerable<string> viewsToAdd = requestedAdds.Except(currentNavigationViews);
 
             // Generate updated list of navigation views
@@ -313,13 +352,18 @@ namespace PANDA
             int addIndex = GetStartingNavigationIndexForClearcaseViews();
             foreach (ClearcaseManagerViewItem clearcaseItem in updatedClearcaseViews)
             {
-                string key = "ClearcaseViewTabControlViewModel." + clearcaseItem.ViewName;
+                string key = "ClearcaseViewTabControlViewModel." + clearcaseItem.ViewName; 
 
                 if (viewsToAdd.Contains(clearcaseItem.ViewName))
                 {
                     // Add to navigation
-                    GetViewModelFromMap(key, clearcaseItem.ViewPath); // Ensure viewModel is instantiated
-                    INavigationItem navigationItem = new FirstLevelNavigationItem() { Label = clearcaseItem.ViewName, Icon = clearcaseItem.Icon, NavigationItemSelectedCallback = item => GetViewModelFromMap(key, clearcaseItem.ViewPath) };
+                    GetViewModelFromMap(key, clearcaseItem.ViewPath, username); // Ensure viewModel is instantiated
+                    INavigationItem navigationItem = new FirstLevelNavigationItem()
+                    {
+                        Label                          = clearcaseItem.ViewName,
+                        Icon                           = clearcaseItem.Icon,
+                        NavigationItemSelectedCallback = item => GetViewModelFromMap(key, clearcaseItem.ViewPath, username)
+                    };
                     NavigationItems.Insert(addIndex, navigationItem);
 
                     // Update change detected flag
@@ -352,7 +396,7 @@ namespace PANDA
         // ----------------------------------------------------------------------------------------
         public async Task RefreshClearcaseViewsPeriodically(TimeSpan interval, CancellationToken cancellationToken)
         {
-            string directoryPath = m_supportedNetworkModeHelper.CurrentNetworkMode.NetworkSpecificPath;
+            string directoryPath = AccessSupportedNetworkModeHelper.CurrentNetworkMode.NetworkSpecificPath;
 
             while (true)
             {
@@ -366,7 +410,8 @@ namespace PANDA
                     }
 
                     // Reset flag for detected change in current update
-                    UpdateDetectedChanges = false;
+                    UpdateDetectedChanges      = false;
+                    UpdateDetectedYMountChange = false;
 
                     // Internal Updates
                     UpdateViews(directoryPath);
@@ -374,7 +419,7 @@ namespace PANDA
                     UpdateNavigationAdditions();
 
                     // Only update external sources if changes detected
-                    if (UpdateDetectedChanges)
+                    if (UpdateDetectedChanges || UpdateDetectedYMountChange)
                     {
                         // External Updates
                         UpdateClearcaseManagerAutocompleteSource();

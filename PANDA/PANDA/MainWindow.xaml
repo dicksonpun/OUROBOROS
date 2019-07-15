@@ -10,13 +10,28 @@
         xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
         xmlns:materialDesignExtControls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
         mc:Ignorable="d"
-        Height="800" Width="1200" 
+        Height="800" Width="1220" 
         WindowStartupLocation="CenterScreen"
-        WindowStyle="SingleBorderWindow"
+        WindowStyle="None"
         ResizeMode="CanResizeWithGrip"
-        Background="{DynamicResource MaterialDesignBackground}" 
-        Foreground="{DynamicResource MaterialDesignBody}"
-        FontFamily="pack://application:,,,/MaterialDesignThemes.Wpf;component/Resources/Roboto/#Roboto">
+        TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+        TextElement.FontWeight="Regular"
+        TextElement.FontSize="13"
+        TextOptions.TextFormattingMode="Ideal" 
+        TextOptions.TextRenderingMode="Auto"
+        Background="{DynamicResource MaterialDesignPaper}"
+        FontFamily="{StaticResource MaterialDesignFont}"
+        StateChanged="Window_StateChanged"
+        Closed="Window_Closed">
+    <WindowChrome.WindowChrome>
+        <WindowChrome
+            x:Name="chrome"
+            CaptionHeight="0"
+            CornerRadius="0"
+            GlassFrameThickness="10"
+            ResizeBorderThickness="6"
+            UseAeroCaptionButtons="False" />
+    </WindowChrome.WindowChrome>
     <Window.Resources>
         <!-- Add new view models and their controls here so it is in scope when binding is needed below. -->
         <DataTemplate DataType="{x:Type viewModel:ClearcaseManagerViewModel}">
@@ -31,6 +46,9 @@
         <DataTemplate DataType="{x:Type viewModel:LicenseLogViewModel}">
             <controls:LicenseLogControl />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:UserProfileViewModel}">
+            <controls:UserProfileControl />
+        </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:VersionLogViewModel}">
             <controls:VersionLogControl />
         </DataTemplate>
@@ -38,15 +56,18 @@
     </Window.Resources>
     
     <Grid>
-        <materialDesign:DialogHost Identifier="dialogHost">
-            <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding Path=IsNavigationDrawerOpen, ElementName=appBar}" 
-                                       LeftDrawerBackground="{DynamicResource MaterialDesignBackground}">
+        <materialDesign:DialogHost Identifier="dialogHost" >
+            <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding Path=IsNavigationDrawerOpen, ElementName=appBar}" >
                 <materialDesign:DrawerHost.LeftDrawerContent>
-                    <materialDesignExtControls:SideNavigation x:Name="navigationDrawerNav" 
-                                                                Items="{Binding Path=NavigationItems, Mode=TwoWay}" 
-                                                                Width="320"
-                                                                NavigationItemSelected="NavigationItemSelectedHandler" />
+                    <materialDesign:ColorZone Mode="Light">
+                        <materialDesignExtControls:SideNavigation x:Name="navigationDrawerNav" 
+                                                                    Items="{Binding Path=NavigationItems, Mode=TwoWay}"
+                                                                    NavigationItemSelected="NavigationItemSelectedHandler"
+                                                                    Width="350" MinHeight="800">
+                        </materialDesignExtControls:SideNavigation>
+                    </materialDesign:ColorZone>
                 </materialDesign:DrawerHost.LeftDrawerContent>
+                
                 <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto" />
@@ -54,23 +75,62 @@
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition Height="Auto" />      <!--HEIGHT FOR APPBAR-->
-                        <RowDefinition Height="*" />         <!--HEIGHT FOR REST OF WINDOW-->
+                        <RowDefinition Height="*" />         <!--HEIGHT FOR REST OF WINDOW--> 
                     </Grid.RowDefinitions>
 
-                    <materialDesignExtControls:AppBar x:Name="appBar" Type="Medium" Grid.ColumnSpan="3" ShowShadow="True" ShowNavigationDrawerButton="True">
-                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Mount" Click="Button_Click_Mount">
-                            <materialDesign:PackIcon Kind="PlusNetwork" Height="24" Width="24" />
+                    <materialDesignExtControls:AppBar  Grid.Row="0"     Grid.RowSpan="1" 
+                                                       Grid.Column="0"  Grid.ColumnSpan="2" 
+                                                       x:Name="appBar" 
+                                                       ShowNavigationDrawerButton="True"  
+                                                       Type="Medium"
+                                                       ShowShadow="True"
+                                                       MouseDown="AppBar_MouseDown"
+                                                       MouseDoubleClick="AppBar_MouseDoubleClick">
+                                                   <!--AppIcon="{StaticResource AppBarIcon}"
+                        <Image Source="pack://application:,,,/Resources/Icons/panda.png" Height="45"/>-->
+                        <materialDesignExtControls:AppBar.Resources>
+                            <Style TargetType="materialDesign:PackIcon">
+                                <Setter Property="Height"    Value="24"/>
+                                <Setter Property="Width"     Value="24"/>
+                            </Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignToolForegroundButton}">
+                                <Setter Property="Margin"                Value="0,0,10,0"/>
+                                <Setter Property="VerticalAlignment"     Value="Center"/>
+                            </Style>
+                        </materialDesignExtControls:AppBar.Resources>
+                        
+                        <!--
+                        <Button ToolTip="Experimental Button 1" Click="Button_Click_Mount">
+                            <materialDesign:PackIcon Kind="PlusNetwork"/>
                         </Button>
-                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Unmount" Click="Button_Click_Unmount">
-                            <materialDesign:PackIcon Kind="MinusNetwork" Height="24" Width="24" />
+                        <Button ToolTip="Experimental Button 2" Click="Button_Click_Unmount">
+                            <materialDesign:PackIcon Kind="MinusNetwork" />
                         </Button>
-                        <Button Style="{StaticResource MaterialDesignToolForegroundButton}" Margin="8,0" ToolTip="Settings">
-                            <materialDesign:PackIcon Kind="Settings" Height="24" Width="24" />
+                        -->
+                        
+                        <Button x:Name="Minimize" Click="Minimize_Click" ToolTip="Minimize">
+                            <materialDesign:PackIcon Kind="WindowMinimize" />
+                        </Button>
+                        <Button x:Name="Maximize" Click="Maximize_Click" ToolTip="Maximize">
+                            <materialDesign:PackIcon Kind="WindowMaximize" />
+                        </Button>
+                        <Button   Name="Close" ToolTip="Close" Click="Close_Click">
+                            <materialDesign:PackIcon Kind="Close" />
                         </Button>
                     </materialDesignExtControls:AppBar>
 
-                    <ContentControl x:Name="contentControl" Grid.Column="1" Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"></ContentControl>
+                    <ContentControl Grid.Row="1"     Grid.RowSpan="1" 
+                                    Grid.Column="0"  Grid.ColumnSpan="2" 
+                                    x:Name="contentControl" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" />
+
+                    <materialDesign:Snackbar Grid.Row="1"     Grid.RowSpan="1" 
+                                             Grid.Column="0"  Grid.ColumnSpan="2" 
+                                             x:Name="MainSnackbar"
+                                             MessageQueue="{materialDesign:MessageQueue}"   
+                                             HorizontalAlignment="Center"
+                                             HorizontalContentAlignment="Center"/>
                 </Grid>
+                
             </materialDesign:DrawerHost>
         </materialDesign:DialogHost>
     </Grid>

@@ -51,18 +51,33 @@ namespace PANDA.ViewModel
             }
         }
 
+        // SelectedAction Databinding (Experimental for now)
+        public string SelectedAction
+        {
+            get { return AddLocalProjectFileSystemDialog.SelectedAction; }
+            set
+            {
+                AddLocalProjectFileSystemDialog.SelectedAction = value;
+                OnPropertyChanged(nameof(SelectedAction));
+            }
+        }
+
         // Members
-        readonly NavigationHelper m_navigationHelper;
+        public NavigationHelper AccessNavigationHelper;
+        public FileSystemDialogViewModel AddLocalProjectFileSystemDialog;
 
         // Constructor
         public ClearcaseManagerViewModel(NavigationHelper navigationHelper) : base()
         {
+            // Initialize Helpers
+            AccessNavigationHelper = navigationHelper;
+            AddLocalProjectFileSystemDialog = new FileSystemDialogViewModel();
+
+            // Initialize Members
             ClearcaseManagerAutocompleteSource = new ClearcaseManagerAutocompleteSource(new List<ClearcaseManagerViewItem>());
             ClearcaseManagerBackgroundRefreshSource = new ObservableCollection<ClearcaseManagerViewItem>();
             m_selectedItem = null;
 
-            // Initialize Helper
-            m_navigationHelper = navigationHelper;
 
             // Register to the PropertyChanged event in the class Constructor
             this.PropertyChanged += ClearcaseManagerViewModel_PropertyChanged;
@@ -76,7 +91,7 @@ namespace PANDA.ViewModel
             {
                 case (nameof(SelectedItem)):
                     ClearcaseManagerViewItem viewItem = (ClearcaseManagerViewItem)SelectedItem;
-                    m_navigationHelper.AddSelectedView(viewItem.ViewName);
+                    AccessNavigationHelper.AddSelectedView(viewItem.ViewName);
                     break;
             }
         }
@@ -87,6 +102,7 @@ namespace PANDA.ViewModel
         public PackIconKind Icon { get; set; }
         public string ViewName { get; set; }
         public string ViewPath { get; set; }
+        public bool IsUserView { get; set; }
         public ClearcaseManagerViewItem() { }
     }
 

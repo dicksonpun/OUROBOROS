@@ -10,191 +10,381 @@
              mc:Ignorable="d" 
              d:DesignHeight="800" d:DesignWidth="1200">
     <UserControl.Resources>
-        <materialDesignConverters:NullToVisibilityConverter x:Key="notNullToVisibleConverter" NullValue="Collapsed" NotNullValue="Visible" />
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
         <DataTemplate x:Key="itemTemplate_SearchSource">
-            <DockPanel>
-                <materialDesign:PackIcon DockPanel.Dock="Left" Kind="{Binding Path=Icon}" Width="30" Height="30" VerticalAlignment="Center" Margin="9,0,9,0" />
+            <StackPanel Orientation="Horizontal">
+                <materialDesign:PackIcon Kind="{Binding Path=Icon}" DockPanel.Dock="Left"
+                                         Width="30" Height="30" 
+                                         VerticalAlignment="Center" Margin="9,0,9,0"/>
                 <StackPanel Orientation="Vertical">
-                    <TextBlock TextWrapping="Wrap" FontSize="12" Text="{Binding Path=VOBParentPath}" VerticalAlignment="Center" Margin="2,0,0,0" />
-                    <TextBlock TextWrapping="Wrap" FontSize="16" FontWeight="Bold" Text="{Binding Path=DirInfo.Name}" VerticalAlignment="Center" Margin="2,0,0,0" />
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto" />
+                            <RowDefinition Height="Auto" />
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="560" />
+                            <ColumnDefinition Width="560" />
+
+                        </Grid.ColumnDefinitions>
+                        <!--NOTE: Set filepath/filename containers to MAX columnspan to guarantee they always have enough space.-->
+
+                        <Grid.Resources>
+                            <!--Define styles and the associated target types for this structure to reduce copy/paste errors-->
+                            <Style TargetType="Border">
+                                <Setter Property="Margin"                      Value="2,0,0,0"/>
+                                <Setter Property="CornerRadius"                Value="6"/>
+                            </Style>
+                            <Style TargetType="materialDesign:PackIcon">
+                                
+                                <Setter Property="Foreground"                  Value="Black"/>
+                                <Setter Property="Margin"                      Value="1"/>
+                                <Setter Property="HorizontalAlignment"         Value="Center"/>
+                                <Setter Property="VerticalAlignment"           Value="Center"/>
+                                <Setter Property="HorizontalContentAlignment"  Value="Center"/>
+                                <Setter Property="VerticalContentAlignment"    Value="Center"/>
+                            </Style>
+                        </Grid.Resources>
+
+                        <StackPanel Grid.Row="0"  Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Left">
+                            <TextBlock Text="{Binding Path=DirInfo.Name}"  Margin="0,0,5,0" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="16" FontWeight="Bold" />
+
+                            <Border Background="WhiteSmoke"  ToolTip="View-private object">
+                                <materialDesign:PackIcon     Kind="VisibilityOffOutline" />
+                            </Border>
+                            <Border Background="Pink"        ToolTip="Checked out">
+                                <materialDesign:PackIcon     Kind="ArrowDownBoldHexagonOutline" />
+                            </Border>
+                            <Border Background="DeepSkyBlue" ToolTip="Branch Listing">
+                                <materialDesign:PackIcon     Kind="ScriptTextOutline" />
+                            </Border>
+                            <Border Background="Plum"        ToolTip="Pull Requests">
+                                <materialDesign:PackIcon     Kind="SourcePull" />
+                            </Border>
+                        </StackPanel>
+
+                        <StackPanel Grid.Row="1"  Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Left">
+                            <TextBlock Text="{Binding Path=VOBParentPath}" Margin="0,0,0,0" TextWrapping="Wrap" VerticalAlignment="Center" FontSize="12" FontWeight="Light"/>
+                        </StackPanel>
+
+                        <!--MaxWidth=550 Supports up to 20 Versions + Review Due + Checkout (Half window)-->
+                        <StackPanel Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right" MaxWidth="550">
+                            <StackPanel.Resources>
+                                <Style TargetType="TextBlock">
+                                    <Setter  Property="Foreground" Value="Black"/>
+                                </Style>
+                            </StackPanel.Resources>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="20"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0"    />
+                            </Border>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="19"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0"    />
+                            </Border>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="18"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0"    />
+                            </Border>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="17"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0"    />
+                            </Border>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="16"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0"    />
+                            </Border>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="15"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0"    />
+                            </Border>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="14"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0"    />
+                            </Border>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="13"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0"    />
+                            </Border>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="12"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0"    />
+                            </Border>
+                            <Border Background="CornflowerBlue"        ToolTip="Checked out">
+                                <materialDesign:PackIcon      Kind="BellOutline" />
+                            </Border>
+                            <Border Background="Gold"        ToolTip="Checked out">
+                                <TextBlock Text="11"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0"    />
+                            </Border>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="10"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0" />
+                            </Border>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="9"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0" />
+                            </Border>
+                            <Border Background="Pink"        ToolTip="Checked out">
+                                <materialDesign:PackIcon     Kind="ArrowDownBoldHexagonOutline" />
+                            </Border>
+                            <Border Background="MediumSpringGreen"        ToolTip="Checked out">
+                                <TextBlock Text="8"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0" />
+                            </Border>
+                            <Border Background="MediumSpringGreen"        ToolTip="Checked out">
+                                <TextBlock Text="7"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0" />
+                            </Border>
+                            <Border Background="MediumSpringGreen"        ToolTip="Checked out">
+                                <TextBlock Text="6"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0" />
+                            </Border>
+                            <Border Background="OrangeRed"        ToolTip="Checked out">
+                                <TextBlock Text="5"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0" />
+                            </Border>
+                            <Border Background="OrangeRed"        ToolTip="Checked out">
+                                <TextBlock Text="4"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0" />
+                            </Border>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="3"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0" />
+                            </Border>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="2"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0" />
+                            </Border>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="1"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0" />
+                            </Border>
+                            <Border Background="WhiteSmoke"        ToolTip="Checked out">
+                                <TextBlock Text="0"          VerticalAlignment="Center" HorizontalAlignment="Center" FontWeight="Medium" FontSize="16" Margin="3,0" />
+                            </Border>
+                        </StackPanel>
+                    </Grid>
                 </StackPanel>
-            </DockPanel>
+            </StackPanel>
         </DataTemplate>
 
-        <DataTemplate x:Key="itemTemplateDense">
+        <DataTemplate x:Key="itemTemplate">
             <DockPanel>
-                <materialDesign:PackIcon DockPanel.Dock="Left" Kind="{Binding Path=Icon}" Width="12" Height="12" VerticalAlignment="Center" SnapsToDevicePixels="True" />
-                <TextBlock FontSize="12" Text="{Binding Path=Name}" VerticalAlignment="Center" Margin="24,0,0,0" />
+                <materialDesign:PackIcon Kind="{Binding Path=Icon}" DockPanel.Dock="Left" 
+                                         Width="24" Height="24" 
+                                         VerticalAlignment="Center" SnapsToDevicePixels="True" />
+                <TextBlock FontSize="14" Text="{Binding Path=Name}" VerticalAlignment="Center" Margin="24,0,0,0" />
             </DockPanel>
         </DataTemplate>
     </UserControl.Resources>
 
     <Grid>
-        <ScrollViewer HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Padding="5"
-                      HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <StackPanel HorizontalAlignment="Center" Width="1100" Orientation="Vertical" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />            <!--Search Toolbar-->
+            <RowDefinition Height="Auto" />            <!--Filter Categories-->
+            <RowDefinition Height="*"    />            <!--Search Results-->
+        </Grid.RowDefinitions>
 
-                <TextBox Name="SearchTextbox" Style="{StaticResource MaterialDesignOutlinedTextFieldTextBox}"
-                        FontSize="20" FontWeight="Bold" Margin="2,10,0,10"
-                        VerticalAlignment="Top" Height="70"
-                        TextWrapping="Wrap" IsEnabled="True" 
-                        Focusable="True" Text="{Binding Path=SearchTerm, UpdateSourceTrigger=PropertyChanged}" >
-                    <materialDesign:HintAssist.Hint>
-                        <DockPanel>
-                            <materialDesign:PackIcon Kind="Magnify" Width="30" Height="30" VerticalAlignment="Center" />
-                            <TextBlock Style="{StaticResource MaterialDesignDisplay1TextBlock}"
-                                       Text="Search" FontSize="18" VerticalAlignment="Center" Margin="10,0,0,0"/>
-                        </DockPanel>
-                    </materialDesign:HintAssist.Hint>
-                </TextBox>
+        <!--SEARCH TOOLBAR-->
+        <ToolBarTray Grid.Column="0" Grid.Row="0" IsLocked="True" Width="1220" VerticalAlignment="Top">
+            <ToolBar Style="{DynamicResource MaterialDesignToolBar}">
 
-                <ToolBarTray Margin="0,2,0,0" IsLocked="True">
-                    <!-- When badging in a toolbar, make sure the parent ToolBar.ClipToBounds="False", and manually apply the button style -->
-                    <ToolBar Style="{DynamicResource MaterialDesignToolBar}" ClipToBounds="False">
-                        <Button ToolTip="Edit" Command="{Binding EditCommand}">
-                            <materialDesign:PackIcon        Kind="LeadPencil" />
-                        </Button>
-                        <Button ToolTip="Version Tree">
-                            <materialDesign:PackIcon        Kind="FileTree" />
-                        </Button>
-                        <Button ToolTip="Compare">
-                            <materialDesign:PackIcon        Kind="SelectCompare" />
-                        </Button>
-                        <materialDesign:Badged Badge="{materialDesign:PackIcon Alert}">
-                            <Button  ToolTip="Pending Reviews" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-                                <materialDesign:PackIcon Kind="UserMultipleCheck" />
-                            </Button>
-                        </materialDesign:Badged>
+                <StackPanel Orientation="Horizontal"  Margin="0,0,5,0">
+                    <materialDesign:PackIcon Kind="Magnify" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                    
+                    <TextBox Name="SearchTextbox" 
+                                 FontSize="20" FontWeight="Medium" 
+                                 Width="270" VerticalAlignment="Center" Margin="8,0"
+                                 IsEnabled="True" Focusable="True"
+                                 Text="{Binding Path=SearchTerm, UpdateSourceTrigger=PropertyChanged}">
+                        <materialDesign:HintAssist.Hint>
+                            <TextBlock Text="Search"/>
+                        </materialDesign:HintAssist.Hint>
+                    </TextBox>
 
-                        <Separator />
+                    <materialDesign:PopupBox    StaysOpen="True"   PlacementMode="BottomAndAlignRightEdges">
+                        <materialDesign:PopupBox.ToggleContent>
+                            <materialDesign:PackIcon Kind="Filter" Margin="5,0" Foreground="{DynamicResource MaterialDesignBody}"/>
+                        </materialDesign:PopupBox.ToggleContent>
+                        <Grid  Width="340"      Margin="8,8,8,8">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition       Width="*" />
+                                <ColumnDefinition       Width="Auto" />
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition          Height="*" />
+                                <RowDefinition          Height="*" />
+                                <RowDefinition          Height="*" />
+                                <RowDefinition          Height="*" />
+                                <RowDefinition          Height="*" />
+                                <RowDefinition          Height="*" />
+                            </Grid.RowDefinitions>
 
-                        <Button ToolTip="Check Out">
-                            <materialDesign:PackIcon        Kind="FileUpload" />
-                        </Button>
-                        <Button ToolTip="Undo Check Out">
-                            <materialDesign:PackIcon        Kind="FileUndo" />
-                        </Button>
-                        <Button ToolTip="Check In">
-                            <materialDesign:PackIcon        Kind="FileDownload" />
-                        </Button>
+                            <controls:Autocomplete Grid.Column="0" Grid.Row="0"
+                                                   x:Name="supportedFiltersAutocompleteSource"
+                                                   Style="{StaticResource MaterialDesignAutocomplete}" 
+                                                   AutocompleteSource="{Binding Path=SupportedFiltersAutocompleteSource}" 
+                                                   ItemTemplate="{StaticResource itemTemplate}" 
+                                                   Background="{DynamicResource MaterialDesignPaper}"
+                                                   Margin="5">
+                                <controls:Autocomplete.Hint>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="TagPlus"  VerticalAlignment="Center" />
+                                        <TextBlock Text="Add Filter" Margin="10,0,0,0" />
+                                    </StackPanel>
+                                </controls:Autocomplete.Hint>
+                            </controls:Autocomplete>
 
-                        <materialDesign:Badged Badge="{materialDesign:PackIcon Alert}">
-                            <Button  ToolTip="Pull Requests" Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" Margin="0">
-                                <materialDesign:PackIcon Kind="SourcePull" />
-                            </Button>
-                        </materialDesign:Badged>
+                            <ListBox Grid.Column="0" Grid.Row="1" 
+                                     SelectionMode="Single" Style="{StaticResource MaterialDesignToolToggleFlatListBox}" Margin="5"
+                                     HorizontalAlignment="Center" 
+                                     Background="{DynamicResource MaterialDesignPaper}">
+                                <ListBoxItem>
+                                    <StackPanel Orientation="Horizontal"  Width="140">
+                                        <materialDesign:PackIcon          Kind="File"      Margin="20,5,5,5" />
+                                        <TextBlock Text="Files Only"      FontSize="16"    VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ListBoxItem>
+                                <ListBoxItem>
+                                    <StackPanel Orientation="Horizontal"  Width="140">
+                                        <materialDesign:PackIcon          Kind="Folder"    Margin="10,5,5,5" />
+                                        <TextBlock Text="Folders Only"    FontSize="16"    VerticalAlignment="Center"/>
+                                    </StackPanel>
+                                </ListBoxItem>
 
-                        <Separator />
+                            </ListBox>
 
-                        <ListBox SelectionMode="Single">
-                            <ListBoxItem>
-                                <TextBlock Text="CHECKOUTS"      FontSize="18" />
-                            </ListBoxItem>
-                            <ListBoxItem>
-                                <TextBlock Text="BRANCH LISTING" FontSize="18" />
-                            </ListBoxItem>
-                        </ListBox>
+                            <WrapPanel Grid.Column="0"        Grid.Row="2" >
+                                <materialDesign:Chip  Content="Example Chip"              FontSize="16" IsDeletable="True" Margin="5"/>
+                                <materialDesign:Chip  Content="Example Chip LONG LENGTH"  FontSize="16" IsDeletable="True" Margin="5"/>
+                                <materialDesign:Chip  Content="short"                     FontSize="16" IsDeletable="True" Margin="5"/>
+                                <materialDesign:Chip  Content="Example Chip LONG LENGTH"  FontSize="16" IsDeletable="True" Margin="5"/>
+                            </WrapPanel>
+                        </Grid>
+                    </materialDesign:PopupBox>
+                </StackPanel>
 
-                        <materialDesign:PopupBox IsEnabled="True" StaysOpen="True" Margin="15,0,0,0" PlacementMode="BottomAndAlignRightEdges">
-                            <materialDesign:PopupBox.ToggleContent>
-                                <materialDesign:PackIcon Kind="Filter" />
-                            </materialDesign:PopupBox.ToggleContent>
-                            <Grid Width="350" Margin="8,8,8,8">
-                                <Grid.Resources>
-                                    <Style TargetType="CheckBox" BasedOn="{StaticResource MaterialDesignCheckBox}">
-                                        <Setter Property="Margin" Value="8,8,10,8" />
-                                    </Style>
-                                    <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
-                                        <Setter Property="materialDesign:HintAssist.IsFloating" Value="True" />
-                                        <Setter Property="Margin" Value="8,8,8,8" />
-                                    </Style>
-                                </Grid.Resources>
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="Auto" />
-                                </Grid.ColumnDefinitions>
-                                <Grid.RowDefinitions>
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="*" />
-                                    <RowDefinition Height="*" />
-                                </Grid.RowDefinitions>
-                                <TextBlock  Grid.Column="0" Grid.Row="0" Style="{StaticResource MaterialDesignTitleTextBlock}" Margin="8,8,8,16">
-                                    FILTERS
-                                </TextBlock>
+                <Separator />
 
-                                <ListBox SelectionMode="Single" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
-                                    <ListBoxItem>
-                                        <StackPanel Orientation="Horizontal">
-                                            <materialDesign:PackIcon        Kind="File"     Margin="0,0,4,0"/>
-                                            <TextBlock Text="FILES ONLY"    FontSize="18"   Margin="8,0,0,0"/>
-                                        </StackPanel>
-                                    </ListBoxItem>
-                                    <ListBoxItem>
-                                        <StackPanel Orientation="Horizontal">
-                                            <materialDesign:PackIcon        Kind="Folder"   Margin="0,0,4,0"/>
-                                            <TextBlock Text="FOLDERS ONLY"  FontSize="18"   Margin="8,0,0,0"/>
-                                        </StackPanel>
-                                    </ListBoxItem>
-                                </ListBox>
+                <Button ToolTip="Edit" Command="{Binding EditCommand}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon  Kind="LeadPencil" />
+                        <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Edit" />
+                    </StackPanel>
+                </Button>
 
-                                <StackPanel Grid.Column="0" Grid.Row="2" Grid.ColumnSpan="2">
-                                    <controls:Autocomplete Style="{StaticResource MaterialDesignAutocomplete}" 
-                                                           AutocompleteSource="{Binding Path=AutocompleteSource}" Hint="VOB Filter"
-                                                           Margin="0,16,0,0"
-                                                           ItemTemplate="{StaticResource itemTemplateDense}" />
-                                </StackPanel>
+                <Button ToolTip="Version Tree">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon  Kind="FileTree" />
+                        <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Version Tree"  />
+                    </StackPanel>
+                </Button>
 
-                                <WrapPanel Grid.Column="0" Grid.Row="3" Grid.ColumnSpan="2">
-                                    <materialDesign:Chip  Content="Example Chip"              IsDeletable="True" Margin="2,5,2,0"/>
-                                    <materialDesign:Chip  Content="Example Chip LONG LENGTH"  IsDeletable="True" Margin="2,5,2,0"/>
-                                    <materialDesign:Chip  Content="short"                     IsDeletable="True" Margin="2,5,2,0"/>
-                                    <materialDesign:Chip  Content="Example Chip LONG LENGTH"  IsDeletable="True" Margin="2,5,2,0"/>
-                                    <materialDesign:Chip  Content="Example Chip"              IsDeletable="True" Margin="2,5,2,0"/>
-                                    <materialDesign:Chip  Content="Example Chip"              IsDeletable="True" Margin="2,5,2,0"/>
-                                    <materialDesign:Chip  Content="Example Chip LONG LENGTH"  IsDeletable="True" Margin="2,5,2,0"/>
-                                    <materialDesign:Chip  Content="short"                     IsDeletable="True" Margin="2,5,2,0"/>
-                                    <materialDesign:Chip  Content="Example Chip"              IsDeletable="True" Margin="2,5,2,0"/>
-                                </WrapPanel>
+                <Button ToolTip="Compare">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon  Kind="SelectCompare" />
+                        <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Compare"  />
+                    </StackPanel>
+                </Button>
 
-                                <StackPanel Grid.Column="0" Grid.Row="4" Grid.ColumnSpan="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                                    <Button Content="_Save"   Command="{x:Static materialDesign:PopupBox.ClosePopupCommand}" />
-                                    <Button Content="_Cancel" Command="{x:Static materialDesign:PopupBox.ClosePopupCommand}">
-                                        <Button.Style>
-                                            <Style TargetType="Button" BasedOn="{StaticResource MaterialDesignPopupBoxButton}">
-                                                <Setter Property="Foreground" Value="Red" />
-                                            </Style>
-                                        </Button.Style>
-                                    </Button>
-                                </StackPanel>
-                            </Grid>
-                        </materialDesign:PopupBox>
-                    </ToolBar>
-                </ToolBarTray>
-                
-                <ScrollViewer CanContentScroll="False" MaxHeight="500" Visibility="{Binding Path=SearchResultsVisibility, Converter={StaticResource notNullToVisibleConverter}}">
-                    <DockPanel>
-                        <ListView x:Name="SearchResultsListView"
-                                  ScrollViewer.VerticalScrollBarVisibility="Auto" 
-                                  ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                  ItemsSource="{Binding SearchSourceFiltered}" 
-                                  ItemTemplate="{StaticResource itemTemplate_SearchSource}" 
-                                  PreviewMouseWheel="SearchResults_ListView_PreviewMouseWheel"
-                                  SelectionMode="Extended">
-                            <ListView.ItemContainerStyle>
-                                <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
-                                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                                    <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
-                                    <EventSetter Event="KeyUp"            Handler="SearchResultsListView_KeyUp"/>
-                                </Style>
-                            </ListView.ItemContainerStyle>
-                        </ListView>
-                    </DockPanel>
-                </ScrollViewer>
-                
-            </StackPanel>
-        </ScrollViewer>
+                <Separator />
+
+                <Button ToolTip="Check Out">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon  Kind="ArrowDownBoldHexagonOutline" />
+                        <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Check Out"  />
+                    </StackPanel>
+                </Button>
+                <Button ToolTip="Undo Check Out">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon  Kind="Undo" />
+                        <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Undo Check Out"  />
+                    </StackPanel>
+                </Button>
+                <Button ToolTip="Check In">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon  Kind="ArrowUpBoldHexagonOutline" />
+                        <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Check In"  />
+                    </StackPanel>
+                </Button>
+
+            </ToolBar>
+        </ToolBarTray>
+
+        <!--FILTER CATEGORIES-->
+        <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal" HorizontalAlignment="Center">
+            <!--This MaxWidth caps the padding. See Width below.-->
+            <ListBox SelectionMode="Single" Style="{StaticResource MaterialDesignToolToggleFlatListBox}"  MaxWidth="1220" >
+
+                <ListBox.Resources>
+                    <!--Define styles and the associated target types for this structure to reduce copy/paste errors-->
+                    <Style TargetType="Border">
+                        <Setter Property="Padding"           Value="3,0"/>
+                        <Setter Property="CornerRadius"      Value="6"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                    </Style>
+                    <Style TargetType="TextBlock">
+                        <Setter Property="FontSize"          Value="14"/>
+                        <Setter Property="FontWeight"        Value="Bold"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                    </Style>
+                </ListBox.Resources>
+
+                <ListBoxItem>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon         Kind="ArrowDownBoldHexagonOutline"/>
+                        <TextBlock Text="Checkouts"      Margin="8,0"/>
+                        <Border Background="Pink">
+                            <TextBlock Text="###"        Margin="0,3"/>
+                        </Border>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem>
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon               Kind="ScriptTextOutline"/>
+                        <TextBlock Text="Branch Listing"       Margin="8,0"/>
+                        <Border Background="DeepSkyBlue"       Margin="0,0,6,0" >
+                            <TextBlock Text="5555 Total"       ToolTip="Branch Listing Count"   Margin="0,3"/>
+                        </Border>
+                        <Border Background="MediumSpringGreen" Margin="0,0,6,0" >
+                            <TextBlock Text="1000 Approved"    ToolTip="Approved"                   Margin="0,3"/>
+                        </Border>
+                        <Border Background="Gold"              Margin="0,0,6,0" >
+                            <TextBlock Text="300 Pending"      ToolTip="Pending review"             Margin="0,3"/>
+                        </Border>
+                        <Border Background="OrangeRed"         Margin="0,0,6,0" >
+                            <TextBlock Text="0004 Disapproved" ToolTip="Disapproved"                Margin="0,3"/>
+                        </Border>
+                        <Border Background="WhiteSmoke"        Margin="0,0,6,0" >
+                            <TextBlock Text="0004 No Status"   ToolTip="Not delivered for review"   Margin="0,3"/>
+                        </Border>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem>
+                    <StackPanel Orientation="Horizontal" >
+                        <materialDesign:PackIcon         Kind="SourcePull" />
+                        <TextBlock Text="Pull Requests"  Margin="8,0"/>
+                        <Border Background="Plum">
+                            <TextBlock Text="###"       Margin="0,3"/>
+                        </Border>
+                    </StackPanel>
+                </ListBoxItem>
+                <ListBoxItem>
+                    <!--Width=200 is padding for dynamic growth when numbers vary. See MaxWidth above.-->
+                    <StackPanel Orientation="Horizontal" Width="200">
+                        <materialDesign:PackIcon         Kind="BellOutline"/>
+                        <TextBlock Text="Reviews Due"  Margin="8,0"/>
+
+                        <Border Background="CornflowerBlue"    Margin="0,0,6,0">
+                            <TextBlock Text="0001"         ToolTip="Awaiting your review"       Margin="0,3"/>
+                        </Border>
+
+                    </StackPanel>
+                </ListBoxItem>
+            </ListBox>
+        </StackPanel>
+
+        <!--Search Results-->
+        <VirtualizingStackPanel Grid.Column="0" Grid.Row="2" HorizontalAlignment="Center" Width="1200" Orientation="Vertical" >
+            <ListView x:Name="SearchResultsListView"
+                        ScrollViewer.VerticalScrollBarVisibility="Auto" 
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        ItemsSource="{Binding SearchSourceFiltered}" 
+                        ItemTemplate="{StaticResource itemTemplate_SearchSource}" 
+                        SelectionMode="Extended"
+                        Height="546">
+                <!--Height=546 is the magic number to show max-height-items and clicking the the last row won't auto-advance-->
+                <ListView.ItemContainerStyle>
+                    <Style TargetType="ListViewItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                        <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                        <EventSetter Event="KeyUp"            Handler="SearchResultsListView_KeyUp"/>
+                    </Style>
+                </ListView.ItemContainerStyle>
+            </ListView>
+        </VirtualizingStackPanel>
+        
     </Grid>
 </UserControl>

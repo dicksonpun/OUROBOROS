@@ -24,19 +24,22 @@ namespace PANDA
         public string RequestedRemoveView;
 
         // Helpers
-        private readonly SupportedNetworkModeHelper m_supportedNetworkModeHelper;
-        private readonly DriveMounter m_YDriveMounter;
+        public SupportedNetworkModeHelper AccessSupportedNetworkModeHelper;
+        public UserSettingsHelper AccessUserSettingsHelper;
+        public DriveMounter AccessYDriveMounter;
 
         // Constructors
-        public NavigationHelper(MainWindow currentMainWindow, 
+        public NavigationHelper(MainWindow mainWindow,
                                 SupportedNetworkModeHelper supportedNetworkModeHelper,
+                                UserSettingsHelper userSettingsHelper,
                                 DriveMounter YDriveMounter)
         {
-            m_mainWindow                 = currentMainWindow;
-            m_supportedNetworkModeHelper = supportedNetworkModeHelper;
-            m_YDriveMounter              = YDriveMounter;
-            navigationClearcaseViews     = new List<ClearcaseManagerViewItem>();
-            RequestedAddView             = string.Empty;
+            m_mainWindow                     = mainWindow;
+            AccessSupportedNetworkModeHelper = supportedNetworkModeHelper;
+            AccessUserSettingsHelper         = userSettingsHelper;
+            AccessYDriveMounter              = YDriveMounter;
+            navigationClearcaseViews         = new List<ClearcaseManagerViewItem>();
+            RequestedAddView                 = string.Empty;
         }
 
         // ----------------------------------------------------------------------------------------
@@ -47,7 +50,7 @@ namespace PANDA
         public void InitializeNavigationDrawerNav()
         {
             PopulateNavigation();
-            SetNavigationSelection(1);
+            SetNavigationSelection(1); // Default selection to index of top menu item
             StartAutoRefresh();
         }
 
@@ -99,6 +102,9 @@ namespace PANDA
         // Method      : GetNavigationCategory
         // Description : Returns the requested category-related INavigation items in a list.
         //               If the requested category does not exist, throw an exception.
+        //               NOTE: ALWAYS INSTANTIATE VIEWMODELS, otherwise they are not created until 
+        //                     the function callback occurs which may produce poor responsiveness.
+        //               NOTE: ClearcaseView ViewModels are handled dynamically and not in this function.
         // Parameters  :
         // - NavigationCategory (enum NAVIGATION_CATEGORY) : Navigation categories enumeration. 
         // ----------------------------------------------------------------------------------------
@@ -107,10 +113,12 @@ namespace PANDA
             switch (NavigationCategory)
             {
                 case NAVIGATION_CATEGORY.DASHBOARD:
+                    // Instantiate ViewModels
+                    GetViewModelFromMap("UserProfileViewModel", AccessUserSettingsHelper);
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "DASHBOARD" },
-                        new FirstLevelNavigationItem() { Label = "Task Overview",      Icon = PackIconKind.MonitorDashboard, NavigationItemSelectedCallback = item => "UNDER CONSTRUCTION: TASK OVERVIEW" },
+                        new FirstLevelNavigationItem() { Label = "User Profile",       Icon = PackIconKind.Account,          NavigationItemSelectedCallback = item => GetViewModelFromMap("UserProfileViewModel", AccessUserSettingsHelper) },
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.SOURCE_CONTROL:
@@ -154,10 +162,14 @@ namespace PANDA
             if (navigationItem != null)
             {
                 m_mainWindow.contentControl.Content = navigationItem.NavigationItemSelectedCallback(navigationItem);
+                // Update Appbar Title
+                m_mainWindow.appBar.Title = ((FirstLevelNavigationItem)navigationItem).Label;
             }
             else
             {
-                m_mainWindow.contentControl.Content = null;
+                // If NavigationItem is dynamically removed during runtime, default to user profile.
+                SetNavigationSelection(1); // Default selection to index of top menu item
+                //m_mainWindow.contentControl.Content = null;
             }
         }
 
