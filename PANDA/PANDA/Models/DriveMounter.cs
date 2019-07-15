@@ -30,7 +30,7 @@ namespace PANDA
         // ----------------------------------------------------------------------------------------
         // Class       : DriveMounter
         // Method      : Mount
-        // Description : Mounts the folder to a drive letter.
+        // Description : Mounts the folder to a drive letter, if it exists.
         // Parameters  :
         // - newPath (string) : Full path to folder to be mounted to class drive letter
         // ----------------------------------------------------------------------------------------
@@ -39,21 +39,31 @@ namespace PANDA
             // Only mount if path changed
             if (DrivePath != newPath)
             {
-                // Unmount old path, if it exists
-                if (Directory.Exists(DrivePath))
-                {
-                    volumeFunctions.UnmapFolderFromDrive(DriveLetter, DrivePath);
-                }
-
-                // Update to new path
-                DrivePath = newPath;
-
                 // Mount new path, if it exists
-                if (Directory.Exists(DrivePath))
+                if (Directory.Exists(newPath))
                 {
+                    // Update DrivePath to new path
+                    DrivePath = newPath;
                     volumeFunctions.MapFolderToDrive(DriveLetter, DrivePath);
                 }
             }
+        }
+
+        // ----------------------------------------------------------------------------------------
+        // Class       : DriveMounter
+        // Method      : Unmount
+        // Description : Unmounts the folder to a drive letter, if it exists and is currently mapped to it
+        // ----------------------------------------------------------------------------------------
+        public void Unmount()
+        {
+            if (Directory.Exists(DrivePath) &&
+                volumeFunctions.DriveIsMappedTo(DriveLetter).Equals(DrivePath))
+            {
+                volumeFunctions.UnmapFolderFromDrive(DriveLetter, DrivePath);
+            }
+
+            // Clear DrivePath
+            DrivePath = string.Empty;
         }
 
         // ----------------------------------------------------------------------------------------

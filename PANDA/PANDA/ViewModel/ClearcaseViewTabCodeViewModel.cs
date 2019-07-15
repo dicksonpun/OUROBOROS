@@ -1,31 +1,16 @@
-﻿using MaterialDesignExtensions.Model;
-using MaterialDesignThemes.Wpf;
-using PANDA;
+﻿using MaterialDesignThemes.Wpf;
 using PANDA.Command;
 using PANDA.ViewModel;
-using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
-using System.Windows.Data;
-using System.Windows.Input;
 
 namespace PANDA.ViewModel
 {
     public class ClearcaseViewTabCodeViewModel : ViewModel
     {
-        // Members
-        private ProjectSourceHelper m_projectSourceHelper;
-        private string m_username = "dickson"; // TODO: NEED to build user settings profile
-        private readonly string m_viewPath;
-        private bool m_isUserView;
-
         // SearchSourceUnfiltered Databinding
         private ObservableCollection<ProjectSourceInfoItem> m_searchSourceUnfiltered;
         public ObservableCollection<ProjectSourceInfoItem> SearchSourceUnfiltered
@@ -68,58 +53,87 @@ namespace PANDA.ViewModel
             }
         }
 
-        // SearchResultsVisibility Databinding
-        private object m_searchResultsVisibility;
-        public object SearchResultsVisibility
-        {
-            get { return m_searchResultsVisibility; }
-
-            set
-            {
-                m_searchResultsVisibility = value;
-                OnPropertyChanged(nameof(SearchResultsVisibility));
-            }
-        }
+        // Members
+        private ProjectSourceHelper m_projectSourceHelper;
+        private string m_username;
+        private readonly string m_viewPath;
+        private bool m_isUserView;
 
         // Constructor
-        public ClearcaseViewTabCodeViewModel(string viewPath, bool isUserView) : base()
+        public ClearcaseViewTabCodeViewModel(string viewPath, bool isUserView, string username) : base()
         {
-            m_searchResultsVisibility = null;
-            m_viewPath = viewPath;
+            m_viewPath   = viewPath;
             m_isUserView = isUserView;
+            m_username   = username;
 
             SearchSourceUnfiltered = new ObservableCollection<ProjectSourceInfoItem>();
             SearchSourceFiltered   = new ObservableCollection<ProjectSourceInfoItem>();
             m_projectSourceHelper  = new ProjectSourceHelper(this, viewPath);
         }
 
+        // ----------------------------------------------------------------------------------------
+        // Class       : ClearcaseViewTabCodeViewModel
+        // Method      : UpdateSearchSourceFiltered
+        // Description : Updates the SearchSourceFiltered ObservableCollection with the latest
+        //               detected search term and enabled filters.
+        // ----------------------------------------------------------------------------------------
         public void UpdateSearchSourceFiltered()
         {
-            SearchResultsVisibility = null;
+            // Clear currently selected item(s) before processing new search
+            UnselectAllSelectedItems();
+
+            // Clear current search returns before processing new search
             SearchSourceFiltered.Clear();
 
+            // Get new search results based on new search term (if any)
             if (!string.IsNullOrWhiteSpace(SearchTerm))
             {
-                // NOTE: The more results that are displayed the more memory usage goes up. Only care about the top search results anyway.
-                int resultsLimit = 10;
-                var results = Search(m_searchTerm).Take(resultsLimit);
+                var results = Search(m_searchTerm);
 
                 if (results.Any())
                 {
                     SearchSourceFiltered = new ObservableCollection<ProjectSourceInfoItem>(results.ToList());
-                    SearchResultsVisibility = true;
+
+                    // Default top result as selection
+                    SearchSourceFiltered.First().IsSelected = true;
                 }
             }
         }
 
+        // ----------------------------------------------------------------------------------------
+        // Class       : ClearcaseViewTabCodeViewModel
+        // Method      : Search
+        // Description : Returns a subset of items matching the search term.
+        // Parameters  :
+        // - searchTerm (string) : Input search term
+        // ----------------------------------------------------------------------------------------
         public IEnumerable<ProjectSourceInfoItem> Search(string searchTerm)
         {
-            return m_searchSourceUnfiltered.Where(item => item.DirInfo.Name.ToLower().StartsWith(searchTerm.ToLower()))
+            return m_searchSourceUnfiltered.Where(item => item.DirInfo.Name.ToLower().Contains(searchTerm.ToLower()))
                                            .OrderBy(x => x.DirInfo.Name);
         }
+
+        // ----------------------------------------------------------------------------------------
+        // Class       : ClearcaseViewTabCodeViewModel
+        // Method      : SelectedItems
+        // Description : Returns a subset of items which are currently selected.
+        // ----------------------------------------------------------------------------------------
         public IEnumerable<ProjectSourceInfoItem> SelectedItems()
         {
             return m_searchSourceFiltered.Where(item => item.IsSelected);
+        }
+
+        // ----------------------------------------------------------------------------------------
+        // Class       : ClearcaseViewTabCodeViewModel
+        // Method      : UnselectAllSelectedItems
+        // Description : Unselects all items which are currently selected.
+        // ----------------------------------------------------------------------------------------
+        public void UnselectAllSelectedItems()
+        {
+            foreach (ProjectSourceInfoItem selectedItem in SelectedItems())
+            {
+                selectedItem.IsSelected = false;
+            }
         }
 
         // Commands
@@ -130,7 +144,15 @@ namespace PANDA.ViewModel
         {
             foreach (ProjectSourceInfoItem item in SelectedItems())
             {
-                Process.Start(item.DirInfo.FullName);
+                try
+                {
+                    Process.Start(item.DirInfo.FullName);
+                }
+                catch
+                { 
+                    // Default to notepad++ if an error is thrown (assumes you have at least notepad++ installed)
+                    Process.Start("notepad++.exe", item.DirInfo.FullName);
+                }
             }
         }
     }

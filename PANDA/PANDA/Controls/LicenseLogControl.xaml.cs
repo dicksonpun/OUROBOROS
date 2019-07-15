@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PANDA.ViewModel;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -25,17 +26,14 @@ namespace PANDA.Controls
             InitializeComponent();
         }
 
-        
-        private void ContextMenu_CopyReferenceURL_Button_Click(object sender, RoutedEventArgs e)
+        private void CopyReferenceURL_Button_Click(object sender, RoutedEventArgs e)
         {
-            // Handle the event for the selected ListViewItem. Access it by casting to its datatype:
-            var selectedListViewItem = this.LicenseDataGrid.SelectedItem as PANDA.ViewModel.LicenseLogItem;
-
-            if (this.LicenseDataGrid.SelectedIndex > -1)
+            // Handle the event for the selected button.
+            if (DataContext is LicenseLogViewModel)
             {
-                // Copy the reference URL
-                Clipboard.SetText((selectedListViewItem.ReferenceURL.ToString()));
-            }            
+                LicenseLogItem viewItem = (LicenseLogItem)(e.Source as Button).DataContext;
+                Clipboard.SetText((viewItem.ReferenceURL));
+            }
         }
     }
 }

@@ -17,22 +17,28 @@ namespace PANDA
         //                   The expected key pattern is <viewModel_Type>.<unique_Identifier> 
         //                   The .<unique_Identifier> is optional but required if multiple instances of the same viewModel are created
         // - arg1 (object) : OPTIONAL parameter used to help instantiate ViewModels (MUST BE PROPERLY CASTED BEFORE USE).
-        //                   
+        // - arg2 (object) : OPTIONAL parameter used to help instantiate ViewModels (MUST BE PROPERLY CASTED BEFORE USE).
         // ----------------------------------------------------------------------------------------
-        public ViewModel.ViewModel GetViewModelFromMap(string key, object arg1 = null)
+        public ViewModel.ViewModel GetViewModelFromMap(string key, object arg1 = null, object arg2 = null)
         {
             // Only add if the key doesn't already exist
             if (!ViewModelMap.ContainsKey(key))
             {
-                if (key.StartsWith("ClearcaseManagerViewModel"))
+                if (key.StartsWith("UserProfileViewModel"))
                 {
-                    NavigationHelper navigationHelper = (NavigationHelper)arg1;
-                    ViewModelMap.Add(key, new ClearcaseManagerViewModel(navigationHelper));
+                    UserSettingsHelper helper = (UserSettingsHelper)arg1;
+                    ViewModelMap.Add(key, new UserProfileViewModel(helper));
                 }
-                if (key.StartsWith("ClearcaseViewTabControlViewModel"))
+                else if (key.StartsWith("ClearcaseManagerViewModel"))
+                {
+                    NavigationHelper helper = (NavigationHelper)arg1;
+                    ViewModelMap.Add(key, new ClearcaseManagerViewModel(helper));
+                }
+                else if (key.StartsWith("ClearcaseViewTabControlViewModel"))
                 {
                     string viewPath = (string)arg1;
-                    ViewModelMap.Add(key, new ClearcaseViewTabControlViewModel(viewPath));
+                    string username = (string)arg2;
+                    ViewModelMap.Add(key, new ClearcaseViewTabControlViewModel(viewPath, username));
                 }
                 else if (key.StartsWith("VersionLogViewModel"))
                 {

@@ -15,6 +15,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <IsWebBootstrapper>false</IsWebBootstrapper>
+    <TargetFrameworkProfile />
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -26,10 +27,9 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.0.0.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -53,6 +53,16 @@
   <PropertyGroup>
     <ApplicationIcon>Resources\Icons\panda.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>
+    </TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>false</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
@@ -72,6 +82,7 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.5.1.1345, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.5.1\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="netstandard, Version=2.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51" />
     <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.12.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -81,7 +92,9 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression, Version=4.2.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -115,6 +128,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="Controls\UserConfirmationControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\UserProfileControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Controls\VersionLogControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -140,7 +161,17 @@
     <Compile Include="Controls\ClearcaseViewTabControl.xaml.cs">
       <DependentUpon>ClearcaseViewTabControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Controls\UserConfirmationControl.xaml.cs">
+      <DependentUpon>UserConfirmationControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\UserProfileControl.xaml.cs">
+      <DependentUpon>UserProfileControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\IsUserViewToWarningTextConverter.cs" />
+    <Compile Include="Converters\PackIconLetterYBoxToButtonIconConverter.cs" />
+    <Compile Include="Converters\PackIconLetterYBoxToButtonTextConverter.cs" />
     <Compile Include="DebugHelper.cs" />
+    <Compile Include="Models\CMDHelper.cs" />
     <Compile Include="Models\ProjectSource\ProjectSourceHelper.cs" />
     <Compile Include="Models\DriveMounter.cs" />
     <Compile Include="Models\Navigation\NavigationHelper.cs" />
@@ -152,10 +183,21 @@
     <Compile Include="Controls\VersionLogControl.xaml.cs">
       <DependentUpon>VersionLogControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\UserSettingsHelper.cs" />
+    <Compile Include="Theme.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Theme.settings</DependentUpon>
+    </Compile>
     <Compile Include="ViewModel\ClearcaseManagerViewModel.cs" />
     <Compile Include="ViewModel\ClearcaseViewTabCodeViewModel.cs" />
     <Compile Include="ViewModel\ClearcaseViewTabControlViewModel.cs" />
+    <Compile Include="ViewModel\ColorSettingsViewModel.cs" />
+    <Compile Include="ViewModel\FileSystemControlViewModel.cs" />
+    <Compile Include="ViewModel\FileSystemDialogViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
+    <Compile Include="ViewModel\UserConfirmationViewModel.cs" />
+    <Compile Include="ViewModel\UserProfileViewModel.cs" />
     <Compile Include="ViewModel\VersionLogViewModel.cs" />
     <Compile Include="Controls\LicenseLogControl.xaml.cs">
       <DependentUpon>LicenseLogControl.xaml</DependentUpon>
@@ -187,9 +229,14 @@
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <None Include="packages.config" />
+    <None Include="Properties\app.manifest" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Theme.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Theme.Designer.cs</LastGenOutput>
     </None>
   </ItemGroup>
   <ItemGroup>

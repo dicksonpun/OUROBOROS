@@ -44,35 +44,50 @@ namespace PANDA.Command
 
         public event EventHandler CanExecuteChanged
         {
-            add { CommandManager.RequerySuggested += value; }
+            add    { CommandManager.RequerySuggested += value; }
             remove { CommandManager.RequerySuggested -= value; }
         }
     }
+ 
 
+    /// <summary>
+    /// Taken from http://msdn.microsoft.com/en-us/magazine/dd419663.aspx#id0090030
+    /// </summary>
     public class RelayCommand : ICommand
     {
-        private readonly Predicate<object> _canExecute;
-        private readonly Action<object> _execute;
+        #region Fields
 
-        public RelayCommand(Action<object> execute)
-           : this(execute, null)
+        readonly Action<object> _execute;
+        readonly Predicate<object> _canExecute;
+
+        #endregion // Fields
+
+        #region Constructors
+
+        public RelayCommand(Action<object> execute) : this(execute, null)
         {
-            _execute = execute;
         }
 
         public RelayCommand(Action<object> execute, Predicate<object> canExecute)
         {
-            if (execute == null)
-            {
-                throw new ArgumentNullException("execute");
-            }
-            _execute = execute;
+            _execute = execute ?? throw new ArgumentNullException("execute");
             _canExecute = canExecute;
         }
+        #endregion // Constructors
+
+        #region ICommand Members
 
         public bool CanExecute(object parameter)
         {
-            return _canExecute == null || _canExecute(parameter);
+            return _canExecute == null ? true : _canExecute(parameter);
+        }
+
+        // Ensures WPF commanding infrastructure asks all RelayCommand objects whether their
+        // associated views should be enabled whenever a command is invoked 
+        public event EventHandler CanExecuteChanged
+        {
+            add    { CommandManager.RequerySuggested += value; }
+            remove { CommandManager.RequerySuggested -= value; }
         }
 
         public void Execute(object parameter)
@@ -80,12 +95,6 @@ namespace PANDA.Command
             _execute(parameter);
         }
 
-        // Ensures WPF commanding infrastructure asks all RelayCommand objects whether their
-        // associated views should be enabled whenever a command is invoked 
-        public event EventHandler CanExecuteChanged
-        {
-            add { CommandManager.RequerySuggested += value; }
-            remove { CommandManager.RequerySuggested -= value; }
-        }
+        #endregion // ICommand Members
     }
 }
