@@ -60,8 +60,9 @@
   <PropertyGroup>
     <GenerateManifests>false</GenerateManifests>
   </PropertyGroup>
+  <PropertyGroup />
   <PropertyGroup>
-    <ApplicationManifest>Properties\app.manifest</ApplicationManifest>
+    <NoWin32Manifest>true</NoWin32Manifest>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
