@@ -6,4 +6,4 @@ This C# project is a proof of concept on how Material Design in XAML is used and
 
 The prototype demo consists primarily of GUI logic. 
 
-The non-GUI logic consists of testing how to use C# syntax, learning WPF and databinding, and showcasing how to do asynchronous actions and general I/O for file manipulation.
+The non-GUI logic consists of learning how to use C# syntax, learning WPF and databinding, and showcasing how to do asynchronous actions and general I/O for file manipulation.
