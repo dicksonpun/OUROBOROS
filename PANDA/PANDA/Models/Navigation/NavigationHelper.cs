@@ -11,7 +11,7 @@ namespace PANDA
     {
         DASHBOARD,
         SOURCE_CONTROL,
-        INTEGRATION,
+        FEATURE_MODULES,
         DOCUMENTATION
     };
 
@@ -63,7 +63,7 @@ namespace PANDA
         {
             List<NAVIGATION_CATEGORY> navigationCategoryOrder = new List<NAVIGATION_CATEGORY> { NAVIGATION_CATEGORY.DASHBOARD,
                                                                                                 NAVIGATION_CATEGORY.SOURCE_CONTROL,
-                                                                                                NAVIGATION_CATEGORY.INTEGRATION,
+                                                                                                NAVIGATION_CATEGORY.FEATURE_MODULES,
                                                                                                 NAVIGATION_CATEGORY.DOCUMENTATION };
             // Populate navigation menu
             NavigationItems = new ObservableCollection<INavigationItem>();
@@ -118,25 +118,29 @@ namespace PANDA
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "DASHBOARD" },
-                        new FirstLevelNavigationItem() { Label = "User Profile",       Icon = PackIconKind.Account,          NavigationItemSelectedCallback = item => GetViewModelFromMap("UserProfileViewModel", AccessUserSettingsHelper) },
+                        new FirstLevelNavigationItem() { Label = "User Profile",           Icon = PackIconKind.Account,          NavigationItemSelectedCallback = item => GetViewModelFromMap("UserProfileViewModel", AccessUserSettingsHelper) },
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.SOURCE_CONTROL:
-                    // Instantiate ViewModels
-                    GetViewModelFromMap("ClearcaseManagerViewModel", this);
+                    GetViewModelFromMap("ClearcaseViewHelperViewModel", this);
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "SOURCE CONTROL" },
-                        new FirstLevelNavigationItem() { Label = "Clearcase Manager",  Icon = PackIconKind.GithubFace,       NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseManagerViewModel") },
+                        new FirstLevelNavigationItem() { Label = "Clearcase Manager",  Icon = PackIconKind.JackOLantern,     NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseViewHelperViewModel") },
                         new DividerNavigationItem(),
                     };
-                case NAVIGATION_CATEGORY.INTEGRATION:
+                case NAVIGATION_CATEGORY.FEATURE_MODULES:
+                    // Instantiate ViewModels
+                    GetViewModelFromMap("ClearcaseManagerViewModel"); 
+                    //GetViewModelFromMap("ClearcaseTabControlViewModel"); 
+                    GetViewModelFromMap("ClearcaseTabControlViewModel", "dickson-branchname-1"); 
                     return new List<INavigationItem>()
                     {
-                        new SubheaderNavigationItem()  { Subheader = "INTEGRATION" },
-                        new FirstLevelNavigationItem() { Label = "Test Builder",       Icon = PackIconKind.TestTube,         NavigationItemSelectedCallback = item => "UNDER CONSTRUCTION: TEST BUILDER" },
-                        new FirstLevelNavigationItem() { Label = "Queue ETA",          Icon = PackIconKind.Clock,            NavigationItemSelectedCallback = item => "UNDER CONSTRUCTION: QUEUE ETA" },
-                        new FirstLevelNavigationItem() { Label = "Artifacts Analyzer", Icon = PackIconKind.Microscope,       NavigationItemSelectedCallback = item => "UNDER CONSTRUCTION: ARTIFACTS ANALYZER" },
+                        new SubheaderNavigationItem()  { Subheader = "FEATURE MODULES" },
+                        new FirstLevelNavigationItem() { Label = "[Prototype] Clearcase Manager",      Icon = PackIconKind.GithubFace,       NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseManagerViewModel") },
+                        new FirstLevelNavigationItem() { Label = "[Prototype] Clearcase TabControl",   Icon = PackIconKind.Git,              NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseTabControlViewModel") },
+
+                        new FirstLevelNavigationItem() { Label = "Placeholder",            Icon = PackIconKind.TestTube,         NavigationItemSelectedCallback = item => "UNDER CONSTRUCTION: PLACEHOLDER" },
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.DOCUMENTATION:
@@ -146,8 +150,8 @@ namespace PANDA
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "DOCUMENTATION" },
-                        new FirstLevelNavigationItem() { Label = "Version Log",        Icon = PackIconKind.Wunderlist,       NavigationItemSelectedCallback = item => GetViewModelFromMap("VersionLogViewModel") },
-                        new FirstLevelNavigationItem() { Label = "Licenses",           Icon = PackIconKind.BarcodeScanner,   NavigationItemSelectedCallback = item => GetViewModelFromMap("LicenseLogViewModel") },
+                        new FirstLevelNavigationItem() { Label = "Version Log",            Icon = PackIconKind.Wunderlist,       NavigationItemSelectedCallback = item => GetViewModelFromMap("VersionLogViewModel") },
+                        new FirstLevelNavigationItem() { Label = "Licenses",               Icon = PackIconKind.BarcodeScanner,   NavigationItemSelectedCallback = item => GetViewModelFromMap("LicenseLogViewModel") },
                     };
                 default:
                     throw new ArgumentOutOfRangeException();

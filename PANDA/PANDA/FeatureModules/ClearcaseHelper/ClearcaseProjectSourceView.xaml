@@ -1,0 +1,136 @@
+﻿<UserControl x:Class="PANDA.Controls.ClearcaseProjectSourceView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PANDA.Controls"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+             xmlns:materialDesignConverters="clr-namespace:MaterialDesignExtensions.Converters;assembly=MaterialDesignExtensions"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{StaticResource MaterialDesignFont}"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1200">
+    <UserControl.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+
+        <DataTemplate x:Key="itemTemplate_SearchSource">
+            <StackPanel Orientation="Horizontal" Margin="0,8">
+                <materialDesign:PackIcon Kind="Git"   Width="24" Height="24"  Margin="12,0"/>
+
+                <TextBlock FontSize="14" Text="{Binding Path=DirInfo.Name}" VerticalAlignment="Center" MinWidth="270"/>
+
+                <StackPanel Visibility="Visible" Margin="30,0,0,0">
+                    <StackPanel.Resources>
+                        <Style TargetType="materialDesign:ColorZone">
+                            <Setter Property="Padding"                                 Value="10,4"/>
+                        </Style>
+                        <Style TargetType="TextBlock">
+                            <Setter Property="VerticalAlignment"                       Value="Center"/>
+                        </Style>
+                    </StackPanel.Resources>
+
+                    <StackPanel   Orientation="Horizontal">
+                        <materialDesign:ColorZone  Mode="Dark"       CornerRadius="6,0,0,6">
+                            <StackPanel            Orientation="Horizontal" >
+                                <TextBlock         Text="NAVIGATION MENU"  />
+                            </StackPanel>
+                        </materialDesign:ColorZone>
+                        <materialDesign:ColorZone  Mode="PrimaryDark" CornerRadius="0,6,6,0">
+                            <StackPanel            Orientation="Horizontal">
+                                <TextBlock         Text="ACTIVE" />
+                            </StackPanel>
+                        </materialDesign:ColorZone>
+                    </StackPanel>
+                </StackPanel>
+            </StackPanel>
+
+        </DataTemplate>
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!--Search Toolbar-->
+            <RowDefinition Height="Auto" />
+            <!--Search Results-->
+            <RowDefinition Height="*"    />
+        </Grid.RowDefinitions>
+
+        <!--SEARCH TOOLBAR-->
+        <ToolBarTray Grid.Row="0" x:Name="SearchToolBarTray" IsLocked="True">
+            <ToolBar Style="{DynamicResource MaterialDesignToolBar}"  ClipToBounds="False" >
+
+                <!--SEARCH TEXTBOX-->
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" ToolBar.OverflowMode="AsNeeded"  Margin="0,0,10,0">
+                    <materialDesign:PackIcon Kind="Magnify"  Width="24" Height="24" VerticalAlignment="Center"   Margin="15,0"/>
+
+                    <TextBox Name="SearchTextbox"
+                             FontSize="20" FontWeight="Medium" 
+                             Width="270" VerticalAlignment="Center"
+                             IsEnabled="True" Focusable="True"
+                             Text="{Binding Path=SearchTerm, UpdateSourceTrigger=PropertyChanged}">
+                        <materialDesign:HintAssist.Hint>
+                            <TextBlock Text="Search"/>
+                        </materialDesign:HintAssist.Hint>
+                    </TextBox>
+                </StackPanel>
+
+                <Separator />
+
+                <Button ToolTip="Add to Navigation Menu"       ToolBar.OverflowMode="AsNeeded">
+                    <materialDesign:PackIcon        Kind="PlaylistAdd" />
+                </Button>
+                <Button ToolTip="Update Clearcase Config Spec" ToolBar.OverflowMode="AsNeeded">
+                    <materialDesign:PackIcon        Kind="EyeSettings" />
+                </Button>
+                <Button ToolTip="Set Default VOBs"  ToolBar.OverflowMode="AsNeeded">
+                    <materialDesign:PackIcon        Kind="FolderNetwork" />
+                </Button>
+                <Button ToolTip="Mount to Y: Drive" ToolBar.OverflowMode="AsNeeded">
+                    <materialDesign:PackIcon        Kind="AlphabetYBox" />
+                </Button>
+
+
+
+
+                <Separator />
+
+                <Button ToolTip="Remove from Navigation Menu"  ToolBar.OverflowMode="AsNeeded">
+                    <materialDesign:PackIcon        Kind="PlaylistRemove" />
+                </Button>
+
+                <!-- when badging in a toolbar, make sure the parent ToolBar.ClipToBounds="False", and manually apply the button style -->
+                <materialDesign:Badged      ToolBar.OverflowMode="AsNeeded"      Badge="{materialDesign:PackIcon Alert}">
+                    <Button ToolTip="View Cleanup"        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                        <materialDesign:PackIcon          Kind="Rubbish" />
+                    </Button>
+                </materialDesign:Badged>
+
+                <Separator/>
+            </ToolBar>
+        </ToolBarTray>
+
+        <!--Search Results-->
+        <!--Reference: https://dzone.com/articles/virtualization-wpf -->
+        <!--Reference: https://stackoverflow.com/questions/3724593/why-setting-scrollviewer-cancontentscroll-to-false-disable-virtualization-->
+        <materialDesign:Card Grid.Row="1">
+            <ListBox   HorizontalContentAlignment="Stretch"
+                       BorderThickness="0"
+                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                       VirtualizingStackPanel.IsVirtualizing="True"
+                       VirtualizingStackPanel.VirtualizationMode="Recycling"
+                       SelectionMode="Extended"
+                       Width="Auto"
+                       ItemsSource="{Binding UnfilteredSearchSourceResults}" 
+                       ItemTemplate="{StaticResource itemTemplate_SearchSource}" 
+                       Height="Auto" >
+            </ListBox>
+        </materialDesign:Card>
+    </Grid>
+</UserControl>
+

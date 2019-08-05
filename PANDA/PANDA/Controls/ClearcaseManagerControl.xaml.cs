@@ -38,7 +38,7 @@ namespace PANDA.Controls
         private void Button_Click_MountOrUnmountY(object sender, RoutedEventArgs e)
         {
             // Handle the event for the selected button.
-            if (DataContext is ClearcaseManagerViewModel viewModel)
+            if (DataContext is ClearcaseViewHelperViewModel viewModel)
             {
                 ClearcaseManagerViewItem selectedViewItem = (ClearcaseManagerViewItem)(e.Source as Button).DataContext;
 
@@ -56,7 +56,7 @@ namespace PANDA.Controls
         private void Button_Click_RemoveView(object sender, RoutedEventArgs e)
         {
             // Handle the event for the selected button.
-            if (DataContext is ClearcaseManagerViewModel viewModel)
+            if (DataContext is ClearcaseViewHelperViewModel viewModel)
             {
                 // Get username
                 string username = viewModel.AccessNavigationHelper.AccessUserSettingsHelper.UserProfile.Username.ToString();
@@ -70,7 +70,7 @@ namespace PANDA.Controls
                     if (messageBoxResult == MessageBoxResult.Yes)
                     {
                         // Do nothing for now.
-                        int gothere = 0;
+                        return;
                     }
                 }
                 else
@@ -92,7 +92,7 @@ namespace PANDA.Controls
 
             OpenDirectoryDialogResult result = await OpenDirectoryDialog.ShowDialogAsync(MainWindow.DialogHostName, dialogArgs);
             
-            if (DataContext is ClearcaseManagerViewModel viewModel)
+            if (DataContext is ClearcaseViewHelperViewModel viewModel)
             {
                 if (!result.Canceled)
                 {

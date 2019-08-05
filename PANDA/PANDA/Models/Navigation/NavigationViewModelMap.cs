@@ -24,15 +24,30 @@ namespace PANDA
             // Only add if the key doesn't already exist
             if (!ViewModelMap.ContainsKey(key))
             {
-                if (key.StartsWith("UserProfileViewModel"))
+                // ==================================================================================
+                // PROTOTYPE FEATURE MODULES 
+                // ==================================================================================
+                if (key.StartsWith("ClearcaseManagerViewModel"))
+                {
+                    ViewModelMap.Add(key, new ClearcaseManagerViewModel());
+                }
+                else if (key.StartsWith("ClearcaseTabControlViewModel"))
+                {
+                    string viewPath = (string)arg1;
+                    ViewModelMap.Add(key, new ClearcaseTabControlViewModel(viewPath));
+                }
+                // ==================================================================================
+                // EXPERIMENTAL / LEARNING MODULES 
+                // ==================================================================================
+                else if (key.StartsWith("UserProfileViewModel"))
                 {
                     UserSettingsHelper helper = (UserSettingsHelper)arg1;
                     ViewModelMap.Add(key, new UserProfileViewModel(helper));
                 }
-                else if (key.StartsWith("ClearcaseManagerViewModel"))
+                else if (key.StartsWith("ClearcaseViewHelperViewModel"))
                 {
                     NavigationHelper helper = (NavigationHelper)arg1;
-                    ViewModelMap.Add(key, new ClearcaseManagerViewModel(helper));
+                    ViewModelMap.Add(key, new ClearcaseViewHelperViewModel(helper));
                 }
                 else if (key.StartsWith("ClearcaseViewTabControlViewModel"))
                 {

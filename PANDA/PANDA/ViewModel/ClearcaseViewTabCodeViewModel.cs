@@ -73,7 +73,7 @@ namespace PANDA.ViewModel
 
         // ----------------------------------------------------------------------------------------
         // Class       : ClearcaseViewTabCodeViewModel
-        // Method      : UpdateSearchSourceFiltered
+        // Method      : UpdateSearchSourceResults
         // Description : Updates the SearchSourceFiltered ObservableCollection with the latest
         //               detected search term and enabled filters.
         // ----------------------------------------------------------------------------------------
