@@ -7,7 +7,7 @@ using System.Linq;
 
 namespace PANDA.ViewModel
 {
-    public class ClearcaseManagerViewModel : ViewModel
+    public class ClearcaseViewHelperViewModel : ViewModel
     {
         // Autocomplete Databinding
         private AutocompleteSourceChangingItems<ClearcaseManagerViewItem> m_clearcaseManagerAutocompleteSource;
@@ -67,7 +67,7 @@ namespace PANDA.ViewModel
         public FileSystemDialogViewModel AddLocalProjectFileSystemDialog;
 
         // Constructor
-        public ClearcaseManagerViewModel(NavigationHelper navigationHelper) : base()
+        public ClearcaseViewHelperViewModel(NavigationHelper navigationHelper) : base()
         {
             // Initialize Helpers
             AccessNavigationHelper = navigationHelper;

@@ -383,7 +383,7 @@ namespace PANDA
         // ----------------------------------------------------------------------------------------
         public void UpdateClearcaseManagerAutocompleteSource()
         {
-            ClearcaseManagerViewModel viewModel = (ClearcaseManagerViewModel)GetViewModelFromMap("ClearcaseManagerViewModel");
+            ClearcaseViewHelperViewModel viewModel = (ClearcaseViewHelperViewModel)GetViewModelFromMap("ClearcaseViewHelperViewModel");
             viewModel.ClearcaseManagerAutocompleteSource = new ClearcaseManagerAutocompleteSource(ClearcaseViewDictionary.Values.ToList());
             viewModel.ClearcaseManagerBackgroundRefreshSource = new ObservableCollection<ClearcaseManagerViewItem>(navigationClearcaseViews.ToList());
         }

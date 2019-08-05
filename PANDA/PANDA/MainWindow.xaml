@@ -33,8 +33,20 @@
             UseAeroCaptionButtons="False" />
     </WindowChrome.WindowChrome>
     <Window.Resources>
-        <!-- Add new view models and their controls here so it is in scope when binding is needed below. -->
+        <!-- PROOF OF CONCEPT GUI START (Denoted by "View"-suffixes) -->
         <DataTemplate DataType="{x:Type viewModel:ClearcaseManagerViewModel}">
+            <controls:ClearcaseManagerView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:ClearcaseTabControlViewModel}">
+            <controls:ClearcaseTabControlView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:ClearcaseProjectSourceViewModel}">
+            <controls:ClearcaseProjectSourceView />
+        </DataTemplate>
+        <!-- PROOF OF CONCEPT GUI FINISH -->
+        
+        <!-- Add new view models and their controls here so it is in scope when binding is needed below. -->
+        <DataTemplate DataType="{x:Type viewModel:ClearcaseViewHelperViewModel}">
             <controls:ClearcaseManagerControl />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:ClearcaseViewTabCodeViewModel}">
@@ -108,13 +120,13 @@
                         </Button>
                         -->
                         
-                        <Button x:Name="Minimize" Click="Minimize_Click" ToolTip="Minimize">
+                        <Button  Click="Minimize_Click" ToolTip="Minimize">
                             <materialDesign:PackIcon Kind="WindowMinimize" />
                         </Button>
-                        <Button x:Name="Maximize" Click="Maximize_Click" ToolTip="Maximize">
+                        <Button  Click="Maximize_Click" ToolTip="Maximize">
                             <materialDesign:PackIcon Kind="WindowMaximize" />
                         </Button>
-                        <Button   Name="Close" ToolTip="Close" Click="Close_Click">
+                        <Button  Click="Close_Click" ToolTip="Close" >
                             <materialDesign:PackIcon Kind="Close" />
                         </Button>
                     </materialDesignExtControls:AppBar>

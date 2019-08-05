@@ -1,18 +1,16 @@
 ﻿using MaterialDesignExtensions.Controls;
-using MaterialDesignExtensions.Model;
 using MaterialDesignThemes.Wpf;
-using PANDA.Command;
 using PANDA.Controls;
 using PANDA.ViewModel;
 using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using System.Security.Permissions;
 using System.Windows;
 using System.Windows.Input;
 
 namespace PANDA
 {
+    // Reference: https://stackoverflow.com/questions/2914819/what-is-the-purpose-of-the-permissionset-attribute-in-the-msdn-filesystemwatcher
+    [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]
     public partial class MainWindow : Window
     {
         public MainWindowViewModel mainWindowViewModel;
@@ -79,8 +77,8 @@ namespace PANDA
             {
                 var view = new UserConfirmationControl
                 {
-                    DataContext = new UserConfirmationViewModel("Reminder",
-                    "There are still some background processes running. Are you sure you want to exit?")
+                    DataContext = new UserConfirmationViewModel("Notification",
+                    "Are you sure you want to exit?")
                 };
                 if (!(bool)await DialogHost.Show(view, "dialogHost"))
                 {
