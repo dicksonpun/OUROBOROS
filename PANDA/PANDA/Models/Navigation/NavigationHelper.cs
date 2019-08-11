@@ -115,10 +115,12 @@ namespace PANDA
                 case NAVIGATION_CATEGORY.DASHBOARD:
                     // Instantiate ViewModels
                     GetViewModelFromMap("UserProfileViewModel", AccessUserSettingsHelper);
+                    GetViewModelFromMap("ColorToolViewModel");
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "DASHBOARD" },
                         new FirstLevelNavigationItem() { Label = "User Profile",           Icon = PackIconKind.Account,          NavigationItemSelectedCallback = item => GetViewModelFromMap("UserProfileViewModel", AccessUserSettingsHelper) },
+                        new FirstLevelNavigationItem() { Label = "Palette Picker",         Icon = PackIconKind.Palette,          NavigationItemSelectedCallback = item => GetViewModelFromMap("ColorToolViewModel") },
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.SOURCE_CONTROL:

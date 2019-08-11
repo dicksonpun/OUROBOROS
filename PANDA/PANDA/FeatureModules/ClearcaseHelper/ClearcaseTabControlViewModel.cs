@@ -13,8 +13,8 @@ namespace PANDA.ViewModel
             m_clearcaseViewTabItems = new ObservableCollection<ClearcaseTabControlItem>()
             {
                 new ClearcaseTabControlItem() { Header = "PROJECT SOURCE"  , Kind = PackIconKind.CodeTags , TabChildViewModel = new ClearcaseProjectSourceViewModel(viewName)},
-                new ClearcaseTabControlItem() { Header = "AUTOMATION"      , Kind = PackIconKind.Robot    , TabChildViewModel = new LicenseLogViewModel()},
-                new ClearcaseTabControlItem() { Header = "INSIGHTS"        , Kind = PackIconKind.ChartBar , TabChildViewModel = new LicenseLogViewModel()}
+                new ClearcaseTabControlItem() { Header = "AUTOMATION"      , Kind = PackIconKind.Robot    , TabChildViewModel = new LicenseLogViewModel()}, // placeholder
+                new ClearcaseTabControlItem() { Header = "INSIGHTS"        , Kind = PackIconKind.ChartBar , TabChildViewModel = new LicenseLogViewModel()}  // placeholder
             };
         }
 

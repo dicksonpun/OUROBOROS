@@ -44,6 +44,10 @@ namespace PANDA
                     UserSettingsHelper helper = (UserSettingsHelper)arg1;
                     ViewModelMap.Add(key, new UserProfileViewModel(helper));
                 }
+                else if (key.StartsWith("ColorToolViewModel"))
+                {
+                    ViewModelMap.Add(key, new ColorToolViewModel());
+                }
                 else if (key.StartsWith("ClearcaseViewHelperViewModel"))
                 {
                     NavigationHelper helper = (NavigationHelper)arg1;

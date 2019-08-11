@@ -27,7 +27,7 @@ namespace PANDA.ViewModel
                 new LicenseLogItem() { PackageName = "MaterialDesignExtensions", Description = ".NET library for additional Material Design controls",    License = "MIT",     Version = "2.7.0 ",   ReferenceURL = "https://github.com/spiegelp/MaterialDesignExtensions"                },
                 new LicenseLogItem() { PackageName = "MaterialDesignThemes",     Description = ".NET library for Material Design theme and controls",     License = "MIT",     Version = "2.6.0",    ReferenceURL = "https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit" },
                 new LicenseLogItem() { PackageName = "Newtonsoft.Json",          Description = ".NET library for high-performance JSON framework",        License = "MIT",     Version = "12.0.2",   ReferenceURL = "https://github.com/JamesNK/Newtonsoft.Json"                          },
-                new LicenseLogItem() { PackageName = "SharpZipLib",              Description = ".NET library for file compression and decompression",     License = "MIT",     Version = "1.1.0",    ReferenceURL = "https://github.com/icsharpcode/SharpZipLib"                          },
+                new LicenseLogItem() { PackageName = "SharpZipLib",              Description = ".NET library for file compression and decompression",     License = "MIT",     Version = "1.2.0",    ReferenceURL = "https://github.com/icsharpcode/SharpZipLib"                          },
                 new LicenseLogItem() { PackageName = "SSH.NET",                  Description = ".NET library for Secure Shell (SSH-2)",                   License = "MIT",     Version = "2016.1.0", ReferenceURL = "https://github.com/sshnet/SSH.NET"                                   }
             };
         }

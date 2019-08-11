@@ -5,8 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PANDA.Controls"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
-             xmlns:materialDesignConverters="clr-namespace:MaterialDesignExtensions.Converters;assembly=MaterialDesignExtensions"
+             xmlns:materialDesignExtensionControls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+             xmlns:materialDesignExtensionConverters="clr-namespace:MaterialDesignExtensions.Converters;assembly=MaterialDesignExtensions"
+             xmlns:converters="clr-namespace:PANDA.Converters"
              TextElement.Foreground="{DynamicResource MaterialDesignBody}"
              TextElement.FontWeight="Regular"
              TextElement.FontSize="13"
@@ -18,44 +19,90 @@
              d:DesignHeight="800" d:DesignWidth="1200">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:FileExtensionToIconConverter x:Key="FileExtensionToIconConverter" />
 
-        <DataTemplate x:Key="itemTemplate_SearchSource">
-            <StackPanel Orientation="Horizontal" Margin="0,8">
-                <materialDesign:PackIcon Kind="Git"   Width="24" Height="24"  Margin="12,0"/>
+        <materialDesignExtensionConverters:NullToVisibilityConverter x:Key="notNullToVisibleConverter" NullValue="Collapsed" NotNullValue="Visible" />
 
-                <TextBlock FontSize="14" Text="{Binding Path=DirInfo.Name}" VerticalAlignment="Center" MinWidth="270"/>
+        <DataTemplate x:Key="itemTemplateDense">
+            <DockPanel>
+                <materialDesign:PackIcon DockPanel.Dock="Left" Kind="Tag" Width="12" Height="12" VerticalAlignment="Center" SnapsToDevicePixels="True" />
+                <TextBlock FontSize="12" Text="{Binding Path=Name}" VerticalAlignment="Center" Margin="24,0,0,0" />
+            </DockPanel>
+        </DataTemplate>
 
-                <StackPanel Visibility="Visible" Margin="30,0,0,0">
-                    <StackPanel.Resources>
-                        <Style TargetType="materialDesign:ColorZone">
-                            <Setter Property="Padding"                                 Value="10,4"/>
-                        </Style>
-                        <Style TargetType="TextBlock">
-                            <Setter Property="VerticalAlignment"                       Value="Center"/>
-                        </Style>
-                    </StackPanel.Resources>
+        <DataTemplate x:Key="SearchSourceResultsItemTemplate">
+            <StackPanel Orientation="Horizontal" >
+                <materialDesign:PackIcon Kind="{Binding Path=DirInfo, Converter={StaticResource FileExtensionToIconConverter}}"   
+                                            Width="40" Height="40"  Margin="0"/>
 
-                    <StackPanel   Orientation="Horizontal">
-                        <materialDesign:ColorZone  Mode="Dark"       CornerRadius="6,0,0,6">
-                            <StackPanel            Orientation="Horizontal" >
-                                <TextBlock         Text="NAVIGATION MENU"  />
-                            </StackPanel>
-                        </materialDesign:ColorZone>
-                        <materialDesign:ColorZone  Mode="PrimaryDark" CornerRadius="0,6,6,0">
-                            <StackPanel            Orientation="Horizontal">
-                                <TextBlock         Text="ACTIVE" />
-                            </StackPanel>
-                        </materialDesign:ColorZone>
+                <StackPanel Orientation="Vertical"  Margin="10,0,0,0">
+                    <!--ROW 1-->
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.Resources>
+                            <Style TargetType="materialDesign:ColorZone">
+                                <Setter Property="Padding"           Value="10,3"/>
+                            </Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </StackPanel.Resources>
+
+                        <TextBlock Text="{Binding Path=DirInfo.Name}" FontWeight="Bold" FontSize="20" Margin="0,0,10,0"/>
+                        
+                        <!--CHECKED OUT-->
+                        <StackPanel  Visibility="Visible" Margin="10,0" Orientation="Horizontal">
+                            <materialDesign:ColorZone  Mode="Dark"       CornerRadius="6,0,0,6">
+                                <StackPanel            Orientation="Horizontal" >
+                                    <TextBlock         Text="CHECKED OUT"         FontWeight="ExtraBold" />
+                                </StackPanel>
+                            </materialDesign:ColorZone>
+                            <materialDesign:ColorZone  Mode="Accent" CornerRadius="0,6,6,0">
+                                <StackPanel            Orientation="Horizontal">
+                                    <TextBlock         Text="BRANCH - 0" FontWeight="Light" />
+                                </StackPanel>
+                            </materialDesign:ColorZone>
+                        </StackPanel>
+                        <!--BRANCH LISTING-->
+                        <StackPanel  Visibility="Visible" Margin="10,0" Orientation="Horizontal">
+                            <materialDesign:ColorZone  Mode="Dark"       CornerRadius="6,0,0,6">
+                                <StackPanel            Orientation="Horizontal" >
+                                    <TextBlock         Text="BRANCH LISTING"         FontWeight="ExtraBold" />
+                                </StackPanel>
+                            </materialDesign:ColorZone>
+                            <materialDesign:ColorZone  Mode="PrimaryDark" CornerRadius="0,6,6,0">
+                                <StackPanel            Orientation="Horizontal">
+                                    <TextBlock         Text="0" FontWeight="Light" />
+                                </StackPanel>
+                            </materialDesign:ColorZone>
+                        </StackPanel>
+                        <!--REVIEW STATUS-->
+                        <StackPanel  Visibility="Visible" Margin="10,0" Orientation="Horizontal">
+                            <materialDesign:ColorZone  Mode="Dark"       CornerRadius="6,0,0,6">
+                                <StackPanel            Orientation="Horizontal" >
+                                    <TextBlock         Text="REVIEW STATUS"         FontWeight="ExtraBold" />
+                                </StackPanel>
+                            </materialDesign:ColorZone>
+                            <materialDesign:ColorZone  Mode="PrimaryMid" CornerRadius="0,6,6,0">
+                                <StackPanel            Orientation="Horizontal">
+                                    <TextBlock         Text="PENDING" FontWeight="Light" />
+                                </StackPanel>
+                            </materialDesign:ColorZone>
+                        </StackPanel>
                     </StackPanel>
+
+                    <!--ROW 2-->
+                    <TextBlock Text="{Binding Path=DirInfo.FullName}" FontWeight="Light" Margin="0,1,0,0" />
                 </StackPanel>
             </StackPanel>
-
         </DataTemplate>
+
     </UserControl.Resources>
 
     <Grid>
         <Grid.RowDefinitions>
             <!--Search Toolbar-->
+            <RowDefinition Height="Auto" />
+            <!--Search Filters-->
             <RowDefinition Height="Auto" />
             <!--Search Results-->
             <RowDefinition Height="*"    />
@@ -66,71 +113,212 @@
             <ToolBar Style="{DynamicResource MaterialDesignToolBar}"  ClipToBounds="False" >
 
                 <!--SEARCH TEXTBOX-->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" ToolBar.OverflowMode="AsNeeded"  Margin="0,0,10,0">
+                <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left"  Margin="0,0,10,0">
                     <materialDesign:PackIcon Kind="Magnify"  Width="24" Height="24" VerticalAlignment="Center"   Margin="15,0"/>
 
                     <TextBox Name="SearchTextbox"
-                             FontSize="20" FontWeight="Medium" 
-                             Width="270" VerticalAlignment="Center"
-                             IsEnabled="True" Focusable="True"
-                             Text="{Binding Path=SearchTerm, UpdateSourceTrigger=PropertyChanged}">
+                            FontSize="20" FontWeight="Medium" 
+                            Width="270" VerticalAlignment="Center"
+                            IsEnabled="True" Focusable="True"
+                            Text="{Binding Path=SearchTerm, UpdateSourceTrigger=PropertyChanged}">
                         <materialDesign:HintAssist.Hint>
                             <TextBlock Text="Search"/>
                         </materialDesign:HintAssist.Hint>
                     </TextBox>
                 </StackPanel>
 
+                <ListBox >
+                    <ListBoxItem x:Name="ShowFilter" IsSelected="True" ToolTip="Show Advanced Filters">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="FilterVariant" />
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+                
                 <Separator />
 
-                <Button ToolTip="Add to Navigation Menu"       ToolBar.OverflowMode="AsNeeded">
-                    <materialDesign:PackIcon        Kind="PlaylistAdd" />
-                </Button>
-                <Button ToolTip="Update Clearcase Config Spec" ToolBar.OverflowMode="AsNeeded">
-                    <materialDesign:PackIcon        Kind="EyeSettings" />
-                </Button>
-                <Button ToolTip="Set Default VOBs"  ToolBar.OverflowMode="AsNeeded">
-                    <materialDesign:PackIcon        Kind="FolderNetwork" />
-                </Button>
-                <Button ToolTip="Mount to Y: Drive" ToolBar.OverflowMode="AsNeeded">
-                    <materialDesign:PackIcon        Kind="AlphabetYBox" />
-                </Button>
-
-
-
-
-                <Separator />
-
-                <Button ToolTip="Remove from Navigation Menu"  ToolBar.OverflowMode="AsNeeded">
-                    <materialDesign:PackIcon        Kind="PlaylistRemove" />
-                </Button>
-
-                <!-- when badging in a toolbar, make sure the parent ToolBar.ClipToBounds="False", and manually apply the button style -->
-                <materialDesign:Badged      ToolBar.OverflowMode="AsNeeded"      Badge="{materialDesign:PackIcon Alert}">
-                    <Button ToolTip="View Cleanup"        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
-                        <materialDesign:PackIcon          Kind="Rubbish" />
-                    </Button>
-                </materialDesign:Badged>
-
-                <Separator/>
+                <ListBox>
+                    <ListBoxItem >
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="FileEyeOutline" />
+                            <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Checkouts"  />
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="ScriptTextOutline" />
+                            <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Branch Listing"  />
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem x:Name="ReviewStatus">
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="BellOutline" />
+                            <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Review Status"  />
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+ 
             </ToolBar>
         </ToolBarTray>
+
+        <!--Search Filters-->
+        <materialDesign:Card Grid.Row="1" 
+                             Background="{DynamicResource MaterialDesignPaper}" 
+                             Visibility="{Binding Path=IsSelected, ElementName=ShowFilter, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <WrapPanel  MaxWidth="{Binding ActualWidth, ElementName=SearchToolBarTray}" Margin="10">
+
+                <!--Add VOBs-->
+                <materialDesignExtensionControls:Autocomplete   x:Name="autocompleteDense" 
+                                                                Style="{StaticResource MaterialDesignAutocompleteDense}" 
+                                                                Background="{DynamicResource MaterialDesignPaper}" 
+                                                                AutocompleteSource="{Binding Path=VOBAutocompleteSource}" 
+                                                                ItemTemplate="{StaticResource itemTemplateDense}" 
+                                                                SelectedItem="{Binding Path=SelectedVOBItem, Mode=TwoWay}" 
+                                                                ShowClearButtonOnlyOnSelectedItem="True" 
+                                                                Height="40" MinWidth="300"
+                                                                Margin="10,6" >
+                    <materialDesignExtensionControls:Autocomplete.Hint>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                            <materialDesign:PackIcon Kind="TagAdd" Width="16" Height="16" VerticalAlignment="Center" />
+                            <TextBlock Text="Add VOB Filter" FontSize="{Binding Path=FontSize, ElementName=autocompleteDense}" Margin="10,0" VerticalAlignment="Center" />
+                        </StackPanel>
+                    </materialDesignExtensionControls:Autocomplete.Hint>
+                </materialDesignExtensionControls:Autocomplete>
+
+                <!--Review Status Options-->
+                <ListBox    Style="{StaticResource MaterialDesignToolToggleListBox}"
+                            SelectionMode="Extended"
+                            VerticalAlignment="Center" 
+                            Visibility="{Binding Path=IsSelected, ElementName=ReviewStatus, Converter={StaticResource BooleanToVisibilityConverter}}"
+                            Margin="5">
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="PersonClock" />
+                            <TextBlock FontSize="16"  Margin="6,2,0,0" Text="My Responsibilities"  />
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="CommentCheck" />
+                            <TextBlock FontSize="16"  Margin="6,2,0,0" Text="Approved"  />
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="CommentProcessing" />
+                            <TextBlock FontSize="16"  Margin="6,2,0,0" Text="Pending"  />
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="CommentWarning" />
+                            <TextBlock FontSize="16"  Margin="6,2,0,0" Text="Disapproved"  />
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="CommentQuestion" />
+                            <TextBlock FontSize="16"  Margin="6,2,0,0" Text="Not for review"  />
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+
+                <!--VOB Filters-->
+                <!-- Reference: https://wpf.2000things.com/2014/02/25/1016-displaying-a-collection-of-items-in-a-wrappanel/ -->
+                <ItemsControl ItemsSource="{Binding SelectedVOBFilters}"  Margin="5">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <materialDesign:Chip  Content="{Binding Name}"  IsDeletable="True"  Margin="5"
+                                                  IconBackground="{DynamicResource PrimaryHueDarkBrush}"
+                                                  IconForeground="{DynamicResource PrimaryHueDarkForegroundBrush}"
+                                                  DeleteClick="FilterTagChip_OnDeleteClick">
+                                <materialDesign:Chip.Icon>
+                                    <materialDesign:PackIcon Kind="Tag"/>
+                                </materialDesign:Chip.Icon>
+                            </materialDesign:Chip>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
+
+            </WrapPanel>
+        </materialDesign:Card>
 
         <!--Search Results-->
         <!--Reference: https://dzone.com/articles/virtualization-wpf -->
         <!--Reference: https://stackoverflow.com/questions/3724593/why-setting-scrollviewer-cancontentscroll-to-false-disable-virtualization-->
-        <materialDesign:Card Grid.Row="1">
+        <materialDesign:Card Grid.Row="2">
             <ListBox   HorizontalContentAlignment="Stretch"
-                       BorderThickness="0"
-                       ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                       VirtualizingStackPanel.IsVirtualizing="True"
-                       VirtualizingStackPanel.VirtualizationMode="Recycling"
-                       SelectionMode="Extended"
-                       Width="Auto"
-                       ItemsSource="{Binding UnfilteredSearchSourceResults}" 
-                       ItemTemplate="{StaticResource itemTemplate_SearchSource}" 
-                       Height="Auto" >
+                        BorderThickness="0"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        VirtualizingStackPanel.IsVirtualizing="True"
+                        VirtualizingStackPanel.VirtualizationMode="Recycling"
+                        SelectionMode="Extended"
+                        ItemsSource="{Binding UnfilteredSearchSourceResults}" 
+                        ItemTemplate="{StaticResource SearchSourceResultsItemTemplate}">
+                
+                <!-- Reference: https://stackoverflow.com/questions/7554184/wpf-listboxitem-and-contextmenu -->
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Edit"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="LeadPencil" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Version Tree"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="Subtasks" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Diff Against"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="SelectCompare" />
+                            </MenuItem.Icon>
+                            <MenuItem  Header="V1" />
+                            <MenuItem  Header="V0" />
+                        </MenuItem>
+
+                        <Separator />
+
+                        <MenuItem Header="Checkout"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="ArrowRightThick" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Undo Checkout"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="UndoVariant" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Checkin"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="ArrowLeftThick" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                        <Separator />
+
+                        <MenuItem Header="Review File"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="ArrowRightThick" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Review File Notes"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="ArrowRightThick" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                        <Separator />
+
+                    </ContextMenu>
+                </ListBox.ContextMenu>
             </ListBox>
         </materialDesign:Card>
+
     </Grid>
 </UserControl>
-

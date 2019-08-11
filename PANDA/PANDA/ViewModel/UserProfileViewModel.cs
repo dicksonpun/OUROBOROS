@@ -25,12 +25,6 @@
     {
         public string Username { get; set; }
         public string NetworkName { get; set; }
-
-        public ColorSettingsViewModel ColorSettings { get; set; }
-        public UserProfileItem()
-        {
-            ColorSettings = new ColorSettingsViewModel();
-        }
     }
 
 }

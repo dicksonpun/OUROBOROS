@@ -68,8 +68,8 @@
     <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
       <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
     </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=1.1.0.145, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>..\packages\SharpZipLib.1.1.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.2.0.246, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.2.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
     </Reference>
     <Reference Include="Jot, Version=2.0.1.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Jot.2.0.1\lib\netstandard2.0\Jot.dll</HintPath>
@@ -118,6 +118,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Page Include="FeatureModules\ColorTool\ColorToolControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="FeatureModules\ClearcaseHelper\ClearcaseProjectSourceView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -166,7 +170,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="FeatureModules\ColorTool\ColorToolControl.xaml.cs">
+      <DependentUpon>ColorToolControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Converters\BrushToHexConverter.cs" />
+    <Compile Include="Converters\ColorToBrushConverter.cs" />
     <Compile Include="Converters\FileExtensionToIconConverter.cs" />
+    <Compile Include="Converters\MultiValueEqualityConverter.cs" />
     <Compile Include="FeatureModules\ClearcaseHelper\ClearcaseProjectSourceModel.cs" />
     <Compile Include="FeatureModules\ClearcaseHelper\ClearcaseProjectSourceView.xaml.cs">
       <DependentUpon>ClearcaseProjectSourceView.xaml</DependentUpon>
@@ -200,7 +210,9 @@
     <Compile Include="FeatureModules\ClearcaseManager\ClearcaseManagerViewModel.cs" />
     <Compile Include="FeatureModules\ClearcaseHelper\ClearcaseTabControlViewModel.cs" />
     <Compile Include="FeatureModules\ConfigSpecEditor\ConfigSpecEditorViewModel.cs" />
+    <Compile Include="FeatureModules\Utilities\ButtonAssist.cs" />
     <Compile Include="Models\CMDHelper.cs" />
+    <Compile Include="FeatureModules\Utilities\PaletteHelperExtensions.cs" />
     <Compile Include="Models\ProjectSource\ProjectSourceHelper.cs" />
     <Compile Include="Models\DriveMounter.cs" />
     <Compile Include="Models\Navigation\NavigationHelper.cs" />
@@ -216,11 +228,11 @@
     <Compile Include="ViewModel\ClearcaseManagerViewModel.cs" />
     <Compile Include="ViewModel\ClearcaseViewTabCodeViewModel.cs" />
     <Compile Include="ViewModel\ClearcaseViewTabControlViewModel.cs" />
-    <Compile Include="ViewModel\ColorSettingsViewModel.cs" />
+    <Compile Include="FeatureModules\ColorTool\ColorToolViewModel.cs" />
     <Compile Include="ViewModel\FileSystemControlViewModel.cs" />
     <Compile Include="ViewModel\FileSystemDialogViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />
-    <Compile Include="ViewModel\UserConfirmationViewModel.cs" />
+    <Compile Include="FeatureModules\UserConfirmationViewModel.cs" />
     <Compile Include="ViewModel\UserProfileViewModel.cs" />
     <Compile Include="ViewModel\VersionLogViewModel.cs" />
     <Compile Include="Controls\LicenseLogControl.xaml.cs">

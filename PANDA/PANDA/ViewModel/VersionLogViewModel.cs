@@ -50,7 +50,7 @@ namespace PANDA.ViewModel
                         new VersionLogNoteItem()
                         {
                             Header       =  "LOW PRIORITY",
-                            Description  =  "Dark Mode in Navigation Menu is not fully supported yet."                  + "\n" +
+                            Description  =  "N/A"                                                                       + "\n" +
                                             END_OF_STRING
                         }
                     }
@@ -70,8 +70,7 @@ namespace PANDA.ViewModel
                         new VersionLogNoteItem()
                         {
                             Header       =  "HIGH PRIORITY",
-                            Description  =  "Add FileSystemWatcher for monitoring file and folder changes"              + "\n" +
-                                            "ADD: Text Search"                                                          + "\n" +
+                            Description  =  "ADD: Text Search"                                                          + "\n" +
                                             END_OF_STRING
                         },
                         new VersionLogNoteItem()
@@ -84,9 +83,7 @@ namespace PANDA.ViewModel
                         new VersionLogNoteItem()
                         {
                             Header       =  "LOW PRIORITY",
-                            Description  =  "ADD: HOW TO STEPPER SERIES"                                                + "\n" +
-                                            "ADD: Analysis tool: Octal scratchpad"                                      + "\n" +
-                                            "ADD: Analysis tool: CSV parser"                                            + "\n" +
+                            Description  =  "N/A"                                                                       + "\n" +
                                             END_OF_STRING
                         }
                     }
@@ -111,7 +108,7 @@ namespace PANDA.ViewModel
                         new VersionLogNoteItem()
                         {
                             Header       =  "MEDIUM PRIORITY",
-                            Description  =  "ADD: FUNCTION: import project"                                             + "\n" +
+                            Description  =  "ADD: FUNCTION: import local project"                                       + "\n" +
                                             "ADD: FUNCTION: Build Integrity Analyzer"                                   + "\n" +
                                             "ADD: FUNCTION: BranchList CHANGE log document generator"                   + "\n" +
                                             "ADD: Dashboard for branch statistics"                                      + "\n" +
@@ -149,7 +146,7 @@ namespace PANDA.ViewModel
                         {
                             Header       =  "User Profile",
                             Description  =  "GUI for UNIX login"                                                        + "\n" +
-                                            "Theme Picker"                                                              + "\n" +
+                                            "Palette Picker"                                                            + "\n" +
                                             END_OF_STRING
                         },
                         new VersionLogNoteItem()

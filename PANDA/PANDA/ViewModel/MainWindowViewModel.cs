@@ -30,8 +30,6 @@ namespace PANDA.ViewModel
         {
             NavigationHelper.InitializeNavigationDrawerNav();
 
-            UserSettingsHelper.UserProfile.ColorSettings.SetTheme();
-            UserSettingsHelper.UserProfile.ColorSettings.SetDarkMode();
         }
     }
 }
