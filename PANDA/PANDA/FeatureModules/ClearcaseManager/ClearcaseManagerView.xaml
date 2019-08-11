@@ -20,12 +20,12 @@
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
         <DataTemplate x:Key="itemTemplate_SearchSource">
-            <StackPanel Orientation="Horizontal" Margin="0,8">
-                <materialDesign:PackIcon Kind="Git"   Width="24" Height="24"  Margin="12,0"/>
+            <StackPanel Orientation="Horizontal" >
+                <materialDesign:PackIcon Kind="Git"   Width="30" Height="30"  Margin="5,0"/>
 
-                <TextBlock FontSize="14" Text="{Binding Path=ViewName}" VerticalAlignment="Center" MinWidth="270"/>
+                <TextBlock Text="{Binding Path=ViewName}" VerticalAlignment="Center" FontWeight="Medium" FontSize="20"  Margin="10,0,0,0"/>
 
-                <StackPanel Visibility="Visible" Margin="30,0,0,0">
+                <StackPanel Visibility="Visible" Margin="30,0,0,0"  VerticalAlignment="Center" >
                     <StackPanel.Resources>
                         <Style TargetType="materialDesign:ColorZone">
                             <Setter Property="Padding"                                 Value="10,4"/>
@@ -36,21 +36,21 @@
                     </StackPanel.Resources>
 
                     <StackPanel   Orientation="Horizontal">
-                        <materialDesign:ColorZone  Mode="Dark"       CornerRadius="6,0,0,6">
+                        <materialDesign:ColorZone  Mode="Dark"        CornerRadius="6,0,0,6">
                             <StackPanel            Orientation="Horizontal" >
-                                <TextBlock         Text="NAVIGATION MENU"  />
+                                <TextBlock         Text="NAVIGATION MENU"  FontWeight="ExtraBold"/>
                             </StackPanel>
                         </materialDesign:ColorZone>
                         <materialDesign:ColorZone  Mode="PrimaryDark" CornerRadius="0,6,6,0">
                             <StackPanel            Orientation="Horizontal">
-                                <TextBlock         Text="ACTIVE" />
+                                <TextBlock         Text="ACTIVE"      FontWeight="Light"/>
                             </StackPanel>
                         </materialDesign:ColorZone>
                     </StackPanel>
                 </StackPanel>
             </StackPanel>
-
         </DataTemplate>
+        
     </UserControl.Resources>
 
     <Grid>
@@ -94,9 +94,6 @@
                 <Button ToolTip="Mount to Y: Drive" ToolBar.OverflowMode="AsNeeded">
                     <materialDesign:PackIcon        Kind="AlphabetYBox" />
                 </Button>
-
-
-
 
                 <Separator />
 

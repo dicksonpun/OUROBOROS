@@ -20,7 +20,7 @@
         TextOptions.TextFormattingMode="Ideal" 
         TextOptions.TextRenderingMode="Auto"
         Background="{DynamicResource MaterialDesignPaper}"
-        FontFamily="{StaticResource MaterialDesignFont}"
+        FontFamily="{DynamicResource MaterialDesignFont}"
         StateChanged="Window_StateChanged"
         Closed="Window_Closed">
     <WindowChrome.WindowChrome>
@@ -33,7 +33,9 @@
             UseAeroCaptionButtons="False" />
     </WindowChrome.WindowChrome>
     <Window.Resources>
-        <!-- PROOF OF CONCEPT GUI START (Denoted by "View"-suffixes) -->
+        <!-- ============================================================== -->
+        <!-- PROOF OF CONCEPTS - GUI FEATURES                               -->
+        <!-- ============================================================== -->
         <DataTemplate DataType="{x:Type viewModel:ClearcaseManagerViewModel}">
             <controls:ClearcaseManagerView />
         </DataTemplate>
@@ -43,9 +45,10 @@
         <DataTemplate DataType="{x:Type viewModel:ClearcaseProjectSourceViewModel}">
             <controls:ClearcaseProjectSourceView />
         </DataTemplate>
-        <!-- PROOF OF CONCEPT GUI FINISH -->
-        
-        <!-- Add new view models and their controls here so it is in scope when binding is needed below. -->
+
+        <!-- ============================================================== -->
+        <!-- LEARNING DEMO FEATURES                                         -->
+        <!-- ============================================================== -->
         <DataTemplate DataType="{x:Type viewModel:ClearcaseViewHelperViewModel}">
             <controls:ClearcaseManagerControl />
         </DataTemplate>
@@ -54,6 +57,9 @@
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:ClearcaseViewTabControlViewModel}">
             <controls:ClearcaseViewTabControl />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:ColorToolViewModel}">
+            <controls:ColorToolControl />
         </DataTemplate>
         <DataTemplate DataType="{x:Type viewModel:LicenseLogViewModel}">
             <controls:LicenseLogControl />
@@ -64,20 +70,22 @@
         <DataTemplate DataType="{x:Type viewModel:VersionLogViewModel}">
             <controls:VersionLogControl />
         </DataTemplate>
+        <!-- ============================================================== -->
         <BitmapImage x:Key="AppBarIcon" UriSource="pack://application:,,,/Resources/Icons/panda.png" />
     </Window.Resources>
     
     <Grid>
         <materialDesign:DialogHost Identifier="dialogHost" >
-            <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding Path=IsNavigationDrawerOpen, ElementName=appBar}" >
+
+            
+            <materialDesign:DrawerHost IsLeftDrawerOpen="{Binding Path=IsNavigationDrawerOpen, ElementName=appBar}"  >
+
                 <materialDesign:DrawerHost.LeftDrawerContent>
-                    <materialDesign:ColorZone Mode="Light">
-                        <materialDesignExtControls:SideNavigation x:Name="navigationDrawerNav" 
+                    <materialDesignExtControls:SideNavigation x:Name="navigationDrawerNav" 
                                                                     Items="{Binding Path=NavigationItems, Mode=TwoWay}"
                                                                     NavigationItemSelected="NavigationItemSelectedHandler"
                                                                     Width="350" MinHeight="800">
-                        </materialDesignExtControls:SideNavigation>
-                    </materialDesign:ColorZone>
+                    </materialDesignExtControls:SideNavigation>
                 </materialDesign:DrawerHost.LeftDrawerContent>
                 
                 <Grid>

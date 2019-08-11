@@ -139,12 +139,14 @@ namespace PANDA.ViewModel
     public class ClearcaseManagerItem : ViewModel
     {
         public string ViewName { get; set; }
+        public List<string> DefaultVOBs { get; set; }
         public bool IsSelected { get; set; }
         public bool IsActivated { get; set; }
         public bool IsMountedToYDrive { get; set; }
 
         public ClearcaseManagerItem()
         {
+            DefaultVOBs = new List<string>();
             IsSelected = false;
             IsActivated = false;
             IsMountedToYDrive = false;

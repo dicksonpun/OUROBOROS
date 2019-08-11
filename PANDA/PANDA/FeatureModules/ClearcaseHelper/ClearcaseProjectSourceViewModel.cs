@@ -1,6 +1,8 @@
-﻿using PANDA.Command;
+﻿using MaterialDesignExtensions.Model;
+using PANDA.Command;
 using PANDA.Model;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -28,18 +30,20 @@ namespace PANDA.ViewModel
         // ----------------------------------------------------------------------------------------
         public ClearcaseProjectSourceViewModel(string viewName)
         {
+            // Project Source Search
             m_unfilteredSearchSource = new ObservableCollection<ClearcaseProjectSourceItem>() { };
             m_unfilteredSearchSourceResults = new ObservableCollection<ClearcaseProjectSourceItem>() { };
-
-            // Initialize dummy files 
-
-            // Default search term to empty
-            SearchTerm = string.Empty;
-
+            SearchTerm = string.Empty; // NOTE: Set after initializing SearchSource(s) to avoid null reference.
             ClearcaseProjectSourceModel = new ClearcaseProjectSourceModel(viewName);
+
+            // VOB Filter
+            m_selectedVOBItem = null;
+            m_VOBAutocompleteSource = new ClearcaseVOBAutocompleteSource();
+            m_selectedVOBFilters = new ObservableCollection<ClearcaseVOBItem>();
+
+            // Register FileSystemWatcher and auto-refresh processing
             StartAutoRefresh();
         }
-
         // ----------------------------------------------------------------------------------------
         // Databinding
         // ----------------------------------------------------------------------------------------
@@ -55,6 +59,7 @@ namespace PANDA.ViewModel
                 UpdateSearchSourceResults(); // Update results accordingly
             }
         }
+
         private ObservableCollection<ClearcaseProjectSourceItem> m_unfilteredSearchSource;
         public ObservableCollection<ClearcaseProjectSourceItem> UnfilteredSearchSource
         {
@@ -65,6 +70,7 @@ namespace PANDA.ViewModel
                 OnPropertyChanged(nameof(UnfilteredSearchSource));
             }
         }
+
         private ObservableCollection<ClearcaseProjectSourceItem> m_unfilteredSearchSourceResults;
         public ObservableCollection<ClearcaseProjectSourceItem> UnfilteredSearchSourceResults
         {
@@ -73,6 +79,57 @@ namespace PANDA.ViewModel
             {
                 m_unfilteredSearchSourceResults = value;
                 OnPropertyChanged(nameof(UnfilteredSearchSourceResults));
+            }
+        }
+
+        private IAutocompleteSource m_VOBAutocompleteSource;
+        public IAutocompleteSource VOBAutocompleteSource
+        {
+            get { return m_VOBAutocompleteSource; }
+        }
+
+        private ClearcaseVOBItem m_selectedVOBItem;
+        public ClearcaseVOBItem SelectedVOBItem
+        {
+            get { return m_selectedVOBItem; }
+
+            set
+            {
+                m_selectedVOBItem = value;
+                OnPropertyChanged(nameof(SelectedVOBItem));
+
+                AddToSelectedVOBFilters(value);
+            }
+        }
+        // Helper functions
+        public void AddToSelectedVOBFilters(ClearcaseVOBItem item)
+        {
+            // Add to Selected Filters if the value is non-null and not already on the list
+            if (!SelectedVOBFilters.Contains(item) && item != null)
+            {
+                SelectedVOBFilters.Add(item);
+                OnPropertyChanged(nameof(SelectedVOBFilters));
+            }
+        }
+        public void RemoveFromSelectedVOBFilters(ClearcaseVOBItem item)
+        {
+            // Remove From Selected Filters if the value is on the list
+            if (SelectedVOBFilters.Contains(item))
+            {
+                SelectedVOBFilters.Remove(item);
+                OnPropertyChanged(nameof(SelectedVOBFilters));
+            }
+        }
+
+        private ObservableCollection<ClearcaseVOBItem> m_selectedVOBFilters;
+        public ObservableCollection<ClearcaseVOBItem> SelectedVOBFilters
+        {
+            get { return m_selectedVOBFilters; }
+
+            set
+            {
+                m_selectedVOBFilters = value;
+                OnPropertyChanged(nameof(SelectedVOBFilters));
             }
         }
         // ----------------------------------------------------------------------------------------
@@ -195,7 +252,7 @@ namespace PANDA.ViewModel
             while (ClearcaseProjectSourceModel.GetUpdateQueueCountUnderLock() > 0)
             {
                 // Consume next queue item
-                UpdateQueueItem item = ClearcaseProjectSourceModel.DequeueUpdateQueueUnderLock();
+                UpdateQueueItem item = ClearcaseProjectSourceModel.DequeueUnderLock();
 
                 switch (item.WatcherChangeType)
                 {
@@ -245,7 +302,7 @@ namespace PANDA.ViewModel
         }
     }
 
-    public class ClearcaseProjectSourceItem : ViewModel
+    public class ClearcaseProjectSourceItem 
     {
         public bool IsSelected { get; set; }
         public DirectoryInfo DirInfo { get; set; }
@@ -266,5 +323,45 @@ namespace PANDA.ViewModel
         CHECKED_OUT_RESERVED,
         CHECKED_OUT_UNRESERVED,
     }
- 
+    public class ClearcaseVOBItem
+    {
+        public string Name { get; set; }
+        public ClearcaseVOBItem() { }
+    }
+
+    public class ClearcaseVOBAutocompleteSource : IAutocompleteSource
+    {
+        private readonly List<ClearcaseVOBItem> m_clearcaseVOBItems;
+        public ClearcaseVOBAutocompleteSource()
+        {
+            m_clearcaseVOBItems = new List<ClearcaseVOBItem>()
+            {
+                new ClearcaseVOBItem() { Name = "Android Gingerbread" },
+                new ClearcaseVOBItem() { Name = "Android Icecream Sandwich" },
+                new ClearcaseVOBItem() { Name = "Android Jellybean" },
+                new ClearcaseVOBItem() { Name = "Android Lollipop" },
+                new ClearcaseVOBItem() { Name = "Android Nougat" },
+                new ClearcaseVOBItem() { Name = "Debian" },
+                new ClearcaseVOBItem() { Name = "Mac OSX" },
+                new ClearcaseVOBItem() { Name = "Raspbian" },
+                new ClearcaseVOBItem() { Name = "Ubuntu Wily Werewolf" },
+                new ClearcaseVOBItem() { Name = "Ubuntu Xenial Xerus" },
+                new ClearcaseVOBItem() { Name = "Ubuntu Yakkety Yak" },
+                new ClearcaseVOBItem() { Name = "Ubuntu Zesty Zapus" },
+                new ClearcaseVOBItem() { Name = "Windows 7" },
+                new ClearcaseVOBItem() { Name = "Windows 8" },
+                new ClearcaseVOBItem() { Name = "Windows 10" },
+                new ClearcaseVOBItem() { Name = "Windows Vista" },
+                new ClearcaseVOBItem() { Name = "Windows XP" }
+            };
+        }
+
+        public IEnumerable Search(string searchTerm)
+        {
+            searchTerm = searchTerm ?? string.Empty;
+            searchTerm = searchTerm.ToLower();
+
+            return m_clearcaseVOBItems.Where(item => item.Name.ToLower().Contains(searchTerm));
+        }
+    }
 }

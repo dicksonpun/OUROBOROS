@@ -15,7 +15,7 @@
             <DataTemplate>
                 <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="{Binding Kind}" Width="20" Height="20" VerticalAlignment="Center"
-                                            Foreground="{Binding Path=(mde:TabControlAssist.TabHeaderForeground), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabItem}}}" />
+                                             Foreground="{Binding Path=(mde:TabControlAssist.TabHeaderForeground), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabItem}}}" />
                     <TextBlock Text="{Binding Header}" FontSize="14" FontWeight="Medium" Margin="10,0,10,0" VerticalAlignment="Center"
                                Foreground="{Binding Path=(mde:TabControlAssist.TabHeaderForeground), RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type TabItem}}}" />
                 </StackPanel>

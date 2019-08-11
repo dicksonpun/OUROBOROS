@@ -53,7 +53,7 @@ namespace PANDA.Model
 
             foreach (string itemPath in CombinedPathsToAdd)
             {
-                GenerateUpdateQueueItemAndAddToQueue(itemPath, WatcherChangeTypes.All); // NOTE: All is used for initialization ONLY.
+                GenerateAndAddEntryToUpdateQueue(itemPath, WatcherChangeTypes.All); // NOTE: All is used for initialization ONLY.
             }
 
             InitializeFileSystemWatcher();
@@ -120,7 +120,7 @@ namespace PANDA.Model
             // Specify what is done when a file is changed.
             Console.WriteLine("{0}: {1} ON PATH: {2}", e.ChangeType, e.Name, e.FullPath);
 
-            GenerateUpdateQueueItemAndAddToQueue(e.FullPath, e.ChangeType);
+            GenerateAndAddEntryToUpdateQueue(e.FullPath, e.ChangeType);
         }
         private void OnRenamed(object source, RenamedEventArgs e)
         {
@@ -128,20 +128,21 @@ namespace PANDA.Model
             Console.WriteLine("{0}: {1} to {2}", WatcherChangeTypes.Renamed, e.OldFullPath, e.FullPath);
 
             // Remove the old item and add the new item.
-            GenerateUpdateQueueItemAndAddToQueue(e.OldFullPath, WatcherChangeTypes.Deleted);
-            GenerateUpdateQueueItemAndAddToQueue(e.FullPath, WatcherChangeTypes.Created);
+            GenerateAndAddEntryToUpdateQueue(e.OldFullPath, WatcherChangeTypes.Deleted);
+            GenerateAndAddEntryToUpdateQueue(e.FullPath, WatcherChangeTypes.Created);
         }
         private void OnError(object source, ErrorEventArgs e)
         {
-            //  Show that an error has been detected.
+            // Show that an error has been detected.
             Console.WriteLine("The FileSystemWatcher has detected an error");
-            //  Give more information if the error is due to an internal buffer overflow.
+            // Give more information if the error is due to an internal buffer overflow.
             if (e.GetException().GetType() == typeof(InternalBufferOverflowException))
             {
-                //  This can happen if Windows is reporting many file system events quickly 
-                //  and internal buffer of the  FileSystemWatcher is not large enough to handle this
-                //  rate of events. The InternalBufferOverflowException error informs the application
-                //  that some of the file system events are being lost.
+                // Reference: https://stackoverflow.com/questions/22116374/filesystemwatcher-internalbufferoverflow
+                // This can happen if Windows is reporting many file system events quickly 
+                // and internal buffer of the  FileSystemWatcher is not large enough to handle this
+                // rate of events. The InternalBufferOverflowException error informs the application
+                // that some of the file system events are being lost.
                 Console.WriteLine(("The file system watcher experienced an internal buffer overflow: " + e.GetException().Message));
             }
         }
@@ -172,10 +173,10 @@ namespace PANDA.Model
         }
         // ----------------------------------------------------------------------------------------
         // Class       : ClearcaseProjectSourceModel
-        // Method      : EnqueueUpdateQueueUnderLock
+        // Method      : EnqueueUnderLock
         // Description : Enqueue new item to UpdateQueue under lock.
         // ----------------------------------------------------------------------------------------
-        public void EnqueueUpdateQueueUnderLock(UpdateQueueItem item)
+        public void EnqueueUnderLock(UpdateQueueItem item)
         {
             RequestLock();
             m_updateQueue.Enqueue(item);
@@ -183,10 +184,10 @@ namespace PANDA.Model
         }
         // ----------------------------------------------------------------------------------------
         // Class       : ClearcaseProjectSourceModel
-        // Method      : DequeueUpdateQueueUnderLock
+        // Method      : DequeueUnderLock
         // Description : Dequeue next item to UpdateQueue under lock.
         // ----------------------------------------------------------------------------------------
-        public UpdateQueueItem DequeueUpdateQueueUnderLock()
+        public UpdateQueueItem DequeueUnderLock()
         {
             RequestLock();
             UpdateQueueItem item = m_updateQueue.Dequeue();
@@ -206,7 +207,7 @@ namespace PANDA.Model
             return count;
         }
 
-        public void GenerateUpdateQueueItemAndAddToQueue(string itemPath, WatcherChangeTypes watcherChangeType)
+        public void GenerateAndAddEntryToUpdateQueue(string itemPath, WatcherChangeTypes watcherChangeType)
         {
             // TODO
             // Determine SourceControlStatus
@@ -219,7 +220,7 @@ namespace PANDA.Model
                 SourceVersion = 0 // TODO
             });
             // Add to Queue under lock
-            EnqueueUpdateQueueUnderLock(updateQueueItem);
+            EnqueueUnderLock(updateQueueItem);
         }
     }
 }
