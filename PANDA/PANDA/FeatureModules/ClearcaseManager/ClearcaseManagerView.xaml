@@ -19,7 +19,7 @@
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
-        <DataTemplate x:Key="itemTemplate_SearchSource">
+        <DataTemplate x:Key="itemTemplate_SearchResults">
             <StackPanel Orientation="Horizontal" >
                 <materialDesign:PackIcon Kind="Git"   Width="30" Height="30"  Margin="5,0"/>
 
@@ -123,8 +123,8 @@
                        VirtualizingStackPanel.VirtualizationMode="Recycling"
                        SelectionMode="Extended"
                        Width="Auto"
-                       ItemsSource="{Binding UnfilteredSearchSourceResults}" 
-                       ItemTemplate="{StaticResource itemTemplate_SearchSource}" 
+                       ItemsSource="{Binding SearchResults}" 
+                       ItemTemplate="{StaticResource itemTemplate_SearchResults}" 
                        Height="Auto" >
             </ListBox>
         </materialDesign:Card>

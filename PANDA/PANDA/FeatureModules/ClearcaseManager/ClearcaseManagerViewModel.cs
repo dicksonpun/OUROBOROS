@@ -9,28 +9,28 @@ namespace PANDA.ViewModel
         // Constructor
         public ClearcaseManagerViewModel()
         {
-            m_unfilteredSearchSource = new ObservableCollection<ClearcaseManagerItem>() { };
-            m_unfilteredSearchSourceResults = new ObservableCollection<ClearcaseManagerItem>() { };
+            m_searchSource = new ObservableCollection<ClearcaseManagerItem>() { };
+            m_searchResults = new ObservableCollection<ClearcaseManagerItem>() { };
 
             // Initialize dummy views
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "Dickson-shortview1" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "Dickson-shortview2" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "dickson-shortview3" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "dickson-shortview4" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-shortview5" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-shortview6" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-shortview7" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "Dickson-veryverylongview1" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "Dickson-veryverylongview2" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview3" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview4" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview5" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview6" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview7" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview8" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "_" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "admin" });
-            m_unfilteredSearchSource.Add(new ClearcaseManagerItem() { ViewName = "nonsenseViewName-asfggdds23" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "Dickson-shortview1" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "Dickson-shortview2" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "dickson-shortview3" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "dickson-shortview4" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-shortview5" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-shortview6" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-shortview7" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "Dickson-veryverylongview1" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "Dickson-veryverylongview2" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview3" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview4" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview5" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview6" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview7" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview8" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "_" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "admin" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "nonsenseViewName-asfggdds23" });
 
             // Default search term to username
             SearchTerm = "dickson";
@@ -51,24 +51,24 @@ namespace PANDA.ViewModel
                 UpdateSearchSourceResults(); // Update results accordingly
             }
         }
-        private ObservableCollection<ClearcaseManagerItem> m_unfilteredSearchSource;
-        public ObservableCollection<ClearcaseManagerItem> UnfilteredSearchSource
+        private ObservableCollection<ClearcaseManagerItem> m_searchSource;
+        public ObservableCollection<ClearcaseManagerItem> SearchSource
         {
-            get { return m_unfilteredSearchSource; }
+            get { return m_searchSource; }
             set
             {
-                m_unfilteredSearchSource = value;
-                OnPropertyChanged(nameof(UnfilteredSearchSource));
+                m_searchSource = value;
+                OnPropertyChanged(nameof(SearchSource));
             }
         }
-        private ObservableCollection<ClearcaseManagerItem> m_unfilteredSearchSourceResults;
-        public ObservableCollection<ClearcaseManagerItem> UnfilteredSearchSourceResults
+        private ObservableCollection<ClearcaseManagerItem> m_searchResults;
+        public ObservableCollection<ClearcaseManagerItem> SearchResults
         {
-            get { return m_unfilteredSearchSourceResults; }
+            get { return m_searchResults; }
             set
             {
-                m_unfilteredSearchSourceResults = value;
-                OnPropertyChanged(nameof(UnfilteredSearchSourceResults));
+                m_searchResults = value;
+                OnPropertyChanged(nameof(SearchResults));
             }
         }
 
@@ -84,7 +84,7 @@ namespace PANDA.ViewModel
             DeselectAllSelectedItems();
 
             // Clear current search returns before processing new search
-            UnfilteredSearchSourceResults.Clear();
+            SearchResults.Clear();
 
             // Get new search results based on new search term (if any)
             if (!string.IsNullOrWhiteSpace(SearchTerm))
@@ -93,10 +93,10 @@ namespace PANDA.ViewModel
 
                 if (results.Any())
                 {
-                    UnfilteredSearchSourceResults = new ObservableCollection<ClearcaseManagerItem>(results.ToList());
+                    SearchResults = new ObservableCollection<ClearcaseManagerItem>(results.ToList());
 
                     // Default top result as selection
-                    UnfilteredSearchSourceResults.First().IsSelected = true;
+                    SearchResults.First().IsSelected = true;
                 }
             }
         }
@@ -110,7 +110,7 @@ namespace PANDA.ViewModel
         // ----------------------------------------------------------------------------------------
         public IEnumerable<ClearcaseManagerItem> Search(string searchTerm)
         {
-            return m_unfilteredSearchSource.Where(item => item.ViewName.ToLower().Contains(searchTerm.ToLower()))
+            return m_searchSource.Where(item => item.ViewName.ToLower().Contains(searchTerm.ToLower()))
                                            .OrderBy(x => x.ViewName);
         }
         // ----------------------------------------------------------------------------------------
@@ -120,7 +120,7 @@ namespace PANDA.ViewModel
         // ----------------------------------------------------------------------------------------
         public IEnumerable<ClearcaseManagerItem> SelectedItems()
         {
-            return m_unfilteredSearchSource.Where(item => item.IsSelected);
+            return m_searchSource.Where(item => item.IsSelected);
         }
         // ----------------------------------------------------------------------------------------
         // Class       : ClearcaseManagerViewModel

@@ -135,14 +135,16 @@ namespace PANDA
                     // Instantiate ViewModels
                     GetViewModelFromMap("ClearcaseManagerViewModel"); 
                     //GetViewModelFromMap("ClearcaseTabControlViewModel"); 
-                    GetViewModelFromMap("ClearcaseTabControlViewModel", "dickson-branchname-1"); 
+                    GetViewModelFromMap("ClearcaseTabControlViewModel", "dickson-branchname-1");
+                    GetViewModelFromMap("ProjectHelperViewModel");
+                    GetViewModelFromMap("ProjectHelperSettingsViewModel");
                     return new List<INavigationItem>()
                     {
                         new SubheaderNavigationItem()  { Subheader = "FEATURE MODULES" },
-                        new FirstLevelNavigationItem() { Label = "[Prototype] Clearcase Manager",      Icon = PackIconKind.GithubFace,       NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseManagerViewModel") },
-                        new FirstLevelNavigationItem() { Label = "[Prototype] Clearcase TabControl",   Icon = PackIconKind.Git,              NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseTabControlViewModel") },
-
-                        new FirstLevelNavigationItem() { Label = "Placeholder",            Icon = PackIconKind.TestTube,         NavigationItemSelectedCallback = item => "UNDER CONSTRUCTION: PLACEHOLDER" },
+                        new FirstLevelNavigationItem() { Label = "[Prototype] Clearcase Manager",       Icon = PackIconKind.TestTube,       NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseManagerViewModel") },
+                        new FirstLevelNavigationItem() { Label = "[Prototype] Clearcase TabControl",    Icon = PackIconKind.TestTube,       NavigationItemSelectedCallback = item => GetViewModelFromMap("ClearcaseTabControlViewModel") },
+                        new FirstLevelNavigationItem() { Label = "[Prototype] Project Helper",          Icon = PackIconKind.TestTube,       NavigationItemSelectedCallback = item => GetViewModelFromMap("ProjectHelperViewModel") },
+                        new FirstLevelNavigationItem() { Label = "[Prototype] Project Helper Settings", Icon = PackIconKind.TestTube,       NavigationItemSelectedCallback = item => GetViewModelFromMap("ProjectHelperSettingsViewModel") },
                         new DividerNavigationItem(),
                     };
                 case NAVIGATION_CATEGORY.DOCUMENTATION:

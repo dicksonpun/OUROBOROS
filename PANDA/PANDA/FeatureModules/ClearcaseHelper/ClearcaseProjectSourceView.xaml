@@ -30,7 +30,7 @@
             </DockPanel>
         </DataTemplate>
 
-        <DataTemplate x:Key="SearchSourceResultsItemTemplate">
+        <DataTemplate x:Key="SearchResultsItemTemplate">
             <StackPanel Orientation="Horizontal" >
                 <materialDesign:PackIcon Kind="{Binding Path=DirInfo, Converter={StaticResource FileExtensionToIconConverter}}"   
                                             Width="40" Height="40"  Margin="0"/>
@@ -173,7 +173,7 @@
                                                                 Background="{DynamicResource MaterialDesignPaper}" 
                                                                 AutocompleteSource="{Binding Path=VOBAutocompleteSource}" 
                                                                 ItemTemplate="{StaticResource itemTemplateDense}" 
-                                                                SelectedItem="{Binding Path=SelectedVOBItem, Mode=TwoWay}" 
+                                                                SelectedItem="{Binding Path=SelectedVOB, Mode=TwoWay}" 
                                                                 ShowClearButtonOnlyOnSelectedItem="True" 
                                                                 Height="40" MinWidth="300"
                                                                 Margin="10,6" >
@@ -225,7 +225,7 @@
 
                 <!--VOB Filters-->
                 <!-- Reference: https://wpf.2000things.com/2014/02/25/1016-displaying-a-collection-of-items-in-a-wrappanel/ -->
-                <ItemsControl ItemsSource="{Binding SelectedVOBFilters}"  Margin="5">
+                <ItemsControl ItemsSource="{Binding SelectedVOBs}"  Margin="5">
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <materialDesign:Chip  Content="{Binding Name}"  IsDeletable="True"  Margin="5"
@@ -258,9 +258,13 @@
                         VirtualizingStackPanel.IsVirtualizing="True"
                         VirtualizingStackPanel.VirtualizationMode="Recycling"
                         SelectionMode="Extended"
-                        ItemsSource="{Binding UnfilteredSearchSourceResults}" 
-                        ItemTemplate="{StaticResource SearchSourceResultsItemTemplate}">
-                
+                        ItemsSource="{Binding SearchResults}" 
+                        ItemTemplate="{StaticResource SearchResultsItemTemplate}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem"     BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                        <Setter Property="IsSelected"   Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
                 <!-- Reference: https://stackoverflow.com/questions/7554184/wpf-listboxitem-and-contextmenu -->
                 <ListBox.ContextMenu>
                     <ContextMenu>

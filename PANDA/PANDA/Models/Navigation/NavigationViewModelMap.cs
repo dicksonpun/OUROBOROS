@@ -36,6 +36,14 @@ namespace PANDA
                     string viewPath = (string)arg1;
                     ViewModelMap.Add(key, new ClearcaseTabControlViewModel(viewPath));
                 }
+                else if (key.StartsWith("ProjectHelperViewModel"))
+                {
+                    ViewModelMap.Add(key, new ProjectHelperViewModel());
+                }
+                else if (key.StartsWith("ProjectHelperSettingsViewModel"))
+                {
+                    ViewModelMap.Add(key, new ProjectHelperSettingsViewModel());
+                }
                 // ==================================================================================
                 // EXPERIMENTAL / LEARNING MODULES 
                 // ==================================================================================

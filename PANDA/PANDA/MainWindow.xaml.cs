@@ -77,7 +77,7 @@ namespace PANDA
             {
                 var view = new UserConfirmationControl
                 {
-                    DataContext = new UserConfirmationViewModel("Notification",
+                    DataContext = new UserConfirmationViewModel("Confirmation",
                     "Are you sure you want to exit?")
                 };
                 if (!(bool)await DialogHost.Show(view, "dialogHost"))

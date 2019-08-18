@@ -10,43 +10,54 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using static PANDA.Model.ClearcaseProjectSourceModel;
+using static PANDA.Model.ProjectHelperModel;
 
 namespace PANDA.ViewModel
 {
-    public class ClearcaseProjectSourceViewModel : ViewModel
+    public class ProjectHelperViewModel : ViewModel
     {
-        // ----------------------------------------------------------------------------------------
-        // Members
-        // ----------------------------------------------------------------------------------------
-        public ClearcaseProjectSourceModel ClearcaseProjectSourceModel;
+        #region Members
+
+        public ProjectHelperModel ProjectHelperModel;
         private CancellationTokenSource cancellationTokenSource;
 
         private static readonly SemaphoreSlim m_SearchResultsMutex = new SemaphoreSlim(1, 1);
         public async void RequestLock() { await m_SearchResultsMutex.WaitAsync(); }
         public void ReleaseLock() { m_SearchResultsMutex.Release(); }
-        // ----------------------------------------------------------------------------------------
-        // Constructor
-        // ----------------------------------------------------------------------------------------
-        public ClearcaseProjectSourceViewModel(string viewName)
-        {
-            // Project Source Search
-            m_searchSource = new ObservableCollection<ClearcaseProjectSourceItem>() { };
-            m_searchResults = new ObservableCollection<ClearcaseProjectSourceItem>() { };
-            SearchTerm = string.Empty; // NOTE: Set after initializing SearchSource(s) to avoid null reference.
-            ClearcaseProjectSourceModel = new ClearcaseProjectSourceModel(viewName);
 
-            // VOB Filter
+        #endregion
+
+
+        #region Constructor
+ 
+        public ProjectHelperViewModel()
+        {
+            ProjectHelperModel = new ProjectHelperModel();
+
+            // Project Source Search
+            m_searchSource = new ObservableCollection<ProjectHelperSourceItem>() { };
+            m_searchResults = new ObservableCollection<ProjectHelperSourceItem>() { };
+            SearchTerm = string.Empty; // NOTE: Set after initializing SearchSource(s) to avoid null reference.
+
+            // VOB
             m_selectedVOB = null;
-            m_VOBAutocompleteSource = new ClearcaseVOBAutocompleteSource();
-            m_selectedVOBs = new ObservableCollection<ClearcaseVOBItem>();
+            m_selectedVOBs = new ObservableCollection<VOBItem>();
+            m_VOBAutocompleteSource = new VOBAutocompleteSource();
+
+            // View
+            m_currentView = string.Empty;
+            m_selectedView = null;
+            m_ViewAutocompleteSource = new ViewAutocompleteSource();
 
             // Register FileSystemWatcher and auto-refresh processing
             StartAutoRefresh();
         }
-        // ----------------------------------------------------------------------------------------
-        // Databinding
-        // ----------------------------------------------------------------------------------------
+
+        #endregion
+
+
+        #region Databinding
+
         private string m_searchTerm;
         public string SearchTerm
         {
@@ -60,8 +71,8 @@ namespace PANDA.ViewModel
             }
         }
 
-        private ObservableCollection<ClearcaseProjectSourceItem> m_searchSource;
-        public ObservableCollection<ClearcaseProjectSourceItem> SearchSource
+        private ObservableCollection<ProjectHelperSourceItem> m_searchSource;
+        public ObservableCollection<ProjectHelperSourceItem> SearchSource
         {
             get { return m_searchSource; }
             set
@@ -71,8 +82,8 @@ namespace PANDA.ViewModel
             }
         }
 
-        private ObservableCollection<ClearcaseProjectSourceItem> m_searchResults;
-        public ObservableCollection<ClearcaseProjectSourceItem> SearchResults
+        private ObservableCollection<ProjectHelperSourceItem> m_searchResults;
+        public ObservableCollection<ProjectHelperSourceItem> SearchResults
         {
             get { return m_searchResults; }
             set
@@ -81,16 +92,23 @@ namespace PANDA.ViewModel
                 OnPropertyChanged(nameof(SearchResults));
             }
         }
-
-        // VOB-specific Databinding
+ 
         private IAutocompleteSource m_VOBAutocompleteSource;
         public IAutocompleteSource VOBAutocompleteSource
         {
             get { return m_VOBAutocompleteSource; }
+            set
+            {
+                if (value != null)
+                {
+                    m_VOBAutocompleteSource = value;
+                    OnPropertyChanged(nameof(VOBAutocompleteSource));
+                }
+            }
         }
 
-        private ClearcaseVOBItem m_selectedVOB;
-        public ClearcaseVOBItem SelectedVOB
+        private VOBItem m_selectedVOB;
+        public VOBItem SelectedVOB
         {
             get { return m_selectedVOB; }
 
@@ -103,14 +121,71 @@ namespace PANDA.ViewModel
             }
         }
 
-        private ObservableCollection<ClearcaseVOBItem> m_selectedVOBs;
-        public ObservableCollection<ClearcaseVOBItem> SelectedVOBs
+        private ObservableCollection<VOBItem> m_selectedVOBs;
+        public ObservableCollection<VOBItem> SelectedVOBs
         {
             get { return m_selectedVOBs; }
+            set
+            {
+                m_selectedVOBs = value;
+                OnPropertyChanged(nameof(SelectedVOBs));
+                UpdateSearchSourceResults(); // Update results accordingly
+            }
         }
 
-        // VOB Helper functions
-        public void AddToSelectedVOBs(ClearcaseVOBItem item)
+        private string m_currentView;
+        public string CurrentView
+        {
+            get { return m_currentView; }
+            set
+            {
+                m_currentView = value;
+                OnPropertyChanged(nameof(CurrentView)); 
+            }
+        }
+        
+        private DirectoryInfo m_selectedView;
+        public DirectoryInfo SelectedView
+        {
+            get { return m_selectedView; }
+            set
+            {
+                m_selectedView = value;
+                OnPropertyChanged(nameof(SelectedView));
+                SetupNewView(SelectedView);
+            }
+        }
+
+        private IAutocompleteSource m_ViewAutocompleteSource;
+        public IAutocompleteSource ViewAutocompleteSource
+        {
+            get { return m_ViewAutocompleteSource; }
+            set
+            {
+                if (value != null)
+                {
+                    m_ViewAutocompleteSource = value;
+                    OnPropertyChanged(nameof(ViewAutocompleteSource));
+                }
+            }
+        }
+
+        #endregion
+
+
+        #region Methods
+
+        public void SetupNewView(DirectoryInfo item)
+        {
+            RequestLock();
+            CurrentView = item.Name;
+            SearchSource = new ObservableCollection<ProjectHelperSourceItem>() { };
+            SearchResults = new ObservableCollection<ProjectHelperSourceItem>() { };
+            ProjectHelperModel = new ProjectHelperModel(item.FullName);
+            ReleaseLock();
+        }
+
+        public void AddToSelectedVOBs(VOBItem item)
         {
             // Add to SelectedVOBs if the value is non-null and not already on the list
             if (!SelectedVOBs.Contains(item) && item != null)
@@ -120,7 +195,7 @@ namespace PANDA.ViewModel
                 UpdateSearchSourceResults(); // Update results accordingly
             }
         }
-        public void RemoveFromSelectedVOBs(ClearcaseVOBItem item)
+        public void RemoveFromSelectedVOBs(VOBItem item)
         {
             // Remove From SelectedVOBs if the value is on the list
             if (SelectedVOBs.Contains(item))
@@ -132,7 +207,7 @@ namespace PANDA.ViewModel
         }
 
         // ----------------------------------------------------------------------------------------
-        // Class       : ClearcaseProjectSourceViewModel
+        // Class       : ProjectHelperViewModel
         // Method      : UpdateSearchSourceResults
         // Description : Updates the SearchResults ObservableCollection with the latest
         //               detected search term and enabled filters.
@@ -155,7 +230,7 @@ namespace PANDA.ViewModel
 
                 if (results.Any())
                 {
-                    SearchResults = new ObservableCollection<ClearcaseProjectSourceItem>(results.ToList());
+                    SearchResults = new ObservableCollection<ProjectHelperSourceItem>(results.ToList());
 
                     // Default top result as selection
                     SearchResults.First().IsSelected = true;
@@ -171,35 +246,35 @@ namespace PANDA.ViewModel
         // Parameters  :
         // - searchTerm (string) : Input search term
         // ----------------------------------------------------------------------------------------
-        public IEnumerable<ClearcaseProjectSourceItem> Search(string searchTerm)
+        public IEnumerable<ProjectHelperSourceItem> Search(string searchTerm)
         {
+            string viewRootPath = @"C:\Users\Dickson\Desktop\testViews\" + CurrentView + @"\";
+
             return m_searchSource.Where(item => item.DirInfo.Name.ToLower().Contains(searchTerm.ToLower())
-                                        && SelectedVOBs.Any(vob => item.DirInfo.FullName.ToLower().Contains(vob.Name.ToLower())))
+                                        && SelectedVOBs.Any(vob => item.DirInfo.FullName.ToLower()
+                                                                  .Contains(viewRootPath.ToLower() + vob.Name.ToLower())))
                                  .OrderBy(x => x.DirInfo.Name);
         }
         // ----------------------------------------------------------------------------------------
-        // Class       : ClearcaseProjectSourceViewModel
         // Method      : SelectedItems
         // Description : Returns a subset of items which are currently selected.
         // ----------------------------------------------------------------------------------------
-        public IEnumerable<ClearcaseProjectSourceItem> SelectedItems()
+        public IEnumerable<ProjectHelperSourceItem> SelectedItems()
         {
             return m_searchSource.Where(item => item.IsSelected);
         }
         // ----------------------------------------------------------------------------------------
-        // Class       : ClearcaseProjectSourceViewModel
         // Method      : DeselectAllSelectedItems
         // Description : Deselects all items which are currently selected.
         // ----------------------------------------------------------------------------------------
         public void DeselectAllSelectedItems()
         {
-            foreach (ClearcaseProjectSourceItem selectedItem in SelectedItems())
+            foreach (ProjectHelperSourceItem selectedItem in SelectedItems())
             {
                 selectedItem.IsSelected = false;
             }
         }
         // ----------------------------------------------------------------------------------------
-        // Class       : ClearcaseProjectSourceViewModel
         // Method      : StartAutoRefresh
         // Description : Starts an auto-refresh task asynchronously. Upon a cancellation request,
         //               the task will throw a OperationCanceledException and the catch will release
@@ -219,16 +294,6 @@ namespace PANDA.ViewModel
             }
         }
         // ----------------------------------------------------------------------------------------
-        // Class       : ClearcaseProjectSourceViewModel
-        // Method      : StopAutoRefresh
-        // Description : Requests a cancellation to be processed on the next asynchronous action.
-        // ----------------------------------------------------------------------------------------
-        public void StopAutoRefresh()
-        {
-            cancellationTokenSource.Cancel();
-        }
-        // ----------------------------------------------------------------------------------------
-        // Class       : ClearcaseProjectSourceViewModel
         // Method      : ProcessUpdateQueuePeriodically
         // Description : This asynchronous Task processes the UpdateQueue periodically. 
         // ----------------------------------------------------------------------------------------
@@ -242,105 +307,75 @@ namespace PANDA.ViewModel
         }
         public void ProcessUpdateQueue()
         {
-            while (ClearcaseProjectSourceModel.GetUpdateQueueCountUnderLock() > 0)
+            bool processedUpdates = false;
+            while (ProjectHelperModel.UpdateQueue.Any())
             {
                 // Consume next queue item
-                UpdateQueueItem item = ClearcaseProjectSourceModel.DequeueUnderLock();
+                UpdateQueueItem item = ProjectHelperModel.UpdateQueue.Dequeue();
 
                 switch (item.WatcherChangeType)
                 {
-                    case (WatcherChangeTypes.All): SearchSource.Add(item.ProjectSourceItem); break; // INITIALIZATION CASE
+                    case (WatcherChangeTypes.All): ProcessInitializedItem(item.ProjectSourceItem); break; // INITIALIZATION CASE
                     case (WatcherChangeTypes.Created): ProcessCreatedItem(item.ProjectSourceItem); break; // CREATED CASE
                     case (WatcherChangeTypes.Deleted): ProcessDeletedItem(item.ProjectSourceItem); break; // DELETED CASE
                     case (WatcherChangeTypes.Changed): ProcessChangedItem(item.ProjectSourceItem); break; // CHANGED CASE
                 }
+                processedUpdates = true;
+            }
+
+            // Only refresh the UI if updated
+            if (processedUpdates)
+            {
+                UpdateSearchSourceResults(); // Update results accordingly
             }
         }
-        public void ProcessCreatedItem(ClearcaseProjectSourceItem item)
+        public void ProcessInitializedItem(ProjectHelperSourceItem item)
         {
             SearchSource.Add(item);
-            UpdateSearchSourceResults(); // Update results accordingly
         }
-        public void ProcessDeletedItem(ClearcaseProjectSourceItem item)
+        public void ProcessCreatedItem(ProjectHelperSourceItem item)
         {
-            // Reference : https://stackoverflow.com/questions/20403162/remove-one-item-in-observablecollection 
-            var result = SearchSource.Remove(SearchSource.FirstOrDefault(i => i.DirInfo.Name.Equals(item.DirInfo.Name)));
-            UpdateSearchSourceResults(); // Update results accordingly
+            SearchSource.Add(item);
         }
-        public void ProcessChangedItem(ClearcaseProjectSourceItem item)
+        public void ProcessDeletedItem(ProjectHelperSourceItem item)
+        {
+            // Reference : https://stackoverflow.com/questions/20403162/remove-one-item-in-observablecollection
+            var result = SearchSource.Remove(SearchSource.FirstOrDefault(i => i.DirInfo.Name.Equals(item.DirInfo.Name)));
+        }
+        public void ProcessChangedItem(ProjectHelperSourceItem item)
         {
             // TODO - figure out what to do here
-            UpdateSearchSourceResults(); // Update results accordingly
         }
-        // ----------------------------------------------------------------------------------------
-        // Commands
-        // ----------------------------------------------------------------------------------------
-        private RelayCommand _editCommand;
-        public RelayCommand EditCommand => _editCommand ?? (_editCommand = new RelayCommand(param => EditCommandProcessing()));
 
-        private void EditCommandProcessing()
+        #endregion
+
+
+        #region Relay Commands
+
+        private RelayCommand _openCommand;
+        public RelayCommand OpenCommand => _openCommand ?? (_openCommand = new RelayCommand(param => OpenCommandProcessing()));
+
+        private void OpenCommandProcessing()
         {
-            foreach (ClearcaseProjectSourceItem item in SelectedItems())
+            foreach (ProjectHelperSourceItem item in SelectedItems())
             {
                 try
                 {
+                    // When you perform Process.Start(filename), it actually looks for the associated application for the extension.
+                    // If it does not find the association, open it in notepad++.
                     Process.Start(item.DirInfo.FullName);
                 }
                 catch
                 {
                     // Default to notepad++ if an error is thrown (assumes you have at least notepad++ installed)
+                    // "Exception thrown: 'System.ComponentModel.Win32Exception' in System.dll" is expected.
+                    // Don't bother logging this error.
                     Process.Start("notepad++.exe", item.DirInfo.FullName);
                 }
             }
         }
-    }
 
-    public class ClearcaseProjectSourceItem 
-    {
-        public bool IsSelected { get; set; }
-        public DirectoryInfo DirInfo { get; set; }
-        public SOURCE_CONTROL_STATUS SourceControlStatus { get; set; }
-        public int SourceVersion { get; set; }
+        #endregion
 
-        public ClearcaseProjectSourceItem()
-        {
-            IsSelected = false;
-            SourceVersion = 0;
-        }
-    }
-
-    public enum SOURCE_CONTROL_STATUS
-    {
-        NOT_IN_SOURCE_CONTROL,
-        IN_SOURCE_CONTROL,
-        CHECKED_OUT_RESERVED,
-        CHECKED_OUT_UNRESERVED,
-    }
-    public class ClearcaseVOBItem
-    {
-        public string Name { get; set; }
-        public ClearcaseVOBItem() { }
-    }
-
-    public class ClearcaseVOBAutocompleteSource : IAutocompleteSource
-    {
-        private readonly List<ClearcaseVOBItem> m_clearcaseVOBItems;
-        public ClearcaseVOBAutocompleteSource()
-        {
-            m_clearcaseVOBItems = new List<ClearcaseVOBItem>()
-            {
-                new ClearcaseVOBItem() { Name = "calculator-master" },
-                new ClearcaseVOBItem() { Name = "evt-master" },
-                new ClearcaseVOBItem() { Name = "GTS-GamesTaskScheduler-master" },
-            };
-        }
-
-        public IEnumerable Search(string searchTerm)
-        {
-            searchTerm = searchTerm ?? string.Empty;
-            searchTerm = searchTerm.ToLower();
-
-            return m_clearcaseVOBItems.Where(item => item.Name.ToLower().Contains(searchTerm));
-        }
     }
 }

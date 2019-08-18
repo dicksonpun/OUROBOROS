@@ -8,16 +8,16 @@ using System.Threading;
 
 namespace PANDA.Model
 {
-    public class ClearcaseProjectSourceModel
+    public class ProjectHelperModel
     {
         // Supporting class
         public class UpdateQueueItem
         {
             // Members
             public WatcherChangeTypes WatcherChangeType;
-            public ClearcaseProjectSourceItem ProjectSourceItem;
+            public ProjectHelperSourceItem ProjectSourceItem;
             // Constructor
-            public UpdateQueueItem(WatcherChangeTypes watcherChangeType_, ClearcaseProjectSourceItem primarySourceItem_)
+            public UpdateQueueItem(WatcherChangeTypes watcherChangeType_, ProjectHelperSourceItem primarySourceItem_)
             {
                 WatcherChangeType = watcherChangeType_;
                 ProjectSourceItem = primarySourceItem_;
@@ -25,29 +25,30 @@ namespace PANDA.Model
         }
 
         // Members
-        public string ViewName;
-        public string ViewDirectory;
         public string ViewFullPath;
         public DirectoryInfo DirInfo;
         public FileSystemWatcher FileSystemWatcher;
 
         // The following requires access under lock:
         private static readonly SemaphoreSlim m_mutex = new SemaphoreSlim(1, 1);
-        private Queue<UpdateQueueItem> m_updateQueue;
+        public Queue<UpdateQueueItem> UpdateQueue;
 
         // Default constructor
-        public ClearcaseProjectSourceModel(string viewName)
+        public ProjectHelperModel()
         {
-            ViewName      = viewName;
-            ViewDirectory = @"C:\Users\Dickson\Desktop\testViews\";
-            ViewFullPath  = ViewDirectory + ViewName;
-            DirInfo       = new DirectoryInfo(ViewFullPath);
-
-            m_updateQueue   = new Queue<UpdateQueueItem>();
+            ViewFullPath = string.Empty;
+            FileSystemWatcher = new FileSystemWatcher();
+            UpdateQueue = new Queue<UpdateQueueItem>();
+        }
+        public ProjectHelperModel(string viewFullPath)
+        {
+            ViewFullPath = viewFullPath;
+            DirInfo = new DirectoryInfo(ViewFullPath);
+            UpdateQueue = new Queue<UpdateQueueItem>();
 
             // Generate initial list of items to add
-            List<string> FilePathsToAdd     = Directory.GetFiles(ViewFullPath, "*.*", SearchOption.AllDirectories).ToList();
-            List<string> FolderPathsToAdd   = Directory.GetDirectories(ViewFullPath, "*", SearchOption.AllDirectories).ToList();
+            List<string> FilePathsToAdd = Directory.GetFiles(ViewFullPath, "*.*", SearchOption.AllDirectories).ToList();
+            List<string> FolderPathsToAdd = Directory.GetDirectories(ViewFullPath, "*", SearchOption.AllDirectories).ToList();
             List<string> CombinedPathsToAdd = FilePathsToAdd.Concat(FolderPathsToAdd).ToList();
 
             foreach (string itemPath in CombinedPathsToAdd)
@@ -78,10 +79,7 @@ namespace PANDA.Model
                                    NotifyFilters.CreationTime |
                                    NotifyFilters.DirectoryName |
                                    NotifyFilters.FileName |
-                                   NotifyFilters.LastAccess |
-                                   NotifyFilters.LastWrite |
-                                   NotifyFilters.Security |
-                                   NotifyFilters.Size,
+                                   NotifyFilters.LastWrite,
 
                     // Watch all files.
                     Filter = "*.*",
@@ -146,80 +144,18 @@ namespace PANDA.Model
             }
         }
 
-        // ----------------------------------------------------------------------------------------
-        // Class       : ClearcaseProjectSourceModel
-        // Method      : RequestLock
-        // Description : Asynchronously wait to enter the Semaphore. 
-        //               If no-one has been granted access to the Semaphore, code execution will proceed.
-        //               Otherwise, this thread waits here until the m_mutex is released.
-        // ----------------------------------------------------------------------------------------
-        public async void RequestLock()
-        {
-            await m_mutex.WaitAsync();
-        }
-        // ----------------------------------------------------------------------------------------
-        // Class       : ClearcaseProjectSourceModel
-        // Method      : ReleaseLock
-        // Description : TLDR: Make sure you ALWAYS call this function from the 'finally' clause of a try-catch-finally statement.
-        //               When the task is finished, release the m_mutex.
-        //               It is vital to ALWAYS release the m_mutex when ready or else the Semaphore is deadlocked.
-        //               This is why it is important to do the Release within a try...finally clause; program execution may crash or 
-        //               take a different path, this way you are guaranteed execution of release.
-        // ----------------------------------------------------------------------------------------
-        public void ReleaseLock()
-        {
-            m_mutex.Release();
-        }
-        // ----------------------------------------------------------------------------------------
-        // Class       : ClearcaseProjectSourceModel
-        // Method      : EnqueueUnderLock
-        // Description : Enqueue new item to UpdateQueue under lock.
-        // ----------------------------------------------------------------------------------------
-        public void EnqueueUnderLock(UpdateQueueItem item)
-        {
-            RequestLock();
-            m_updateQueue.Enqueue(item);
-            ReleaseLock();
-        }
-        // ----------------------------------------------------------------------------------------
-        // Class       : ClearcaseProjectSourceModel
-        // Method      : DequeueUnderLock
-        // Description : Dequeue next item to UpdateQueue under lock.
-        // ----------------------------------------------------------------------------------------
-        public UpdateQueueItem DequeueUnderLock()
-        {
-            RequestLock();
-            UpdateQueueItem item = m_updateQueue.Dequeue();
-            ReleaseLock();
-            return item;
-        }
-        // ----------------------------------------------------------------------------------------
-        // Class       : ClearcaseProjectSourceModel
-        // Method      : GetUpdateQueueCountUnderLock
-        // Description : Get UpdateQueue's count under lock.
-        // ----------------------------------------------------------------------------------------
-        public int GetUpdateQueueCountUnderLock()
-        {
-            RequestLock();
-            int count = m_updateQueue.Count();
-            ReleaseLock();
-            return count;
-        }
-
         public void GenerateAndAddEntryToUpdateQueue(string itemPath, WatcherChangeTypes watcherChangeType)
         {
             // TODO
             // Determine SourceControlStatus
             // Determine SourceVersion
-            UpdateQueueItem updateQueueItem = new UpdateQueueItem(watcherChangeType, new ClearcaseProjectSourceItem()
+            UpdateQueueItem updateQueueItem = new UpdateQueueItem(watcherChangeType, new ProjectHelperSourceItem()
             {
                 DirInfo = new DirectoryInfo(itemPath),
                 IsSelected = false,
-                SourceControlStatus = SOURCE_CONTROL_STATUS.NOT_IN_SOURCE_CONTROL, // TODO
-                SourceVersion = 0 // TODO
             });
             // Add to Queue under lock
-            EnqueueUnderLock(updateQueueItem);
+            UpdateQueue.Enqueue(updateQueueItem);
         }
     }
 }

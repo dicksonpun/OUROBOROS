@@ -40,6 +40,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,6 +50,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <LangVersion>8.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Resources\Icons\panda.ico</ApplicationIcon>
@@ -162,6 +164,14 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="FeatureModules\ProjectHelper\ProjectHelperSettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="FeatureModules\ProjectHelper\ProjectHelperView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -170,6 +180,8 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\StringToBoolConverter.cs" />
+    <Compile Include="Converters\ValueConverterGroup.cs" />
     <Compile Include="FeatureModules\ColorTool\ColorToolControl.xaml.cs">
       <DependentUpon>ColorToolControl.xaml</DependentUpon>
     </Compile>
@@ -209,7 +221,16 @@
     <Compile Include="DebugHelper.cs" />
     <Compile Include="FeatureModules\ClearcaseManager\ClearcaseManagerViewModel.cs" />
     <Compile Include="FeatureModules\ClearcaseHelper\ClearcaseTabControlViewModel.cs" />
-    <Compile Include="FeatureModules\ConfigSpecEditor\ConfigSpecEditorViewModel.cs" />
+    <Compile Include="FeatureModules\ProjectHelper\ProjectHelperItems.cs" />
+    <Compile Include="FeatureModules\ProjectHelper\ProjectHelperModel.cs" />
+    <Compile Include="FeatureModules\ProjectHelper\ProjectHelperSettingsView.xaml.cs">
+      <DependentUpon>ProjectHelperSettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FeatureModules\ProjectHelper\ProjectHelperSettingsViewModel.cs" />
+    <Compile Include="FeatureModules\ProjectHelper\ProjectHelperView.xaml.cs">
+      <DependentUpon>ProjectHelperView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FeatureModules\ProjectHelper\ProjectHelperViewModel.cs" />
     <Compile Include="FeatureModules\Utilities\ButtonAssist.cs" />
     <Compile Include="Models\CMDHelper.cs" />
     <Compile Include="FeatureModules\Utilities\PaletteHelperExtensions.cs" />

@@ -45,7 +45,12 @@
         <DataTemplate DataType="{x:Type viewModel:ClearcaseProjectSourceViewModel}">
             <controls:ClearcaseProjectSourceView />
         </DataTemplate>
-
+        <DataTemplate DataType="{x:Type viewModel:ProjectHelperViewModel}">
+            <controls:ProjectHelperView />
+        </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:ProjectHelperSettingsViewModel}">
+            <controls:ProjectHelperSettingsView />
+        </DataTemplate>
         <!-- ============================================================== -->
         <!-- LEARNING DEMO FEATURES                                         -->
         <!-- ============================================================== -->

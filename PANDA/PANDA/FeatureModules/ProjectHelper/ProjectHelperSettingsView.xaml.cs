@@ -1,26 +1,27 @@
 ﻿using MaterialDesignThemes.Wpf;
 using PANDA.ViewModel;
+using System.Windows;
 using System.Windows.Controls;
 
 namespace PANDA.Controls
 {
     /// <summary>
-    /// Interaction logic for ClearcaseProjectSourceView.xaml
+    /// Interaction logic for ProjectHelperSettingsView.xaml
     /// </summary>
-    public partial class ClearcaseProjectSourceView : UserControl
+    public partial class ProjectHelperSettingsView : UserControl
     {
-        public ClearcaseProjectSourceView()
+        public ProjectHelperSettingsView()
         {
             InitializeComponent();
         }
 
-        private void FilterTagChip_OnDeleteClick(object sender, System.Windows.RoutedEventArgs e)
+        private void FilterTagChip_OnDeleteClick(object sender, RoutedEventArgs e)
         {
             // Handle the event for the selected button.
-            if (DataContext is ClearcaseProjectSourceViewModel viewModel)
+            if (DataContext is ProjectHelperSettingsViewModel viewModel)
             {
                 // Get selected item
-                ClearcaseVOBItem selectedItem = (ClearcaseVOBItem)(e.Source as Chip).DataContext;
+                VOBItem selectedItem = (VOBItem)(e.Source as Chip).DataContext;
 
                 // Delete selected item
                 viewModel.RemoveFromSelectedVOBs(selectedItem);

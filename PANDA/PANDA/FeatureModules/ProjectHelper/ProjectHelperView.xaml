@@ -1,0 +1,246 @@
+﻿<UserControl x:Class="PANDA.Controls.ProjectHelperView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PANDA.Controls"
+             xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+             xmlns:materialDesignExtensionControls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
+             xmlns:materialDesignExtensionConverters="clr-namespace:MaterialDesignExtensions.Converters;assembly=MaterialDesignExtensions"
+             xmlns:converters="clr-namespace:PANDA.Converters"
+             TextElement.Foreground="{DynamicResource MaterialDesignBody}"
+             TextElement.FontWeight="Regular"
+             TextElement.FontSize="13"
+             TextOptions.TextFormattingMode="Ideal" 
+             TextOptions.TextRenderingMode="Auto"
+             Background="{DynamicResource MaterialDesignPaper}"
+             FontFamily="{StaticResource MaterialDesignFont}"
+             mc:Ignorable="d" 
+             d:DesignHeight="800" d:DesignWidth="1200">
+    <UserControl.Resources>
+        <!--Converters-->
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+        <converters:FileExtensionToIconConverter x:Key="FileExtensionToIconConverter" />
+        <materialDesignExtensionConverters:NullToVisibilityConverter x:Key="notNullToVisibleConverter" NullValue="Collapsed" NotNullValue="Visible" />
+
+        <!-- Reference: https://stackoverflow.com/questions/2607490/is-there-a-way-to-chain-multiple-value-converters-in-xaml-->
+        <converters:ValueConverterGroup x:Key="StringToVisibilityConverter">
+            <converters:StringToBoolConverter  />
+            <BooleanToVisibilityConverter/>
+        </converters:ValueConverterGroup>
+
+        <!--Templates-->
+        <DataTemplate x:Key="itemTemplateDense">
+            <DockPanel>
+                <materialDesign:PackIcon DockPanel.Dock="Left" Kind="Tag" Width="12" Height="12" VerticalAlignment="Center" SnapsToDevicePixels="True" />
+                <TextBlock FontSize="12" Text="{Binding Path=Name}" VerticalAlignment="Center" Margin="24,0,0,0" />
+            </DockPanel>
+        </DataTemplate>
+
+        <DataTemplate x:Key="SearchResultsItemTemplate">
+            <StackPanel Orientation="Horizontal" >
+                <materialDesign:PackIcon Kind="{Binding Path=DirInfo, Converter={StaticResource FileExtensionToIconConverter}}"   
+                                            Width="40" Height="40"  Margin="0"/>
+
+                <StackPanel Orientation="Vertical"  Margin="10,0,0,0">
+                    <!--ROW 1-->
+                    <StackPanel Orientation="Horizontal">
+                        <StackPanel.Resources>
+                            <Style TargetType="materialDesign:ColorZone">
+                                <Setter Property="Padding"           Value="10,3"/>
+                            </Style>
+                            <Style TargetType="TextBlock">
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                            </Style>
+                        </StackPanel.Resources>
+
+                        <TextBlock Text="{Binding Path=DirInfo.Name}" FontWeight="Bold" FontSize="20" Margin="0,0,10,0" />
+
+                        <!--CHECKED OUT-->
+                        <materialDesign:ColorZone  Mode="PrimaryDark" CornerRadius="5" Margin="10,0"
+                                                   Visibility="{Binding Path=IsCheckout, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel            Orientation="Horizontal">
+                                <TextBlock         Text="CHECKOUT" FontWeight="Light" />
+                            </StackPanel>
+                        </materialDesign:ColorZone>
+                        <!--BRANCH LISTING-->
+                        <materialDesign:ColorZone  Mode="PrimaryDark" CornerRadius="5"
+                                                   Visibility="{Binding Path=IsBranchListing, Converter={StaticResource BooleanToVisibilityConverter}}">
+                            <StackPanel            Orientation="Horizontal">
+                                <TextBlock         Text="BRANCH LISTING" FontWeight="Light" />
+                            </StackPanel>
+                        </materialDesign:ColorZone>
+                    </StackPanel>
+
+                    <!--ROW 2-->
+                    <TextBlock Text="{Binding Path=DirInfo.FullName}" FontWeight="Light" Margin="0,1,0,0" />
+                </StackPanel>
+            </StackPanel>
+        </DataTemplate>
+
+    </UserControl.Resources>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <!--Search Toolbar-->
+            <RowDefinition Height="Auto" />
+            <!--Search Results-->
+            <RowDefinition Height="*"    />
+        </Grid.RowDefinitions>
+
+        <!--SEARCH TOOLBAR-->
+        <ToolBarTray Grid.Row="0" x:Name="SearchToolBarTray" IsLocked="True">
+            <ToolBar Style="{DynamicResource MaterialDesignToolBar}"  ClipToBounds="False" >
+
+                <!--SEARCH TEXTBOX-->
+                <StackPanel Orientation="Horizontal"  HorizontalAlignment="Left"  Margin="0,0,10,0">
+                    <materialDesign:PackIcon Kind="Magnify"  Width="24" Height="24" VerticalAlignment="Center"   Margin="15,0"/>
+
+                    <TextBox Name="SearchTextbox"
+                            FontSize="20" FontWeight="Medium" 
+                            Width="270" VerticalAlignment="Center"
+                            IsEnabled="True" Focusable="True"
+                            Text="{Binding Path=SearchTerm, UpdateSourceTrigger=PropertyChanged}">
+                        <materialDesign:HintAssist.Hint>
+                            <TextBlock Text="Search"/>
+                        </materialDesign:HintAssist.Hint>
+                    </TextBox>
+                </StackPanel>
+
+                <Separator />
+
+                <!--SEARCH RESULT TOGGLES-->
+                <ListBox >
+                    <ListBoxItem >
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="LeadPencil" />
+                            <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Checkouts"  />
+                        </StackPanel>
+                    </ListBoxItem>
+                    <ListBoxItem>
+                        <StackPanel Orientation="Horizontal">
+                            <materialDesign:PackIcon  Kind="ScriptTextOutline" />
+                            <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Branch Listing"  />
+                        </StackPanel>
+                    </ListBoxItem>
+                </ListBox>
+
+                <!--REVIEW STATUS-->
+                <Button  ToolBar.OverflowMode="AsNeeded" 
+                             Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon  Kind="RateReview" />
+                        <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Review Status"  />
+                    </StackPanel>
+                </Button>
+                
+                <Separator />
+                
+                <!--MOUNT TO Y DRIVE-->
+                <Button  ToolBar.OverflowMode="AsNeeded"  Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                         Visibility="{Binding Path=CurrentView, Converter={StaticResource StringToVisibilityConverter}}"   
+                         Click="MountOrUnmountY_Button_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon  Kind="LetterYBox" />
+                        <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Mount"  />
+                    </StackPanel>
+                </Button>
+
+                <!--LAUNCH IDE-->
+                <Button  ToolBar.OverflowMode="AsNeeded"  Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}"
+                         Visibility="{Binding Path=CurrentView, Converter={StaticResource StringToVisibilityConverter}}"   >
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon  Kind="Rocket" />
+                        <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Launch IDE"  />
+                    </StackPanel>
+                </Button>
+
+                <!--SETTINGS-->
+                <Button ToolBar.OverflowMode="AsNeeded" 
+                        Style="{StaticResource {x:Static ToolBar.ButtonStyleKey}}" 
+                        Click="Settings_Button_Click">
+                    <StackPanel Orientation="Horizontal">
+                        <materialDesign:PackIcon  Kind="Cog" />
+                        <TextBlock FontSize="16"  Margin="6,2,0,0"  Text="Settings"  />
+                    </StackPanel>
+                </Button>
+
+            </ToolBar>
+        </ToolBarTray>
+
+        <!--Search Results-->
+        <!--Reference: https://dzone.com/articles/virtualization-wpf -->
+        <!--Reference: https://stackoverflow.com/questions/3724593/why-setting-scrollviewer-cancontentscroll-to-false-disable-virtualization-->
+        <materialDesign:Card Grid.Row="1">
+            <ListBox   HorizontalContentAlignment="Stretch"
+                        BorderThickness="0"
+                        ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                        VirtualizingStackPanel.IsVirtualizing="True"
+                        VirtualizingStackPanel.VirtualizationMode="Recycling"
+                        SelectionMode="Extended"
+                        ItemsSource="{Binding SearchResults}" 
+                        ItemTemplate="{StaticResource SearchResultsItemTemplate}">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem"     BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                        <Setter Property="IsSelected"   Value="{Binding IsSelected, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
+                        <EventSetter Event="MouseDoubleClick" Handler="ListViewItem_MouseDoubleClick"/>
+                        <EventSetter Event="KeyUp"            Handler="SearchResultsListView_KeyUp"/>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+                <!-- Reference: https://stackoverflow.com/questions/7554184/wpf-listboxitem-and-contextmenu -->
+                <ListBox.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Open"                 Command="{Binding OpenCommand}" >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="OpenInNew" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Version Tree"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="Subtasks" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Compare with Unmodified"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="SelectCompare" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                        <Separator />
+
+                        <MenuItem Header="Checkout"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="ArrowRightThick" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Undo Checkout"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="UndoVariant" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Checkin"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="ArrowLeftThick" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+
+                        <Separator />
+
+                        <MenuItem Header="Open Review Tool"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="OpenInNew" />
+                            </MenuItem.Icon>
+                        </MenuItem>
+                        <MenuItem Header="Open Review Notes"  >
+                            <MenuItem.Icon>
+                                <materialDesign:PackIcon        Kind="CommentUser" />
+                            </MenuItem.Icon>
+                        </MenuItem> 
+
+                    </ContextMenu>
+                </ListBox.ContextMenu>
+            </ListBox>
+        </materialDesign:Card>
+
+    </Grid>
+</UserControl>
