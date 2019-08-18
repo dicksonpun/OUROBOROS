@@ -98,11 +98,13 @@
 
                     <TextBox Name="SearchTextbox"
                             FontSize="20" FontWeight="Medium" 
-                            Width="270" VerticalAlignment="Center"
+                            Width="280" VerticalAlignment="Center"
                             IsEnabled="True" Focusable="True"
                             Text="{Binding Path=SearchTerm, UpdateSourceTrigger=PropertyChanged}">
                         <materialDesign:HintAssist.Hint>
-                            <TextBlock Text="Search"/>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Path=CurrentView, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"/>
+                            </StackPanel>
                         </materialDesign:HintAssist.Hint>
                     </TextBox>
                 </StackPanel>
