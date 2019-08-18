@@ -21,12 +21,13 @@ namespace PANDA.ViewModel
              * The patch version is incremented for minor changes and bug fixes which do not change the software's features. 
              */
 
-            // Note: Keep KNOWN ISSUES and TODO entry as top entries until they are fully resolved
+            // Note: Keep "Known Issues" and "TODO" entry as top entries.
             m_items = new List<VersionLogItem>()
             {
+                #region Known Issues
                 new VersionLogItem()
                 {
-                    Version     = "KNOWN ISSUES",
+                    Version     = "Known Issues",
                     UpdateNotes = new List<VersionLogNoteItem>()
                     {
                         new VersionLogNoteItem()
@@ -55,134 +56,102 @@ namespace PANDA.ViewModel
                         }
                     }
                 },
+            #endregion
+            #region TODO
                 new VersionLogItem()
                 {
-                    Version     = "TODO - GUI Prototype",
+                    Version     = "TODO",
                     UpdateNotes = new List<VersionLogNoteItem>()
                     {
                         new VersionLogNoteItem()
                         {
                             Header       =  "CURRENTLY IN DEVELOPMENT",
-                            Description  =  "Add App State Persistence"                                                 + "\n" +
-                                            "+ Central Location for storing meta files"                                 + "\n" +
-                                            END_OF_STRING
-                        },
-                        new VersionLogNoteItem()
-                        {
-                            Header       =  "HIGH PRIORITY",
-                            Description  =  "ADD: Text Search"                                                          + "\n" +
-                                            END_OF_STRING
-                        },
-                        new VersionLogNoteItem()
-                        {
-                            Header       =  "MEDIUM PRIORITY",
-                            Description  =  "ADD: function update views - config spec"                                  + "\n" +
-                                            "Tidy up all files prior to official release (Documentation)"               + "\n" +
-                                            END_OF_STRING
-                        },
-                        new VersionLogNoteItem()
-                        {
-                            Header       =  "LOW PRIORITY",
                             Description  =  "N/A"                                                                       + "\n" +
                                             END_OF_STRING
-                        }
-                    }
-                },
-                new VersionLogItem()
-                {
-                    Version     = "TODO - Functionality",
-                    UpdateNotes = new List<VersionLogNoteItem>()
-                    {
-                        new VersionLogNoteItem()
-                        {
-                            Header       =  "CURRENTLY IN DEVELOPMENT",
-                            Description  =  "Consider re-designing update algorithm"                                    + "\n" +
-                                            END_OF_STRING
                         },
                         new VersionLogNoteItem()
                         {
                             Header       =  "HIGH PRIORITY",
-                            Description  =  "Update logic to support updates via cleartool commands"                    + "\n" +
+                            Description  =  "Tidy up all files prior to official release (Documentation)"               + "\n" +
                                             END_OF_STRING
                         },
                         new VersionLogNoteItem()
                         {
                             Header       =  "MEDIUM PRIORITY",
-                            Description  =  "ADD: FUNCTION: import local project"                                       + "\n" +
-                                            "ADD: FUNCTION: Build Integrity Analyzer"                                   + "\n" +
-                                            "ADD: FUNCTION: BranchList CHANGE log document generator"                   + "\n" +
-                                            "ADD: Dashboard for branch statistics"                                      + "\n" +
-                                            "ADD: file review functionality"                                            + "\n" +
-                                            "ADD: AUTOSTAMP"                                                            + "\n" +
-                                            "ADD: Test Descriptor Verifier and Queue"                                   + "\n" +
-                                            "ADD: Test ETA"                                                             + "\n" +
+                            Description  =  "[Add] File review functionality"                                           + "\n" +
+                                            "[Add] State Persistence for View and VOBs"                                 + "\n" +
                                             END_OF_STRING
                         },
                         new VersionLogNoteItem()
                         {
                             Header       =  "LOW PRIORITY",
-                            Description  =  "ADD: HOW TO Wiki (Using Stepper)"                                          + "\n" +
-                                            "ADD: Powerpoint directory"                                                 + "\n" +
-                                            "Button to create user views / branch"                                      + "\n" +
+                            Description  =  "[Add] FUNCTION: BranchList CHANGE log document generator"                   + "\n" +
+                                            "[Add] Text Search"                                                          + "\n" +
+                                            "[Add] HOW TO Helper"                                                        + "\n" +
+                                            "[Add] Powerpoint directory"                                                 + "\n" +
+                                            "[Add] AUTOSTAMP"                                                            + "\n" +
+                                            "[Add] Test Descriptor Verifier and Queue"                                   + "\n" +
+                                            "[Add] Test ETA"                                                             + "\n" +
+                                            "[Add] FUNCTION: Build Integrity Analyzer"                                   + "\n" +
                                             END_OF_STRING
                         }
                     }
                 },
-                /* Add new versions ascending from here. */
+                #endregion
+                #region 0.0.1
+                /* Add new versions in descending order (latest on top). */
                 new VersionLogItem()
                 {
-                    Version     = "1.0.0",
+                    Version     = "0.0.1",
                     UpdateNotes = new List<VersionLogNoteItem>()
                     {
                         new VersionLogNoteItem()
                         {
                             Header       =  "Main Window",
-                            Description  =  "Navigation Menu - Clearcase Views support asynchronous periodic updates"   + "\n" +
-                                            "+ Updates list of available views and external sources referencing views"  + "\n" +
-                                            "Snackbar operational for notifications"                                    + "\n" +
+                            Description  =  "[Added] Navigation Menu"                                                   + "\n" +
+                                            "[Added] Snackbar notifications"                                            + "\n" +
                                             END_OF_STRING
                         },
                         new VersionLogNoteItem()
                         {
                             Header       =  "User Profile",
-                            Description  =  "GUI for UNIX login"                                                        + "\n" +
-                                            "Palette Picker"                                                            + "\n" +
+                            Description  =  "[Added] GUI for UNIX login"                                                + "\n" +
                                             END_OF_STRING
                         },
                         new VersionLogNoteItem()
                         {
-                            Header       =  "Clearcase Manager",
-                            Description  =  "Asynchronous periodic updates"                                             + "\n" +
-                                            "+ Updates list of available views externally via Navigation Menu updates"  + "\n" +
-                                            "Searchbar to add views"                                                    + "\n" +
-                                            "Button to mount and unmount folder to Y-Drive"                             + "\n" +
-                                            "Button to remove views"                                                    + "\n" +
-                                            "+ Nonuser views are removed from navigation menu"                          + "\n" +
-                                            "+ User views tentatively only collect user confirmation to delete"         + "\n" +
+                            Header       =  "Palette Picker",
+                            Description  =  "[Added] GUI"                                                               + "\n" +
+                                            "[Added] State Persistence for Color and Theme"                             + "\n" +
                                             END_OF_STRING
                         },
                         new VersionLogNoteItem()
                         {
-                            Header       =  "Project Source Helper",
-                            Description  =  "Searchbar for project source"                                              + "\n" +
-                                            "Button to open selected item(s)"                                           + "\n" +
-                                            "Double click to open selected item"                                        + "\n" +
+                            Header       =  "Project Helper",
+                            Description  =  "[Added] Searchbar"                                                         + "\n" +
+                                            "[Added] Filter toggles for checkouts and branchlisting (not operational)"  + "\n" +
+                                            "[Added] Review Status button (not operational)"                            + "\n" +
+                                            "[Added] Settings (to select view and vobs)"                                + "\n" +
+                                            "[Added] Mount Y Drive button (must select view)"                           + "\n" +
+                                            "[Added] Launch IDE button (must select view) (not operational)"            + "\n" +
+                                            "[Added] Context Menu (only open files is operational)"                     + "\n" +
                                             END_OF_STRING
                         },
                         new VersionLogNoteItem()
                         {
-                            Header       =  "Version Log",
-                            Description  =  "Add TODOs and pending V1.0.0 notes"                                        + "\n" +
+                            Header       =  "Changelog",
+                            Description  =  "[Added] Categories: Known Issues, TODOs, and Version notes"                + "\n" +
                                             END_OF_STRING
                         },
                         new VersionLogNoteItem()
                         {
                             Header       =  "Licenses",
-                            Description  =  "Add documentation"                                                         + "\n" +
+                            Description  =  "[Added] Documentation"                                                     + "\n" +
                                             END_OF_STRING
                         },
                     }
                 }
+                #endregion
             };
         }
 
