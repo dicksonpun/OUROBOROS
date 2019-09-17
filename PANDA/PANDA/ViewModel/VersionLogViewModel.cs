@@ -78,21 +78,15 @@ namespace PANDA.ViewModel
                         new VersionLogNoteItem()
                         {
                             Header       =  "MEDIUM PRIORITY",
-                            Description  =  "[Add] File review functionality"                                           + "\n" +
-                                            "[Add] State Persistence for View and VOBs"                                 + "\n" +
+                            Description  =  "N/A"                                                                       + "\n" +
                                             END_OF_STRING
                         },
                         new VersionLogNoteItem()
                         {
                             Header       =  "LOW PRIORITY",
-                            Description  =  "[Add] FUNCTION: BranchList CHANGE log document generator"                   + "\n" +
-                                            "[Add] Text Search"                                                          + "\n" +
+                            Description  =  "[Add] Text Search"                                                          + "\n" +
                                             "[Add] HOW TO Helper"                                                        + "\n" +
                                             "[Add] Powerpoint directory"                                                 + "\n" +
-                                            "[Add] AUTOSTAMP"                                                            + "\n" +
-                                            "[Add] Test Descriptor Verifier and Queue"                                   + "\n" +
-                                            "[Add] Test ETA"                                                             + "\n" +
-                                            "[Add] FUNCTION: Build Integrity Analyzer"                                   + "\n" +
                                             END_OF_STRING
                         }
                     }

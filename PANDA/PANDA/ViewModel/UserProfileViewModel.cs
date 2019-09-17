@@ -4,6 +4,7 @@
     {
         // Helpers
         public UserSettingsHelper UserSettingsHelper;
+        public ConnectionMonitorViewModel ConnectionMonitor { get; private set; }
 
         // Databinding
         public UserProfileItem UserProfileItem
@@ -18,6 +19,7 @@
         public UserProfileViewModel(UserSettingsHelper userSettingsHelper) : base()
         {
             UserSettingsHelper = userSettingsHelper;
+            ConnectionMonitor = new ConnectionMonitorViewModel();
         }
     }
 
