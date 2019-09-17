@@ -180,6 +180,7 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Converters\BooleanInverterConverter.cs" />
     <Compile Include="Converters\StringToBoolConverter.cs" />
     <Compile Include="Converters\ValueConverterGroup.cs" />
     <Compile Include="FeatureModules\ColorTool\ColorToolControl.xaml.cs">
@@ -250,6 +251,7 @@
     <Compile Include="ViewModel\ClearcaseViewTabCodeViewModel.cs" />
     <Compile Include="ViewModel\ClearcaseViewTabControlViewModel.cs" />
     <Compile Include="FeatureModules\ColorTool\ColorToolViewModel.cs" />
+    <Compile Include="ViewModel\ConnectionMonitorViewModel.cs" />
     <Compile Include="ViewModel\FileSystemControlViewModel.cs" />
     <Compile Include="ViewModel\FileSystemDialogViewModel.cs" />
     <Compile Include="ViewModel\MainWindowViewModel.cs" />

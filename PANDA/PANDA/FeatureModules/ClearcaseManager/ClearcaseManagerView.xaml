@@ -4,6 +4,7 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:PANDA.Controls"
+             xmlns:converters="clr-namespace:PANDA.Converters"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:controls="clr-namespace:MaterialDesignExtensions.Controls;assembly=MaterialDesignExtensions"
              xmlns:materialDesignConverters="clr-namespace:MaterialDesignExtensions.Converters;assembly=MaterialDesignExtensions"
@@ -18,7 +19,7 @@
              d:DesignHeight="800" d:DesignWidth="1200">
     <UserControl.Resources>
         <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-
+        
         <DataTemplate x:Key="itemTemplate_SearchResults">
             <StackPanel Orientation="Horizontal" >
                 <materialDesign:PackIcon Kind="Git"   Width="30" Height="30"  Margin="5,0"/>
