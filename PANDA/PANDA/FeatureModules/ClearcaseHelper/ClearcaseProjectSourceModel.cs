@@ -33,14 +33,14 @@ namespace PANDA.Model
 
         // The following requires access under lock:
         private static readonly SemaphoreSlim m_mutex = new SemaphoreSlim(1, 1);
-        private Queue<UpdateQueueItem> m_updateQueue;
+        private readonly Queue<UpdateQueueItem> m_updateQueue;
 
         // Default constructor
         public ClearcaseProjectSourceModel(string viewName)
         {
             ViewName      = viewName;
-            ViewDirectory = @"C:\Users\Dickson\Desktop\testViews\";
-            ViewFullPath  = ViewDirectory + ViewName;
+            ViewDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+            ViewFullPath  = ViewDirectory;
             DirInfo       = new DirectoryInfo(ViewFullPath);
 
             m_updateQueue   = new Queue<UpdateQueueItem>();

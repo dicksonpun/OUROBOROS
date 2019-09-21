@@ -1,4 +1,5 @@
 ﻿using MaterialDesignExtensions.Model;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -46,7 +47,7 @@ namespace PANDA.ViewModel
 
         public IEnumerable Search(string searchTerm)
         {
-            searchTerm = searchTerm ?? string.Empty;
+            searchTerm ??= string.Empty;
             searchTerm = searchTerm.ToLower();
 
             return m_VOBItems.Where(item => item.Name.ToLower().Contains(searchTerm));
@@ -60,7 +61,7 @@ namespace PANDA.ViewModel
         {
             m_VOBItems = new List<DirectoryInfo>();
 
-            var ViewDirectory = @"C:\Users\Dickson\Desktop\testViews\";
+            var ViewDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
             var ViewNames = Directory.GetDirectories(ViewDirectory).ToList();
 
             foreach (string viewName in ViewNames)
@@ -72,7 +73,7 @@ namespace PANDA.ViewModel
 
         public IEnumerable Search(string searchTerm)
         {
-            searchTerm = searchTerm ?? string.Empty;
+            searchTerm ??= string.Empty;
             searchTerm = searchTerm.ToLower();
 
             return m_VOBItems.Where(item => item.Name.ToLower().Contains(searchTerm));
