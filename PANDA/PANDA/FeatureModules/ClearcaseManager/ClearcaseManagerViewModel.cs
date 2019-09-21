@@ -28,8 +28,8 @@ namespace PANDA.ViewModel
             m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview6" });
             m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview7" });
             m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "randomusername-veryverylongview8" });
-            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "_" });
-            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "admin" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "_abc" });
+            m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "admin222" });
             m_searchSource.Add(new ClearcaseManagerItem() { ViewName = "nonsenseViewName-asfggdds23" });
 
             // Default search term to username

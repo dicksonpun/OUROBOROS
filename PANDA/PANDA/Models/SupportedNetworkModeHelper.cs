@@ -23,7 +23,7 @@ namespace PANDA
         // Class members
         public NetworkMode CurrentNetworkMode   { get; private set; }
         public List<NetworkMode> SupportedNetworkModes { get; private set; }
-        private MainWindow m_mainWindow;
+        private readonly MainWindow m_mainWindow;
 
         // Constructor
         public SupportedNetworkModeHelper(MainWindow mainWindow)
@@ -32,7 +32,7 @@ namespace PANDA
 
             SupportedNetworkModes = new List<NetworkMode>()
             {
-                new NetworkMode  {  Name = SUPPORTED_NETWORK_MODES.DEBUG,      NetworkSpecificPath = @"C:\Users\Dickson\Desktop\testViews"},
+                new NetworkMode  {  Name = SUPPORTED_NETWORK_MODES.DEBUG,      NetworkSpecificPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)},
                 new NetworkMode  {  Name = SUPPORTED_NETWORK_MODES.SERVER_001, NetworkSpecificPath = "ABC1"},
                 new NetworkMode  {  Name = SUPPORTED_NETWORK_MODES.SERVER_002, NetworkSpecificPath = "ABC2"},
                 new NetworkMode  {  Name = SUPPORTED_NETWORK_MODES.OFFLINE,    NetworkSpecificPath = "" },

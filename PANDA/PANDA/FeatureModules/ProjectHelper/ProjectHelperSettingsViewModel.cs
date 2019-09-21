@@ -1,6 +1,7 @@
 ﻿using MaterialDesignExtensions.Model;
 using MaterialDesignThemes.Wpf;
 using PANDA.Command;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -30,6 +31,10 @@ namespace PANDA.ViewModel
 
             m_selectedView = null;
             m_ViewAutocompleteSource = new ViewAutocompleteSource();
+
+            m_minimumRefreshDelayHours = 0;
+            m_minimumRefreshDelayMinutes = 0;
+            m_minimumRefreshDelaySeconds = 1;
         }
 
         #endregion
@@ -38,7 +43,7 @@ namespace PANDA.ViewModel
         #region Databinding
 
 
-        private IAutocompleteSource m_ViewAutocompleteSource;
+        private readonly IAutocompleteSource m_ViewAutocompleteSource;
         public IAutocompleteSource ViewAutocompleteSource
         {
             get { return m_ViewAutocompleteSource; }
@@ -103,6 +108,49 @@ namespace PANDA.ViewModel
             }
         }
 
+        private int m_minimumRefreshDelayHours;
+        public int MinimumRefreshDelayHours
+        {
+            get { return m_minimumRefreshDelayHours; }
+            set
+            {
+                if (value >= 0)
+                {
+                    m_minimumRefreshDelayHours = value;
+                    OnPropertyChanged(nameof(MinimumRefreshDelayHours));
+                }
+            }
+        }
+
+        private int m_minimumRefreshDelayMinutes;
+        public int MinimumRefreshDelayMinutes
+        {
+            get { return m_minimumRefreshDelayMinutes; }
+            set
+            {
+                if (value >= 0)
+                {
+                    m_minimumRefreshDelayMinutes = value;
+                    OnPropertyChanged(nameof(m_minimumRefreshDelayMinutes));
+                }
+            }
+        }
+
+        private int m_minimumRefreshDelaySeconds;
+        public int MinimumRefreshDelaySeconds
+        {
+            get { return m_minimumRefreshDelaySeconds; }
+            set
+            {
+                if (value >= 0)
+                {
+                    m_minimumRefreshDelaySeconds = value;
+                    OnPropertyChanged(nameof(MinimumRefreshDelaySeconds));
+                }
+            }
+        }
+
+
         #endregion
 
 
@@ -156,6 +204,12 @@ namespace PANDA.ViewModel
                 SelectedVOBs.Remove(itemToRemove);
                 OnPropertyChanged(nameof(SelectedVOBs));
             }
+        }
+
+        public int GetTotalMinimumRefreshDelayInSeconds()
+        {
+            TimeSpan totalDelayTimeSpan = new TimeSpan(m_minimumRefreshDelayHours, m_minimumRefreshDelayMinutes, m_minimumRefreshDelaySeconds);
+            return Convert.ToInt32(totalDelayTimeSpan.TotalSeconds);
         }
 
         #endregion

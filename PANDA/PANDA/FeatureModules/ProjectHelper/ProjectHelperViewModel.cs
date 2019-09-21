@@ -248,7 +248,7 @@ namespace PANDA.ViewModel
         // ----------------------------------------------------------------------------------------
         public IEnumerable<ProjectHelperSourceItem> Search(string searchTerm)
         {
-            string viewRootPath = @"C:\Users\Dickson\Desktop\testViews\" + CurrentView + @"\";
+            string viewRootPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop) + CurrentView + @"\";
 
             return m_searchSource.Where(item => item.DirInfo.Name.ToLower().Contains(searchTerm.ToLower())
                                         && SelectedVOBs.Any(vob => item.DirInfo.FullName.ToLower()
