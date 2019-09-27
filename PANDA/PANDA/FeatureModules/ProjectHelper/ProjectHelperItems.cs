@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-namespace PANDA.ViewModel
+namespace OUROBOROS.ViewModel
 {
     public class ProjectHelperSourceItem
     {

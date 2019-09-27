@@ -1,6 +1,6 @@
 ﻿using System.Windows.Controls;
 
-namespace PANDA.Controls
+namespace OUROBOROS.Controls
 {
     /// <summary>
     /// Interaction logic for UserConfirmationControl.xaml

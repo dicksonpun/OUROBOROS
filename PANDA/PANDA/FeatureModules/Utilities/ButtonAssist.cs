@@ -1,6 +1,6 @@
 ﻿using System.Windows;
 
-namespace PANDA.Utilities
+namespace OUROBOROS.Utilities
 {
     public static class ButtonAssist
     {

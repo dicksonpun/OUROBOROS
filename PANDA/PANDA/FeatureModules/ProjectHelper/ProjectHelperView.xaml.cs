@@ -1,5 +1,5 @@
 ﻿using MaterialDesignThemes.Wpf;
-using PANDA.ViewModel;
+using OUROBOROS.ViewModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 
-namespace PANDA.Controls
+namespace OUROBOROS.Controls
 {
     /// <summary>
     /// Interaction logic for ProjectHelperView.xaml

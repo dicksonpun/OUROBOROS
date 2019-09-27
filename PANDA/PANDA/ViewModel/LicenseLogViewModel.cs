@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PANDA.ViewModel
+namespace OUROBOROS.ViewModel
 {
     public class LicenseLogViewModel : ViewModel
     {
@@ -19,7 +19,6 @@ namespace PANDA.ViewModel
             m_items = new List<LicenseLogItem>()
             {
                 // Keep alphanumerical order:
-                new LicenseLogItem() { PackageName = "Application Icon",         Description = "Panda Icon",                                              License = "Free",    Version = "LOW-RES",  ReferenceURL = "https://www.freelogodesign.org/"                                     },
                 new LicenseLogItem() { PackageName = "DocX",                     Description = ".NET library for manipulating Word 2007/2010/2013 files", License = "MS-PL",   Version = "1.3.0",    ReferenceURL = "https://github.com/xceedsoftware/DocX"                               },
                 new LicenseLogItem() { PackageName = "ExcelDataReader",          Description = ".NET library for reading Microsoft Excel files",          License = "MIT",     Version = "3.6.0",    ReferenceURL = "https://github.com/ExcelDataReader/ExcelDataReader"                  },
                 new LicenseLogItem() { PackageName = "MaterialDesignColors",     Description = ".NET library for Material Design color system",           License = "MS-PL",   Version = "1.2.0",    ReferenceURL = "https://github.com/MaterialDesignInXAML/MaterialDesignInXamlToolkit" },

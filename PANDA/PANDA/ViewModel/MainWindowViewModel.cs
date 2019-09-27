@@ -1,8 +1,8 @@
 ﻿using MaterialDesignThemes.Wpf;
-using PANDA.Command;
-using PANDA.Controls;
+using OUROBOROS.Command;
+using OUROBOROS.Controls;
 
-namespace PANDA.ViewModel
+namespace OUROBOROS.ViewModel
 {
     public class MainWindowViewModel : ViewModel
     {

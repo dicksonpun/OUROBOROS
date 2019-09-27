@@ -1,4 +1,4 @@
-﻿namespace PANDA.ViewModel
+﻿namespace OUROBOROS.ViewModel
 {
     public abstract class FileSystemControlViewModel : ViewModel
     {

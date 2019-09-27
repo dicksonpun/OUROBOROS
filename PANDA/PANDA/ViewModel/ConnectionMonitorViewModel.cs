@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace PANDA.ViewModel
+namespace OUROBOROS.ViewModel
 {
     public class ConnectionMonitorViewModel : ViewModel
     {

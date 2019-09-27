@@ -1,13 +1,13 @@
 ﻿using MaterialDesignExtensions.Model;
 using MaterialDesignThemes.Wpf;
-using PANDA.ViewModel;
+using OUROBOROS.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading;
 
-namespace PANDA
+namespace OUROBOROS
 {
     public partial class ProjectSourceHelper
     {

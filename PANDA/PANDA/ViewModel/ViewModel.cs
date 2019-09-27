@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 
-namespace PANDA.ViewModel
+namespace OUROBOROS.ViewModel
 {
     public class ViewModel : INotifyPropertyChanged
     {

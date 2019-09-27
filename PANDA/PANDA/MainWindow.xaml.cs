@@ -1,13 +1,13 @@
 ﻿using MaterialDesignExtensions.Controls;
 using MaterialDesignThemes.Wpf;
-using PANDA.Controls;
-using PANDA.ViewModel;
+using OUROBOROS.Controls;
+using OUROBOROS.ViewModel;
 using System;
 using System.Security.Permissions;
 using System.Windows;
 using System.Windows.Input;
 
-namespace PANDA
+namespace OUROBOROS
 {
     // Reference: https://stackoverflow.com/questions/2914819/what-is-the-purpose-of-the-permissionset-attribute-in-the-msdn-filesystemwatcher
     [PermissionSet(SecurityAction.Demand, Name = "FullTrust")]

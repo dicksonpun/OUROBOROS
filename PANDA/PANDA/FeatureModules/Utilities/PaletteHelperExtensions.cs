@@ -3,7 +3,7 @@ using MaterialDesignColors;
 using MaterialDesignColors.ColorManipulation;
 using MaterialDesignThemes.Wpf;
 
-namespace PANDA.Model
+namespace OUROBOROS.Model
 {
     public static class PaletteHelperExtensions
     {

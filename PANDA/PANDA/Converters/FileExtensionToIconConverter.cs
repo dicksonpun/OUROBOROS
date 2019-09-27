@@ -4,7 +4,7 @@ using System.Globalization;
 using System.IO;
 using System.Windows.Data;
 
-namespace PANDA.Converters
+namespace OUROBOROS.Converters
 {
     public class FileExtensionToIconConverter : IValueConverter
     {

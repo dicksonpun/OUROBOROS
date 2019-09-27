@@ -1,7 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
 using System.Collections.ObjectModel;
 
-namespace PANDA.ViewModel
+namespace OUROBOROS.ViewModel
 {
     public class ClearcaseTabControlViewModel : ViewModel
     {        

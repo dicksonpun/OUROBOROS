@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 
-namespace PANDA
+namespace OUROBOROS
 {
     public class NavigationItem : INotifyPropertyChanged
     {

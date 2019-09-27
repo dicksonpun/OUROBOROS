@@ -1,4 +1,4 @@
-﻿using PANDA.ViewModel;
+﻿using OUROBOROS.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -6,7 +6,7 @@ using System.Linq;
 using System.Runtime.Caching;
 using System.Threading;
 
-namespace PANDA.Model
+namespace OUROBOROS.Model
 {
     public class ClearcaseProjectSourceModel
     {

@@ -7,10 +7,10 @@ using System.Windows.Input;
 using System.Windows.Media;
 using MaterialDesignColors; 
 using MaterialDesignThemes.Wpf;
-using PANDA.Command;
-using PANDA.Model;
+using OUROBOROS.Command;
+using OUROBOROS.Model;
 
-namespace PANDA.ViewModel
+namespace OUROBOROS.ViewModel
 {
     enum ColorScheme
     {

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace PANDA
+namespace OUROBOROS
 {
     class DebugHelper
     {

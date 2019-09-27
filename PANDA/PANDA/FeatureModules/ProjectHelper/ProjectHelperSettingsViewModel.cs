@@ -1,14 +1,13 @@
 ﻿using MaterialDesignExtensions.Model;
 using MaterialDesignThemes.Wpf;
-using PANDA.Command;
+using OUROBOROS.Command;
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 
-namespace PANDA.ViewModel
+namespace OUROBOROS.ViewModel
 {
     public class ProjectHelperSettingsViewModel : ViewModel
     {

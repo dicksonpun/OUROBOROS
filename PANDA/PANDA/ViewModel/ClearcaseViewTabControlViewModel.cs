@@ -2,7 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 
-namespace PANDA.ViewModel
+namespace OUROBOROS.ViewModel
 {
     public class ClearcaseViewTabControlViewModel : ViewModel
     {

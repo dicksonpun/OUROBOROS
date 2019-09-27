@@ -1,4 +1,4 @@
-﻿using PANDA.ViewModel;
+﻿using OUROBOROS.ViewModel;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Threading;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace PANDA
+namespace OUROBOROS
 {
     public class UserSettingsHelper
     {

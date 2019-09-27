@@ -1,6 +1,6 @@
 ﻿using MaterialDesignExtensions.Model;
-using PANDA.Command;
-using PANDA.Model;
+using OUROBOROS.Command;
+using OUROBOROS.Model;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -10,9 +10,9 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using static PANDA.Model.ProjectHelperModel;
+using static OUROBOROS.Model.ProjectHelperModel;
 
-namespace PANDA.ViewModel
+namespace OUROBOROS.ViewModel
 {
     public class ProjectHelperViewModel : ViewModel
     {

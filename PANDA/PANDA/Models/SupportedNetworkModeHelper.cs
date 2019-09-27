@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace PANDA
+namespace OUROBOROS
 {
     public enum SUPPORTED_NETWORK_MODES
     {

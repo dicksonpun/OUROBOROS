@@ -1,7 +1,7 @@
-﻿using PANDA.ViewModel;
+﻿using OUROBOROS.ViewModel;
 using System.Collections.Generic;
 
-namespace PANDA
+namespace OUROBOROS
 {
     public partial class NavigationHelper
     {

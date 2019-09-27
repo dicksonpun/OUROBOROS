@@ -1,8 +1,8 @@
 ﻿using MaterialDesignThemes.Wpf;
-using PANDA.ViewModel;
+using OUROBOROS.ViewModel;
 using System.Windows.Controls;
 
-namespace PANDA.Controls
+namespace OUROBOROS.Controls
 {
     /// <summary>
     /// Interaction logic for ClearcaseProjectSourceView.xaml

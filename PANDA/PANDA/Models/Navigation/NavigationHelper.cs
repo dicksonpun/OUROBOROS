@@ -1,11 +1,11 @@
 ﻿using MaterialDesignExtensions.Model;
 using MaterialDesignThemes.Wpf;
-using PANDA.ViewModel;
+using OUROBOROS.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace PANDA
+namespace OUROBOROS
 {
     public enum NAVIGATION_CATEGORY
     {

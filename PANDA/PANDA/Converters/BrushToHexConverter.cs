@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Windows.Data;
 using System.Windows.Media;
 
-namespace PANDA.Converters
+namespace OUROBOROS.Converters
 {
     public class BrushToHexConverter : IValueConverter
     {

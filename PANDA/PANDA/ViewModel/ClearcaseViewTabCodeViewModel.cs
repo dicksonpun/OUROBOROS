@@ -1,13 +1,13 @@
 ﻿using MaterialDesignThemes.Wpf;
-using PANDA.Command;
-using PANDA.ViewModel;
+using OUROBOROS.Command;
+using OUROBOROS.ViewModel;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 
-namespace PANDA.ViewModel
+namespace OUROBOROS.ViewModel
 {
     public class ClearcaseViewTabCodeViewModel : ViewModel
     {

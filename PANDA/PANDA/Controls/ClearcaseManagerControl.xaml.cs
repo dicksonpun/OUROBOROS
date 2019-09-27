@@ -1,6 +1,6 @@
 ﻿using MaterialDesignExtensions.Controls;
 using MaterialDesignThemes.Wpf;
-using PANDA.ViewModel;
+using OUROBOROS.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -17,7 +17,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace PANDA.Controls
+namespace OUROBOROS.Controls
 {
     /// <summary>
     /// Interaction logic for ClearcaseManagerControl.xaml

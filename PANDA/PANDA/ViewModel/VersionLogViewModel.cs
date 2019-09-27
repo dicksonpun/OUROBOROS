@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace PANDA.ViewModel
+namespace OUROBOROS.ViewModel
 {
     public class VersionLogViewModel : ViewModel
     {
@@ -57,7 +57,7 @@ namespace PANDA.ViewModel
                     }
                 },
             #endregion
-            #region TODO
+                #region TODO
                 new VersionLogItem()
                 {
                     Version     = "TODO",
@@ -72,7 +72,7 @@ namespace PANDA.ViewModel
                         new VersionLogNoteItem()
                         {
                             Header       =  "HIGH PRIORITY",
-                            Description  =  "Tidy up all files prior to official release (Documentation)"               + "\n" +
+                            Description  =  "N/A"                                                                       + "\n" +
                                             END_OF_STRING
                         },
                         new VersionLogNoteItem()
@@ -84,9 +84,7 @@ namespace PANDA.ViewModel
                         new VersionLogNoteItem()
                         {
                             Header       =  "LOW PRIORITY",
-                            Description  =  "[Add] Text Search"                                                          + "\n" +
-                                            "[Add] HOW TO Helper"                                                        + "\n" +
-                                            "[Add] Powerpoint directory"                                                 + "\n" +
+                            Description  =  "N/A"                                                                       + "\n" +
                                             END_OF_STRING
                         }
                     }
@@ -104,43 +102,6 @@ namespace PANDA.ViewModel
                             Header       =  "Main Window",
                             Description  =  "[Added] Navigation Menu"                                                   + "\n" +
                                             "[Added] Snackbar notifications"                                            + "\n" +
-                                            END_OF_STRING
-                        },
-                        new VersionLogNoteItem()
-                        {
-                            Header       =  "User Profile",
-                            Description  =  "[Added] GUI for UNIX login"                                                + "\n" +
-                                            END_OF_STRING
-                        },
-                        new VersionLogNoteItem()
-                        {
-                            Header       =  "Palette Picker",
-                            Description  =  "[Added] GUI"                                                               + "\n" +
-                                            "[Added] State Persistence for Color and Theme"                             + "\n" +
-                                            END_OF_STRING
-                        },
-                        new VersionLogNoteItem()
-                        {
-                            Header       =  "Project Helper",
-                            Description  =  "[Added] Searchbar"                                                         + "\n" +
-                                            "[Added] Filter toggles for checkouts and branchlisting (not operational)"  + "\n" +
-                                            "[Added] Review Status button (not operational)"                            + "\n" +
-                                            "[Added] Settings (to select view and vobs)"                                + "\n" +
-                                            "[Added] Mount Y Drive button (must select view)"                           + "\n" +
-                                            "[Added] Launch IDE button (must select view) (not operational)"            + "\n" +
-                                            "[Added] Context Menu (only open files is operational)"                     + "\n" +
-                                            END_OF_STRING
-                        },
-                        new VersionLogNoteItem()
-                        {
-                            Header       =  "Changelog",
-                            Description  =  "[Added] Categories: Known Issues, TODOs, and Version notes"                + "\n" +
-                                            END_OF_STRING
-                        },
-                        new VersionLogNoteItem()
-                        {
-                            Header       =  "Licenses",
-                            Description  =  "[Added] Documentation"                                                     + "\n" +
                                             END_OF_STRING
                         },
                     }

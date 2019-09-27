@@ -2,7 +2,7 @@
 using System.Globalization;
 using System.Windows.Data;
 
-namespace PANDA.Converters
+namespace OUROBOROS.Converters
 {
     public class BooleanInverterConverter : IValueConverter
     {

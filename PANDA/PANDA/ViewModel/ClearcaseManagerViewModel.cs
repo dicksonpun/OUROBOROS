@@ -5,7 +5,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 
-namespace PANDA.ViewModel
+namespace OUROBOROS.ViewModel
 {
     public class ClearcaseViewHelperViewModel : ViewModel
     {

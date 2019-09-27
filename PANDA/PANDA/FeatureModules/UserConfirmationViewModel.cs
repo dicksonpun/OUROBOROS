@@ -1,7 +1,7 @@
 ﻿using MaterialDesignThemes.Wpf;
-using PANDA.Command;
+using OUROBOROS.Command;
 
-namespace PANDA.ViewModel
+namespace OUROBOROS.ViewModel
 {
     // Referenced Bachup Application
     class UserConfirmationViewModel : ViewModel
