@@ -51,6 +51,9 @@
         <DataTemplate DataType="{x:Type viewModel:ProjectHelperSettingsViewModel}">
             <controls:ProjectHelperSettingsView />
         </DataTemplate>
+        <DataTemplate DataType="{x:Type viewModel:ProjectHelperStageFileDeliveryViewModel}">
+            <controls:ProjectHelperStageFileDeliveryView />
+        </DataTemplate>
         <!-- ============================================================== -->
         <!-- LEARNING DEMO FEATURES                                         -->
         <!-- ============================================================== -->
@@ -75,8 +78,6 @@
         <DataTemplate DataType="{x:Type viewModel:VersionLogViewModel}">
             <controls:VersionLogControl />
         </DataTemplate>
-        <!-- ============================================================== -->
-        <BitmapImage x:Key="AppBarIcon" UriSource="pack://application:,,,/Resources/Icons/panda.png" />
     </Window.Resources>
     
     <Grid>
@@ -89,7 +90,7 @@
                     <materialDesignExtControls:SideNavigation x:Name="navigationDrawerNav" 
                                                                     Items="{Binding Path=NavigationItems, Mode=TwoWay}"
                                                                     NavigationItemSelected="NavigationItemSelectedHandler"
-                                                                    Width="350" MinHeight="800">
+                                                                    Width="400" MinHeight="800">
                     </materialDesignExtControls:SideNavigation>
                 </materialDesign:DrawerHost.LeftDrawerContent>
                 
