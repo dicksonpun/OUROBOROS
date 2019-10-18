@@ -44,6 +44,10 @@ namespace OUROBOROS
                 {
                     ViewModelMap.Add(key, new ProjectHelperSettingsViewModel());
                 }
+                else if (key.StartsWith("ProjectHelperStageFileDeliveryViewModel"))
+                {
+                    ViewModelMap.Add(key, new ProjectHelperStageFileDeliveryViewModel());
+                }
                 // ==================================================================================
                 // EXPERIMENTAL / LEARNING MODULES 
                 // ==================================================================================

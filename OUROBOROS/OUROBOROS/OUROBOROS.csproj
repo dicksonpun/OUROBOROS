@@ -163,6 +163,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="FeatureModules\ProjectHelper\ProjectHelperStageFileDeliveryView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="FeatureModules\ProjectHelper\ProjectHelperView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -223,6 +227,10 @@
       <DependentUpon>ProjectHelperSettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="FeatureModules\ProjectHelper\ProjectHelperSettingsViewModel.cs" />
+    <Compile Include="FeatureModules\ProjectHelper\ProjectHelperStageFileDeliveryView.xaml.cs">
+      <DependentUpon>ProjectHelperStageFileDeliveryView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="FeatureModules\ProjectHelper\ProjectHelperStageFileDeliveryViewModel.cs" />
     <Compile Include="FeatureModules\ProjectHelper\ProjectHelperView.xaml.cs">
       <DependentUpon>ProjectHelperView.xaml</DependentUpon>
     </Compile>
